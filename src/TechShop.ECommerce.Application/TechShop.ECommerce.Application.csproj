@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\TechShop.ECommerce.Domain\TechShop.ECommerce.Domain.csproj" />
+    <ProjectReference Include="..\TechShop.ECommerce.Infrastructure\TechShop.ECommerce.Infrastructure.csproj" />
+    <ProjectReference Include="..\TechShop.ECommerce.WebAPI\TechShop.ECommerce.WebAPI.csproj" />
+  </ItemGroup>
+
+</Project>
