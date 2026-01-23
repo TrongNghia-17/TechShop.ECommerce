@@ -2,5 +2,5 @@
 
 public interface IProductRepository : IGenericRepository<Product>
 {
-
+    Task<bool> IsProductUnique(string name);
 }
