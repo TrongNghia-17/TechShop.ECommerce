@@ -5,7 +5,8 @@ public class GetProductDetailsQueryHandler(IMapper mapper,
 {
     public async Task<ProductDetailsDto> Handle(GetProductDetailsQuery request, CancellationToken cancellationToken)
     {
-        var product = await productRepository.GetByIdAsync(request.Id);
+        var product = await productRepository.GetByIdAsync(request.Id)
+                ?? throw new NotFoundException(nameof(Product), request.Id);
 
         var data = mapper.Map<ProductDetailsDto>(product);
 
