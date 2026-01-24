@@ -1,6 +1,4 @@
-﻿using TechShop.ECommerce.Persistence.DatabaseContext;
-
-namespace TechShop.ECommerce.Persistence;
+﻿namespace TechShop.ECommerce.Persistence;
 
 public static class PersistenceServiceRegistration
 {
@@ -10,6 +8,9 @@ public static class PersistenceServiceRegistration
         {
             options.UseSqlServer(configuration.GetConnectionString("TechShopDatabaseConnectionString"));
         });
+
+        services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+        services.AddScoped<IProductRepository, ProductRepository>();
 
         return services;
     }
