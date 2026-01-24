@@ -1,3 +1,1 @@
-﻿global using System.ComponentModel.DataAnnotations;
-global using System.ComponentModel.DataAnnotations.Schema;
-global using TechShop.ECommerce.Domain.Common;
+﻿global using TechShop.ECommerce.Domain.Common;
