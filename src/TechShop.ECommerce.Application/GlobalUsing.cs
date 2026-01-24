@@ -9,6 +9,7 @@ global using TechShop.ECommerce.Application.Exceptions;
 global using TechShop.ECommerce.Application.Features.Product.Commands.CreateProduct;
 global using TechShop.ECommerce.Application.Features.Product.Queries.GetAllProducts;
 global using TechShop.ECommerce.Application.Features.Product.Queries.GetProductDetails;
+global using TechShop.ECommerce.Application.Models.Email;
 global using TechShop.ECommerce.Domain.Common;
 global using TechShop.ECommerce.Domain.Entities;
 

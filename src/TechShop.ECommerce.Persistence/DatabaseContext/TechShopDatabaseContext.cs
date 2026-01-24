@@ -19,11 +19,11 @@ public class TechShopDatabaseContext(DbContextOptions<TechShopDatabaseContext> o
         foreach (var entry in base.ChangeTracker.Entries<BaseEntity>()
                 .Where(q => q.State == EntityState.Added || q.State == EntityState.Modified))
         {
-            entry.Entity.UpdatedDate = DateTime.Now;
+            entry.Entity.UpdatedDate = DateTime.UtcNow;
 
             if (entry.State == EntityState.Added)
             {
-                entry.Entity.CreatedDate = DateTime.Now;
+                entry.Entity.CreatedDate = DateTime.UtcNow;
                 entry.Entity.IsDeleted = false;
             }
         }
@@ -33,7 +33,7 @@ public class TechShopDatabaseContext(DbContextOptions<TechShopDatabaseContext> o
         {
             entry.State = EntityState.Modified;
             entry.Entity.IsDeleted = true;
-            entry.Entity.UpdatedDate = DateTime.Now;
+            entry.Entity.UpdatedDate = DateTime.UtcNow;
         }
 
         return base.SaveChangesAsync(cancellationToken);

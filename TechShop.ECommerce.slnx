@@ -2,6 +2,7 @@
   <Folder Name="/src/">
     <Project Path="src/TechShop.ECommerce.Application/TechShop.ECommerce.Application.csproj" />
     <Project Path="src/TechShop.ECommerce.Domain/TechShop.ECommerce.Domain.csproj" />
+    <Project Path="src/TechShop.ECommerce.Infrastructure/TechShop.ECommerce.Infrastructure.csproj" Id="49899ad4-ab07-40d0-a96d-267423ed22db" />
     <Project Path="src/TechShop.ECommerce.Persistence/TechShop.ECommerce.Persistence.csproj" />
     <Project Path="src/TechShop.ECommerce.WebAPI/TechShop.ECommerce.WebAPI.csproj" />
   </Folder>
