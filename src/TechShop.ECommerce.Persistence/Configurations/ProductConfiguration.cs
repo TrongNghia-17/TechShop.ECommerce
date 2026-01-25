@@ -55,7 +55,7 @@ public class ProductConfiguration : IEntityTypeConfiguration<Product>
                 Price = 3499.00m,
                 StockQuantity = 20,
                 CategoryId = 1,
-                CreatedDate = DateTime.UtcNow,
+                CreatedDate = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc),
                 IsDeleted = false
             },
             new Product
@@ -67,7 +67,7 @@ public class ProductConfiguration : IEntityTypeConfiguration<Product>
                 Price = 2199.00m,
                 StockQuantity = 15,
                 CategoryId = 1,
-                CreatedDate = DateTime.UtcNow,
+                CreatedDate = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc),
                 IsDeleted = false
             },
             new Product
@@ -79,7 +79,7 @@ public class ProductConfiguration : IEntityTypeConfiguration<Product>
                 Price = 1199.00m,
                 StockQuantity = 50,
                 CategoryId = 2,
-                CreatedDate = DateTime.UtcNow,
+                CreatedDate = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc),
                 IsDeleted = false
             },
             new Product
@@ -91,7 +91,7 @@ public class ProductConfiguration : IEntityTypeConfiguration<Product>
                 Price = 1299.00m,
                 StockQuantity = 45,
                 CategoryId = 2,
-                CreatedDate = DateTime.UtcNow,
+                CreatedDate = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc),
                 IsDeleted = false
             },
             new Product
@@ -103,7 +103,7 @@ public class ProductConfiguration : IEntityTypeConfiguration<Product>
                 Price = 99.99m,
                 StockQuantity = 100,
                 CategoryId = 3,
-                CreatedDate = DateTime.UtcNow,
+                CreatedDate = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc),
                 IsDeleted = false
             },
             new Product
@@ -115,7 +115,7 @@ public class ProductConfiguration : IEntityTypeConfiguration<Product>
                 Price = 348.00m,
                 StockQuantity = 30,
                 CategoryId = 3,
-                CreatedDate = DateTime.UtcNow,
+                CreatedDate = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc),
                 IsDeleted = false
             }
         );

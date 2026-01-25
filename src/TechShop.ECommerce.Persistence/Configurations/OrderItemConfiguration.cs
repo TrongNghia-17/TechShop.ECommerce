@@ -43,7 +43,7 @@ public class OrderItemConfiguration : IEntityTypeConfiguration<OrderItem>
                 ProductId = 1,
                 Quantity = 1,
                 UnitPrice = 3499.00m,
-                CreatedDate = DateTime.UtcNow.AddDays(-10),
+                CreatedDate = new DateTime(2024, 1, 20, 10, 0, 0, DateTimeKind.Utc),
                 IsDeleted = false
             },
             new OrderItem
@@ -53,7 +53,7 @@ public class OrderItemConfiguration : IEntityTypeConfiguration<OrderItem>
                 ProductId = 5,
                 Quantity = 1,
                 UnitPrice = 99.99m,
-                CreatedDate = DateTime.UtcNow.AddDays(-10),
+                CreatedDate = new DateTime(2024, 1, 20, 10, 0, 0, DateTimeKind.Utc),
                 IsDeleted = false
             },
             new OrderItem
@@ -63,7 +63,7 @@ public class OrderItemConfiguration : IEntityTypeConfiguration<OrderItem>
                 ProductId = 3,
                 Quantity = 1,
                 UnitPrice = 1199.00m,
-                CreatedDate = DateTime.UtcNow.AddHours(-2),
+                CreatedDate = new DateTime(2024, 1, 25, 15, 30, 0, DateTimeKind.Utc),
                 IsDeleted = false
             }
         );

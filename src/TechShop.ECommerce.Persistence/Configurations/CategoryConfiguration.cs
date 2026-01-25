@@ -35,7 +35,7 @@ public class CategoryConfiguration : IEntityTypeConfiguration<Category>
                 Id = 1,
                 Name = "Laptops & PCs",
                 Description = "High-performance laptops, desktops, and workstations",
-                CreatedDate = DateTime.UtcNow,
+                CreatedDate = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc),
                 IsDeleted = false
             },
             new Category
@@ -43,7 +43,7 @@ public class CategoryConfiguration : IEntityTypeConfiguration<Category>
                 Id = 2,
                 Name = "Smartphones & Tablets",
                 Description = "Latest mobile devices and tablets",
-                CreatedDate = DateTime.UtcNow,
+                CreatedDate = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc),
                 IsDeleted = false
             },
             new Category
@@ -51,7 +51,7 @@ public class CategoryConfiguration : IEntityTypeConfiguration<Category>
                 Id = 3,
                 Name = "Accessories",
                 Description = "Keyboards, mice, chargers, and more",
-                CreatedDate = DateTime.UtcNow,
+                CreatedDate = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc),
                 IsDeleted = false
             }
         );
