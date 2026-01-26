@@ -7,6 +7,9 @@ public class ProductProfiles : Profile
         CreateMap<Product, ProductDto>();
         CreateMap<Product, ProductDetailsDto>();
         CreateMap<CreateProductCommand, Product>();
-        CreateMap<UpdateProductCommand, Product>();
+        CreateMap<UpdateProductCommand, Product>()
+            .ForMember(p => p.CreatedDate, opt => opt.Ignore())
+            .ForMember(p => p.UpdatedDate, opt => opt.Ignore())
+            .ForMember(p => p.IsDeleted, opt => opt.Ignore());
     }
 }

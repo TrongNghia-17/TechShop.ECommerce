@@ -26,6 +26,7 @@ public class TechShopDatabaseContext(DbContextOptions<TechShopDatabaseContext> o
             }
             else if (entry.State == EntityState.Modified)
             {
+                entry.Property(x => x.CreatedDate).IsModified = false;
                 entry.Entity.UpdatedDate = DateTime.UtcNow;
             }
         }
