@@ -1,24 +1,34 @@
 ﻿namespace TechShop.ECommerce.Application.Features.Product.Commands.UpdateProduct;
 
-public class UpdateProductCommandHandler(
-    IMapper mapper,
+public sealed class UpdateProductCommandHandler(
     IProductRepository productRepository,
-    IAppLogger<UpdateProductCommandHandler> logger) : IRequestHandler<UpdateProductCommand, Unit>
+    IUnitOfWork unitOfWork,
+    IAppLogger<UpdateProductCommandHandler> logger)
+    : IRequestHandler<UpdateProductCommand, Unit>
 {
-    public async Task<Unit> Handle(UpdateProductCommand request, CancellationToken cancellationToken)
+    public async Task<Unit> Handle(
+        UpdateProductCommand request,
+        CancellationToken cancellationToken)
     {
-        var validator = new UpdateProductCommandValidator(productRepository);
-        var validationResult = await validator.ValidateAsync(request, cancellationToken);
+        logger.LogInformation(
+            "Starting update process for Product {ProductId}",
+            request.Id);
 
-        if (validationResult.Errors.Count != 0)
-        {
-            logger.LogWarning("Validation errors in update request for {0} - {1}", nameof(Product), request.Id);
-            throw new BadRequestException("Invalid Product", validationResult);
-        }
+        var product = await productRepository.GetByIdAsync(request.Id)
+            ?? throw new NotFoundException(nameof(Product), request.Id);
 
-        var productToUpdate = mapper.Map<TechShop.ECommerce.Domain.Entities.Product>(request);
+        product.Rename(request.Name);
+        product.ChangePrice(request.Price);
+        product.UpdateDescription(request.Summary, request.Description);
 
-        await productRepository.UpdateAsync(productToUpdate);
+        var hasOrders = await productRepository.HasOrdersAsync(product.Id);
+        product.ChangeCategory(request.CategoryId, hasOrders);
+
+        await unitOfWork.SaveChangesAsync(cancellationToken);
+
+        logger.LogInformation(
+            "Successfully updated Product {ProductId}",
+            request.Id);
 
         return Unit.Value;
     }
