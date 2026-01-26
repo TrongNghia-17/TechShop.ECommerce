@@ -19,4 +19,13 @@ public class ProductRepository(TechShopDatabaseContext context)
             .Where(p => !p.IsDeleted)
             .ToListAsync();
     }
+
+    public async Task<Product?> GetProductByIdWithDetailsAsync(int id)
+    {
+        return await _context.Products
+            .Include(p => p.Category)
+            .AsNoTracking()
+            .Where(p => !p.IsDeleted)
+            .FirstOrDefaultAsync(p => p.Id == id);
+    }
 }
