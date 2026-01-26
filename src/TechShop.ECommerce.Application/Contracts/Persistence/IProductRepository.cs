@@ -3,4 +3,5 @@
 public interface IProductRepository : IGenericRepository<Product>
 {
     Task<bool> IsProductUnique(string name);
+    Task<List<Product>> GetProductsWithDetailsAsync();
 }

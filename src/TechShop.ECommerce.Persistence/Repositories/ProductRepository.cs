@@ -10,4 +10,13 @@ public class ProductRepository(TechShopDatabaseContext context)
 
         return !exists;
     }
+
+    public async Task<List<Product>> GetProductsWithDetailsAsync()
+    {
+        return await _context.Products
+            .Include(p => p.Category)
+            .AsNoTracking()
+            .Where(p => !p.IsDeleted)
+            .ToListAsync();
+    }
 }
