@@ -19,12 +19,14 @@ public class TechShopDatabaseContext(DbContextOptions<TechShopDatabaseContext> o
         foreach (var entry in base.ChangeTracker.Entries<BaseEntity>()
                 .Where(q => q.State == EntityState.Added || q.State == EntityState.Modified))
         {
-            entry.Entity.UpdatedDate = DateTime.UtcNow;
-
             if (entry.State == EntityState.Added)
             {
                 entry.Entity.CreatedDate = DateTime.UtcNow;
                 entry.Entity.IsDeleted = false;
+            }
+            else if (entry.State == EntityState.Modified)
+            {
+                entry.Entity.UpdatedDate = DateTime.UtcNow;
             }
         }
 

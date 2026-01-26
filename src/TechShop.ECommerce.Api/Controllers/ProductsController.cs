@@ -37,9 +37,11 @@ public class ProductsController(IMediator mediator) : ControllerBase
     [ProducesResponseType(400)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesDefaultResponseType]
-    public async Task<ActionResult> Put(UpdateProductCommand command)
+    public async Task<ActionResult> Put(int id, UpdateProductCommand command)
     {
+        command.Id = id;
         await mediator.Send(command);
+
         return NoContent();
     }
 
