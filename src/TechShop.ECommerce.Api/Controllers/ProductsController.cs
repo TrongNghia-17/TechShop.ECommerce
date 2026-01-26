@@ -14,26 +14,44 @@ public class ProductsController(IMediator mediator) : ControllerBase
 
     // GET api/<ProductsController>/5
     [HttpGet("{id}")]
-    public string Get(int id)
+    public async Task<ActionResult<ProductDetailsDto>> Get(int id)
     {
-        return "value";
+        var product = await mediator.Send(new GetProductDetailsQuery(id));
+        return Ok(product);
     }
 
     // POST api/<ProductsController>
     [HttpPost]
-    public void Post([FromBody] string value)
+    [ProducesResponseType(201)]
+    [ProducesResponseType(400)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult> Post(CreateProductCommand command)
     {
+        var response = await mediator.Send(command);
+        return CreatedAtAction(nameof(Get), new { id = response });
     }
 
     // PUT api/<ProductsController>/5
     [HttpPut("{id}")]
-    public void Put(int id, [FromBody] string value)
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(400)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesDefaultResponseType]
+    public async Task<ActionResult> Put(UpdateProductCommand command)
     {
+        await mediator.Send(command);
+        return NoContent();
     }
 
     // DELETE api/<ProductsController>/5
     [HttpDelete("{id}")]
-    public void Delete(int id)
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesDefaultResponseType]
+    public async Task<ActionResult> Delete(int id)
     {
+        var command = new DeleteProductCommand { Id = id };
+        await mediator.Send(command);
+        return NoContent();
     }
 }

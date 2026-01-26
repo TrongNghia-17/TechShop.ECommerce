@@ -9,5 +9,6 @@ public class ProductProfiles : Profile
                 opt => opt.MapFrom(src => src.Category != null ? src.Category.Name : string.Empty));
         CreateMap<Product, ProductDetailsDto>();
         CreateMap<CreateProductCommand, Product>();
+        CreateMap<UpdateProductCommand, Product>();
     }
 }
