@@ -6,7 +6,6 @@ public class Product : BaseEntity
     public string? Summary { get; private set; }
     public string? Description { get; private set; }
     public decimal Price { get; private set; }
-    public int StockQuantity { get; private set; }
 
     public int CategoryId { get; private set; }
     public Category Category { get; private set; } = null!;
@@ -16,20 +15,24 @@ public class Product : BaseEntity
     public Product(
         string name,
         decimal price,
-        int stockQuantity,
         int categoryId,
         string? summary = null,
         string? description = null)
     {
         Rename(name);
         ChangePrice(price);
-        InitializeStock(stockQuantity);
 
         CategoryId = categoryId;
         Summary = summary;
         Description = description;
     }
-
+    public static Product Create(
+        string name,
+        decimal price,
+        int categoryId,
+        string? summary = null,
+        string? description = null)
+        => new(name, price, categoryId, summary, description);
     public void Rename(string name)
     {
         if (string.IsNullOrWhiteSpace(name))
@@ -38,6 +41,11 @@ public class Product : BaseEntity
         Name = name.Trim();
     }
 
+    /// <summary>
+    /// Changes the product price.
+    /// Business rule:
+    /// - Product price must always be greater than zero.
+    /// </summary>
     public void ChangePrice(decimal newPrice)
     {
         if (newPrice <= 0)
@@ -46,56 +54,29 @@ public class Product : BaseEntity
         Price = newPrice;
     }
 
-    private void InitializeStock(int stockQuantity)
-    {
-        if (stockQuantity < 0)
-            throw new DomainException("Stock quantity cannot be negative");
-
-        StockQuantity = stockQuantity;
-    }
-
-    public void IncreaseStock(int quantity)
-    {
-        if (quantity <= 0)
-            throw new DomainException("Quantity must be greater than zero");
-
-        StockQuantity += quantity;
-    }
-
-    public void DecreaseStock(int quantity)
-    {
-        if (quantity <= 0)
-            throw new DomainException("Quantity must be greater than zero");
-
-        if (StockQuantity < quantity)
-            throw new DomainException("Insufficient stock");
-
-        StockQuantity -= quantity;
-    }
-
     public void UpdateDescription(string? summary, string? description)
     {
         Summary = summary;
         Description = description;
     }
 
+    /// <summary>
+    /// Changes the category of the product.
+    /// Business rule:
+    /// - Once a product has been ordered, its category cannot be changed
+    ///   to ensure data consistency for historical orders.
+    /// </summary>
     public void ChangeCategory(int newCategoryId, bool hasOrders)
     {
         if (CategoryId == newCategoryId)
             return;
 
+        // A product that already has orders must not change its category,
+        // because orders depend on the original product classification.
         if (hasOrders)
-            throw new DomainException("Cannot change category of a product that has orders");
+            throw new DomainException(
+                "Cannot change category of a product that has orders");
 
         CategoryId = newCategoryId;
     }
-
-    public static Product Create(
-        string name,
-        decimal price,
-        int stockQuantity,
-        int categoryId,
-        string? summary = null,
-        string? description = null)
-        => new(name, price, stockQuantity, categoryId, summary, description);
 }
