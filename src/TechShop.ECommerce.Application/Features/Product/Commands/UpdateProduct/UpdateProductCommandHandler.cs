@@ -21,8 +21,11 @@ public sealed class UpdateProductCommandHandler(
         product.ChangePrice(request.Price);
         product.UpdateDescription(request.Summary, request.Description);
 
-        var hasOrders = await productRepository.HasOrdersAsync(product.Id);
-        product.ChangeCategory(request.CategoryId, hasOrders);
+        if (product.CategoryId != request.CategoryId)
+        {
+            var hasOrders = await productRepository.HasOrdersAsync(product.Id);
+            product.ChangeCategory(request.CategoryId, hasOrders);
+        }
 
         await unitOfWork.SaveChangesAsync(cancellationToken);
 

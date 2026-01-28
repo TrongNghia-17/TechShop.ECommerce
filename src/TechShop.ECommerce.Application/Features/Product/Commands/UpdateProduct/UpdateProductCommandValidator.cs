@@ -12,15 +12,12 @@ public class UpdateProductCommandValidator : AbstractValidator<UpdateProductComm
         RuleFor(x => x.Name)
             .NotEmpty()
             .MinimumLength(3)
-            .MustAsync(async (name, _) =>
-                !await productRepository.ExistsByNameAsync(name))
+            .MustAsync(async (command, name, _) =>
+                !await productRepository.ExistsByNameAsync(name, command.Id))
             .WithMessage("Product name already exists.");
 
         RuleFor(x => x.Price)
             .GreaterThan(0);
-
-        RuleFor(x => x.Quantity)
-            .GreaterThanOrEqualTo(0);
 
         RuleFor(x => x.CategoryId)
             .GreaterThan(0);
