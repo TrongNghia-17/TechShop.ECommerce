@@ -27,7 +27,7 @@ public sealed class UpdateProductCommandHandler(
             product.ChangeCategory(request.CategoryId, hasOrders);
         }
 
-        await unitOfWork.SaveChangesAsync(cancellationToken);
+        await unitOfWork.SaveChangesAsync();
 
         logger.LogInformation(
             "Successfully updated Product {ProductId}",
