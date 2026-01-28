@@ -2,8 +2,8 @@
 
 public abstract class BaseEntity
 {
-    public int Id { get; set; }
-    public DateTime? CreatedDate { get; set; }
-    public DateTime? UpdatedDate { get; set; }
-    public bool IsDeleted { get; set; }
+    public int Id { get; protected set; }
+    public DateTime CreatedDate { get; protected set; }
+    public DateTime? UpdatedDate { get; protected set; }
+    public bool IsDeleted { get; protected set; }
 }
