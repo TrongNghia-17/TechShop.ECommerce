@@ -1,31 +1,45 @@
 ﻿namespace TechShop.ECommerce.Persistence.Repositories;
 
 public class ProductRepository(TechShopDatabaseContext context)
-    : GenericRepository<Product>(context), IProductRepository
+    : IProductRepository
 {
-    public async Task<bool> IsProductUnique(string name)
+    public async Task<Product?> GetByIdAsync(int id)
     {
-        var exists = await _context.Products
-             .AnyAsync(p => p.Name == name);
-
-        return !exists;
+        return await context.Products
+            .AsNoTracking()
+            .FirstOrDefaultAsync(p => p.Id == id && !p.IsDeleted);
     }
 
-    public async Task<List<Product>> GetProductsWithDetailsAsync()
+    public async Task<IReadOnlyList<Product>> GetAllAsync()
     {
-        return await _context.Products
-            .Include(p => p.Category)
+        return await context.Products
             .AsNoTracking()
             .Where(p => !p.IsDeleted)
             .ToListAsync();
     }
 
-    public async Task<Product?> GetProductByIdWithDetailsAsync(int id)
+    public async Task AddAsync(Product product)
     {
-        return await _context.Products
-            .Include(p => p.Category)
-            .AsNoTracking()
-            .Where(p => !p.IsDeleted)
-            .FirstOrDefaultAsync(p => p.Id == id);
+        await context.Products.AddAsync(product);
+    }
+
+    public async Task<bool> ExistsAsync(int id)
+    {
+        return await context.Products
+            .AnyAsync(p => p.Id == id && !p.IsDeleted);
+    }
+
+    public async Task<bool> ExistsByNameAsync(string name, int? excludeId = null)
+    {
+        return await context.Products.AnyAsync(p =>
+            p.Name == name &&
+            !p.IsDeleted &&
+            (!excludeId.HasValue || p.Id != excludeId.Value));
+    }
+
+    public async Task<bool> HasOrdersAsync(int productId)
+    {
+        return await context.OrderItems
+            .AnyAsync(oi => oi.ProductId == productId);
     }
 }

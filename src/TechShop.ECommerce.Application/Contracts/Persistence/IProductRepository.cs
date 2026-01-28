@@ -1,8 +1,11 @@
 ﻿namespace TechShop.ECommerce.Application.Contracts.Persistence;
 
-public interface IProductRepository : IGenericRepository<Product>
+public interface IProductRepository
 {
-    Task<bool> IsProductUnique(string name);
-    Task<List<Product>> GetProductsWithDetailsAsync();
-    Task<Product?> GetProductByIdWithDetailsAsync(int id);
+    Task<Product?> GetByIdAsync(int id);
+    Task<IReadOnlyList<Product>> GetAllAsync();
+    Task AddAsync(Product product);
+    Task<bool> ExistsAsync(int id);
+    Task<bool> ExistsByNameAsync(string name, int? excludeId = null);
+    Task<bool> HasOrdersAsync(int productId);
 }
