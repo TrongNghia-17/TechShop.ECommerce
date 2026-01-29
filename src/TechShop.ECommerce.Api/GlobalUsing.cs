@@ -1,10 +1,10 @@
 ﻿global using MediatR;
 global using Microsoft.AspNetCore.Mvc;
 global using TechShop.ECommerce.Application;
-global using TechShop.ECommerce.Application.Features.Product.Commands.CreateProduct;
-global using TechShop.ECommerce.Application.Features.Product.Commands.DeleteProduct;
-global using TechShop.ECommerce.Application.Features.Product.Commands.UpdateProduct;
-global using TechShop.ECommerce.Application.Features.Product.Queries.GetAllProducts;
-global using TechShop.ECommerce.Application.Features.Product.Queries.GetProductDetails;
+global using TechShop.ECommerce.Application.Features.Products.Commands.Create;
+global using TechShop.ECommerce.Application.Features.Products.Commands.Delete;
+global using TechShop.ECommerce.Application.Features.Products.Commands.Update;
+global using TechShop.ECommerce.Application.Features.Products.Queries.GetAll;
+global using TechShop.ECommerce.Application.Features.Products.Queries.GetDetails;
 global using TechShop.ECommerce.Infrastructure;
 global using TechShop.ECommerce.Persistence;
