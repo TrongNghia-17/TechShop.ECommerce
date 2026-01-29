@@ -6,4 +6,7 @@
     <Project Path="src/TechShop.ECommerce.Infrastructure/TechShop.ECommerce.Infrastructure.csproj" Id="49899ad4-ab07-40d0-a96d-267423ed22db" />
     <Project Path="src/TechShop.ECommerce.Persistence/TechShop.ECommerce.Persistence.csproj" />
   </Folder>
+  <Folder Name="/test/">
+    <Project Path="test/TechShop.ECommerce.Application.UnitTests/TechShop.ECommerce.Application.UnitTests.csproj" Id="b240a741-ebf4-4fff-8539-8e3bceca2559" />
+  </Folder>
 </Solution>
