@@ -10,12 +10,6 @@ public sealed class CreateProductCommandHandler(
         CreateProductCommand request,
         CancellationToken cancellationToken)
     {
-        var validator = new CreateProductCommandValidator(productRepository);
-        var validationResult = await validator.ValidateAsync(request, cancellationToken);
-
-        if (!validationResult.IsValid)
-            throw new BadRequestException("Invalid Product", validationResult);
-
         logger.LogInformation(
             "Creating product with name {ProductName}",
             request.Name);

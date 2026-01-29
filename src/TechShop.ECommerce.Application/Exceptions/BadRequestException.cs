@@ -5,9 +5,12 @@ public class BadRequestException : Exception
     public IDictionary<string, string[]> ValidationErrors { get; set; }
         = new Dictionary<string, string[]>();
 
-    public BadRequestException(string message)
+    public BadRequestException(
+        string message,
+        IDictionary<string, string[]> validationErrors)
         : base(message)
     {
+        ValidationErrors = validationErrors;
     }
 
 
