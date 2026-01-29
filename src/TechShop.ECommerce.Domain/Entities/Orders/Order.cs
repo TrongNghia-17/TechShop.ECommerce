@@ -1,4 +1,4 @@
-﻿namespace TechShop.ECommerce.Domain.Entities;
+﻿namespace TechShop.ECommerce.Domain.Entities.Orders;
 
 public class Order : BaseEntity
 {

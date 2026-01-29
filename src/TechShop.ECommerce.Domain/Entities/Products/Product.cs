@@ -1,4 +1,6 @@
-﻿namespace TechShop.ECommerce.Domain.Entities;
+﻿using TechShop.ECommerce.Domain.Entities.Categories;
+
+namespace TechShop.ECommerce.Domain.Entities.Products;
 
 public class Product : BaseEntity
 {
@@ -78,5 +80,13 @@ public class Product : BaseEntity
                 "Cannot change category of a product that has orders");
 
         CategoryId = newCategoryId;
+    }
+
+    public void Delete()
+    {
+        if (IsDeleted)
+            throw new DomainException("Product already deleted");
+
+        IsDeleted = true;
     }
 }
