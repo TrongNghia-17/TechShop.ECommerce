@@ -9,7 +9,6 @@ public static class PersistenceServiceRegistration
             options.UseSqlServer(configuration.GetConnectionString("TechShopDatabaseConnectionString"));
         });
 
-        services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
         services.AddScoped<IProductRepository, ProductRepository>();
 
         return services;

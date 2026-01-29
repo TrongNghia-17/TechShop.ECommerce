@@ -10,11 +10,17 @@ public class ProductRepository(TechShopDatabaseContext context)
             .FirstOrDefaultAsync(p => p.Id == id && !p.IsDeleted);
     }
 
-    public async Task<IReadOnlyList<Product>> GetAllAsync()
+    public async Task<IReadOnlyList<ProductDto>> GetAllAsync()
     {
         return await context.Products
             .AsNoTracking()
             .Where(p => !p.IsDeleted)
+            .Select(p => new ProductDto(
+                p.Id,
+                p.Name,
+                p.Price,
+                p.Category.Name
+            ))
             .ToListAsync();
     }
 

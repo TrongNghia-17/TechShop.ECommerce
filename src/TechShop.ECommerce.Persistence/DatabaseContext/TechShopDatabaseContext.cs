@@ -14,20 +14,19 @@ public class TechShopDatabaseContext(DbContextOptions<TechShopDatabaseContext> o
         base.OnModelCreating(modelBuilder);
     }
 
-    public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+    public override Task<int> SaveChangesAsync(
+        CancellationToken cancellationToken = default)
     {
-        foreach (var entry in base.ChangeTracker.Entries<BaseEntity>()
-                .Where(q => q.State == EntityState.Added || q.State == EntityState.Modified))
+        foreach (var entry in ChangeTracker.Entries<BaseEntity>())
         {
             if (entry.State == EntityState.Added)
             {
-                entry.Entity.CreatedDate = DateTime.UtcNow;
-                entry.Entity.IsDeleted = false;
+                entry.Entity.MarkAsCreated();
             }
             else if (entry.State == EntityState.Modified)
             {
                 entry.Property(x => x.CreatedDate).IsModified = false;
-                entry.Entity.UpdatedDate = DateTime.UtcNow;
+                entry.Entity.MarkAsUpdated();
             }
         }
 
@@ -35,8 +34,7 @@ public class TechShopDatabaseContext(DbContextOptions<TechShopDatabaseContext> o
             .Where(q => q.State == EntityState.Deleted))
         {
             entry.State = EntityState.Modified;
-            entry.Entity.IsDeleted = true;
-            entry.Entity.UpdatedDate = DateTime.UtcNow;
+            entry.Entity.MarkAsDeleted();
         }
 
         return base.SaveChangesAsync(cancellationToken);
