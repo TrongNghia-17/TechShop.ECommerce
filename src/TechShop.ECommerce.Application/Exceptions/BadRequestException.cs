@@ -2,17 +2,18 @@
 
 public class BadRequestException : Exception
 {
-    public IReadOnlyList<string> ValidationErrors { get; }
-    public BadRequestException(string message) : base(message)
+    public IDictionary<string, string[]> ValidationErrors { get; set; }
+        = new Dictionary<string, string[]>();
+
+    public BadRequestException(string message)
+        : base(message)
     {
-        ValidationErrors = [];
     }
 
-    public BadRequestException(string message, ValidationResult validationResult) : base(message)
+
+    public BadRequestException(string message, ValidationResult validationResult)
+        : base(message)
     {
-        ValidationErrors = validationResult.Errors
-            .Select(e => e.ErrorMessage)
-            .ToList()
-            .AsReadOnly();
+        ValidationErrors = validationResult.ToDictionary();
     }
 }
