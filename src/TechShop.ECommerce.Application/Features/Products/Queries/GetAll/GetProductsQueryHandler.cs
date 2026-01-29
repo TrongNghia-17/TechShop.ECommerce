@@ -1,7 +1,6 @@
 ﻿namespace TechShop.ECommerce.Application.Features.Products.Queries.GetAll;
 
 public sealed class GetProductsQueryHandler(
-    IMapper mapper,
     IProductRepository productRepository,
     IAppLogger<GetProductsQueryHandler> logger)
     : IRequestHandler<GetProductsQuery, IReadOnlyList<ProductDto>>
