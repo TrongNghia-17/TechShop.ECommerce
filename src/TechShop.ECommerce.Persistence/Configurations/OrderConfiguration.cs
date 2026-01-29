@@ -1,4 +1,6 @@
-﻿namespace TechShop.ECommerce.Persistence.Configurations;
+﻿using TechShop.ECommerce.Domain.Entities.Orders;
+
+namespace TechShop.ECommerce.Persistence.Configurations;
 
 public class OrderConfiguration : IEntityTypeConfiguration<Order>
 {
@@ -6,9 +8,6 @@ public class OrderConfiguration : IEntityTypeConfiguration<Order>
     {
         // Table name
         builder.ToTable("Orders");
-
-        // Primary Key
-        builder.HasKey(o => o.Id);
 
         // Properties
         builder.Property(o => o.UserId)
@@ -43,33 +42,5 @@ public class OrderConfiguration : IEntityTypeConfiguration<Order>
             .WithOne(oi => oi.Order)
             .HasForeignKey(oi => oi.OrderId)
             .OnDelete(DeleteBehavior.Cascade);
-
-        // Seed data
-        builder.HasData(
-            new Order
-            {
-                Id = 1,
-                UserId = "user-001",
-                OrderDate = new DateTime(2024, 1, 20, 10, 0, 0, DateTimeKind.Utc),
-                TotalPrice = 3598.99m,
-                Status = OrderStatus.Completed,
-                ShippingAddress = "123 Tech Street, Silicon Valley, CA",
-                Notes = "Please deliver during office hours",
-                CreatedDate = new DateTime(2024, 1, 20, 10, 0, 0, DateTimeKind.Utc),
-                IsDeleted = false
-            },
-            new Order
-            {
-                Id = 2,
-                UserId = "user-002",
-                OrderDate = new DateTime(2024, 1, 25, 15, 30, 0, DateTimeKind.Utc),
-                TotalPrice = 1199.00m,
-                Status = OrderStatus.Pending,
-                ShippingAddress = "456 Developer Lane, Seattle, WA",
-                Notes = "",
-                CreatedDate = new DateTime(2024, 1, 25, 15, 30, 0, DateTimeKind.Utc),
-                IsDeleted = false
-            }
-        );
     }
 }
