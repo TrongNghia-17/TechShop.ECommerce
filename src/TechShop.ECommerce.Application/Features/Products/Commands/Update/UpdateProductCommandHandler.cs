@@ -1,4 +1,4 @@
-﻿namespace TechShop.ECommerce.Application.Features.Product.Commands.UpdateProduct;
+﻿namespace TechShop.ECommerce.Application.Features.Products.Commands.Update;
 
 public sealed class UpdateProductCommandHandler(
     IProductRepository productRepository,
@@ -27,7 +27,7 @@ public sealed class UpdateProductCommandHandler(
             product.ChangeCategory(request.CategoryId, hasOrders);
         }
 
-        await unitOfWork.SaveChangesAsync();
+        await unitOfWork.SaveChangesAsync(cancellationToken);
 
         logger.LogInformation(
             "Successfully updated Product {ProductId}",

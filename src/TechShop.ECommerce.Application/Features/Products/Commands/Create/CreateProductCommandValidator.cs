@@ -1,4 +1,4 @@
-﻿namespace TechShop.ECommerce.Application.Features.Product.Commands.CreateProduct;
+﻿namespace TechShop.ECommerce.Application.Features.Products.Commands.Create;
 
 public class CreateProductCommandValidator : AbstractValidator<CreateProductCommand>
 {
@@ -26,10 +26,6 @@ public class CreateProductCommandValidator : AbstractValidator<CreateProductComm
             .LessThanOrEqualTo(1000000).WithMessage("{PropertyName} cannot exceed 1,000,000")
             .PrecisionScale(18, 2, false).WithMessage("{PropertyName} must have maximum 18 digits and 2 decimal places");
 
-        RuleFor(p => p.StockQuantity)
-            .GreaterThanOrEqualTo(0).WithMessage("{PropertyName} cannot be negative")
-            .LessThanOrEqualTo(10000).WithMessage("{PropertyName} cannot exceed 10,000");
-
         RuleFor(p => p.CategoryId)
             .GreaterThan(0).WithMessage("{PropertyName} must be greater than 0");
 
@@ -38,8 +34,10 @@ public class CreateProductCommandValidator : AbstractValidator<CreateProductComm
             .WithMessage("Product already exists");
     }
 
-    private Task<bool> ProductNameUnique(CreateProductCommand command, CancellationToken token)
+    private async Task<bool> ProductNameUnique(
+         CreateProductCommand command,
+         CancellationToken token)
     {
-        return _productRepository.IsProductUnique(command.Name);
+        return !await _productRepository.ExistsByNameAsync(command.Name);
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace TechShop.ECommerce.Application.Features.Product.Commands.UpdateProduct;
+﻿namespace TechShop.ECommerce.Application.Features.Products.Commands.Update;
 
 public class UpdateProductCommandValidator : AbstractValidator<UpdateProductCommand>
 {
