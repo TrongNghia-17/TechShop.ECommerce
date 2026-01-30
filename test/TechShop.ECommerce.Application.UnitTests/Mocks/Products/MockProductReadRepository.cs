@@ -1,8 +1,8 @@
-﻿namespace TechShop.ECommerce.Application.UnitTests.Mocks;
+﻿namespace TechShop.ECommerce.Application.UnitTests.Mocks.Products;
 
-public static class MockProductRepository
+public static class MockProductReadRepository
 {
-    public static Mock<IProductRepository> GetMockProductRepository()
+    public static Mock<IProductRepository> GetMock()
     {
         var productDtos = new List<ProductDto>
         {
@@ -12,7 +12,8 @@ public static class MockProductRepository
 
         var mockRepo = new Mock<IProductRepository>();
 
-        mockRepo.Setup(r => r.GetAllAsync())
+        mockRepo
+            .Setup(r => r.GetAllAsync())
             .ReturnsAsync(productDtos);
 
         return mockRepo;

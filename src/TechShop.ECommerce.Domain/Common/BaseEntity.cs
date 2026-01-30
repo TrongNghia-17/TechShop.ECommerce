@@ -7,6 +7,8 @@ public abstract class BaseEntity
     public DateTime? UpdatedDate { get; protected set; }
     public bool IsDeleted { get; protected set; }
 
+    internal void SetId(int id) => Id = id;
+
     internal void MarkAsCreated()
     {
         CreatedDate = DateTime.UtcNow;

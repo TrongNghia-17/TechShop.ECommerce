@@ -11,9 +11,10 @@ public sealed class GetProductsQueryHandler(
     {
         logger.LogInformation("Retrieving products");
 
-        var products = await productRepository.GetAllAsync();
+        var productDtos = await productRepository
+            .GetAllAsync();
 
-        return products;
+        return productDtos;
     }
 }
 
