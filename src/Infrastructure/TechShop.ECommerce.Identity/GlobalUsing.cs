@@ -1,5 +1,10 @@
-﻿global using Microsoft.AspNetCore.Http;
+﻿global using Microsoft.AspNetCore.Authentication.JwtBearer;
 global using Microsoft.AspNetCore.Identity;
+global using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+global using Microsoft.EntityFrameworkCore;
+global using Microsoft.EntityFrameworkCore.Metadata.Builders;
+global using Microsoft.Extensions.Configuration;
+global using Microsoft.Extensions.DependencyInjection;
 global using Microsoft.Extensions.Options;
 global using Microsoft.IdentityModel.Tokens;
 global using System.IdentityModel.Tokens.Jwt;
@@ -8,4 +13,6 @@ global using System.Text;
 global using TechShop.ECommerce.Application.Contracts.Identity;
 global using TechShop.ECommerce.Application.Exceptions;
 global using TechShop.ECommerce.Application.Models.Identity;
+global using TechShop.ECommerce.Identity.DbContext;
 global using TechShop.ECommerce.Identity.Models;
+global using TechShop.ECommerce.Identity.Services;

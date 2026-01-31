@@ -1,4 +1,6 @@
-﻿namespace TechShop.ECommerce.Identity.Services;
+﻿using Microsoft.AspNetCore.Http;
+
+namespace TechShop.ECommerce.Identity.Services;
 
 public class UserService(
     UserManager<ApplicationUser> userManager,
