@@ -1,4 +1,7 @@
-﻿namespace TechShop.ECommerce.Application.UnitTests.Mocks.Products;
+﻿using TechShop.ECommerce.Application.Contracts.Persistence;
+using TechShop.ECommerce.Application.Features.Products.Queries.GetAll;
+
+namespace TechShop.ECommerce.Application.UnitTests.Mocks.Products;
 
 public static class MockProductReadRepository
 {

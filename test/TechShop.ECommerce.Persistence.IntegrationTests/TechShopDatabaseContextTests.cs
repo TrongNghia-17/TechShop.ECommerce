@@ -1,4 +1,7 @@
-﻿namespace TechShop.ECommerce.Persistence.IntegrationTests;
+﻿using TechShop.ECommerce.Domain.Entities.Products;
+using TechShop.ECommerce.Persistence.DatabaseContext;
+
+namespace TechShop.ECommerce.Persistence.IntegrationTests;
 
 public class TechShopDatabaseContextTests
 {

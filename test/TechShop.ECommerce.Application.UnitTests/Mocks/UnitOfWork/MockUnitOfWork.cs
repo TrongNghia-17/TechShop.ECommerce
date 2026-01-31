@@ -1,4 +1,6 @@
-﻿namespace TechShop.ECommerce.Application.UnitTests.Mocks.UnitOfWork;
+﻿using TechShop.ECommerce.Application.Contracts.Persistence;
+
+namespace TechShop.ECommerce.Application.UnitTests.Mocks.UnitOfWork;
 
 public static class MockUnitOfWork
 {

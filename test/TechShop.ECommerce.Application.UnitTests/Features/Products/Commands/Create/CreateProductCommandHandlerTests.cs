@@ -1,5 +1,8 @@
-﻿using TechShop.ECommerce.Application.Features.Products.Commands.Create;
+﻿using TechShop.ECommerce.Application.Contracts.Logging;
+using TechShop.ECommerce.Application.Contracts.Persistence;
+using TechShop.ECommerce.Application.Features.Products.Commands.Create;
 using TechShop.ECommerce.Application.UnitTests.Mocks.UnitOfWork;
+using TechShop.ECommerce.Domain.Entities.Products;
 
 namespace TechShop.ECommerce.Application.UnitTests.Features.Products.Commands.Create;
 

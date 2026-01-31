@@ -20,8 +20,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\..\src\TechShop.ECommerce.Application\TechShop.ECommerce.Application.csproj" />
-	  <ProjectReference Include="..\..\src\TechShop.ECommerce.Persistence\TechShop.ECommerce.Persistence.csproj" />
+		<ProjectReference Include="..\..\src\Infrastructure\TechShop.ECommerce.Persistence\TechShop.ECommerce.Persistence.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>

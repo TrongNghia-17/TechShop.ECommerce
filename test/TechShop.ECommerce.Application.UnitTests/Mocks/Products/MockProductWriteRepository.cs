@@ -1,4 +1,6 @@
-﻿namespace TechShop.ECommerce.Application.UnitTests.Mocks.Products;
+﻿using TechShop.ECommerce.Application.Contracts.Persistence;
+
+namespace TechShop.ECommerce.Application.UnitTests.Mocks.Products;
 
 public static class MockProductWriteRepository
 {
