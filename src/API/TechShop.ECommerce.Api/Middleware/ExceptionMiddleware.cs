@@ -16,49 +16,79 @@ public class ExceptionMiddleware(
         }
     }
 
-    private async Task HandleExceptionAsync(HttpContext httpContext, Exception ex)
+    private async Task HandleExceptionAsync(HttpContext context, Exception ex)
     {
-        HttpStatusCode statusCode = HttpStatusCode.InternalServerError;
-        CustomProblemDetails problem = new();
+        if (context.Response.HasStarted)
+        {
+            logger.LogWarning(
+                ex,
+                "Response already started. Path: {Path}",
+                context.Request.Path
+            );
+
+            ExceptionDispatchInfo.Capture(ex).Throw();
+        }
+
+        CustomProblemDetails problem;
+        LogLevel logLevel;
 
         switch (ex)
         {
-            case BadRequestException badRequestException:
-                statusCode = HttpStatusCode.BadRequest;
+            case BadRequestException badRequest:
                 problem = new CustomProblemDetails
                 {
-                    Title = badRequestException.Message,
-                    Status = (int)statusCode,
-                    Detail = badRequestException.InnerException?.Message,
-                    Type = nameof(BadRequestException),
-                    Errors = badRequestException.ValidationErrors
+                    Title = "Bad request",
+                    Status = StatusCodes.Status400BadRequest,
+                    Type = "https://httpstatuses.com/400",
+                    Detail = badRequest.Message,
+                    Instance = context.Request.Path,
+                    ErrorCode = "VALIDATION_ERROR",
+                    Errors = badRequest.ValidationErrors
                 };
+                logLevel = LogLevel.Warning;
                 break;
-            case NotFoundException NotFound:
-                statusCode = HttpStatusCode.NotFound;
+
+            case NotFoundException notFound:
                 problem = new CustomProblemDetails
                 {
-                    Title = NotFound.Message,
-                    Status = (int)statusCode,
-                    Type = nameof(NotFoundException),
-                    Detail = NotFound.InnerException?.Message,
+                    Title = "Resource not found",
+                    Status = StatusCodes.Status404NotFound,
+                    Type = "https://httpstatuses.com/404",
+                    Detail = notFound.Message,
+                    Instance = context.Request.Path,
+                    ErrorCode = "RESOURCE_NOT_FOUND"
                 };
+                logLevel = LogLevel.Information;
                 break;
+
             default:
                 problem = new CustomProblemDetails
                 {
-                    Title = ex.Message,
-                    Status = (int)statusCode,
-                    Type = nameof(HttpStatusCode.InternalServerError),
-                    Detail = ex.StackTrace,
+                    Title = "An unexpected error occurred",
+                    Status = StatusCodes.Status500InternalServerError,
+                    Type = "https://httpstatuses.com/500",
+                    Detail = "Please contact support if the problem persists.",
+                    Instance = context.Request.Path,
+                    ErrorCode = "INTERNAL_SERVER_ERROR"
                 };
+                logLevel = LogLevel.Error;
                 break;
         }
 
-        httpContext.Response.StatusCode = (int)statusCode;
-        var logMessage = JsonConvert.SerializeObject(problem);
-        logger.LogError(logMessage);
-        await httpContext.Response.WriteAsJsonAsync(problem);
+        problem.Extensions["traceId"] = context.TraceIdentifier;
 
+        logger.Log(
+            logLevel,
+            ex,
+            "Exception handled. Status: {Status}, ErrorCode: {ErrorCode}, Path: {Path}",
+            problem.Status,
+            problem.ErrorCode,
+            context.Request.Path
+        );
+
+        context.Response.StatusCode = problem.Status!.Value;
+        context.Response.ContentType = "application/problem+json";
+
+        await context.Response.WriteAsJsonAsync(problem);
     }
 }
