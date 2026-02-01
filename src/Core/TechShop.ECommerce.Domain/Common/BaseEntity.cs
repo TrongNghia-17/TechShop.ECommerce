@@ -3,26 +3,30 @@
 public abstract class BaseEntity
 {
     public int Id { get; protected set; }
-    public DateTime CreatedDate { get; protected set; }
-    public DateTime? UpdatedDate { get; protected set; }
+    public DateTime DateCreated { get; protected set; }
+    public string? CreatedBy { get; protected set; }
+    public DateTime? DateModified { get; protected set; }
+    public string? ModifiedBy { get; protected set; }
     public bool IsDeleted { get; protected set; }
 
     internal void SetId(int id) => Id = id;
 
-    internal void MarkAsCreated()
+    internal void MarkAsCreated(string? userId)
     {
-        CreatedDate = DateTime.UtcNow;
+        DateCreated = DateTime.UtcNow;
+        CreatedBy = userId;
         IsDeleted = false;
     }
 
-    internal void MarkAsUpdated()
+    internal void MarkAsUpdated(string? userId)
     {
-        UpdatedDate = DateTime.UtcNow;
+        DateModified = DateTime.UtcNow;
+        ModifiedBy = userId;
     }
 
     internal void MarkAsDeleted()
     {
         IsDeleted = true;
-        UpdatedDate = DateTime.UtcNow;
+        DateModified = DateTime.UtcNow;
     }
 }

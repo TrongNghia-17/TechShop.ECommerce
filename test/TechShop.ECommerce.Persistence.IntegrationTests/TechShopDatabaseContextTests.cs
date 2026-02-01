@@ -1,18 +1,25 @@
-﻿using TechShop.ECommerce.Domain.Entities.Products;
+﻿using Moq;
+using TechShop.ECommerce.Application.Contracts.Identity;
+using TechShop.ECommerce.Domain.Entities.Products;
 using TechShop.ECommerce.Persistence.DatabaseContext;
 
 namespace TechShop.ECommerce.Persistence.IntegrationTests;
 
 public class TechShopDatabaseContextTests
 {
-    private TechShopDatabaseContext _techShopDatabaseContext;
+    private readonly TechShopDatabaseContext _techShopDatabaseContext;
+    private readonly string _userId;
+    private readonly Mock<IUserService> _userServiceMock;
 
     public TechShopDatabaseContextTests()
     {
         var dbOptions = new DbContextOptionsBuilder<TechShopDatabaseContext>()
                 .UseInMemoryDatabase(Guid.NewGuid().ToString()).Options;
+        _userId = "00000000-0000-0000-0000-000000000000";
+        _userServiceMock = new Mock<IUserService>();
+        _userServiceMock.Setup(m => m.UserId).Returns(_userId);
 
-        _techShopDatabaseContext = new TechShopDatabaseContext(dbOptions);
+        _techShopDatabaseContext = new TechShopDatabaseContext(dbOptions, _userServiceMock.Object);
     }
 
     [Fact]
@@ -30,7 +37,7 @@ public class TechShopDatabaseContextTests
         await _techShopDatabaseContext.SaveChangesAsync();
 
         // Assert
-        product.CreatedDate.ShouldNotBe(default);
+        product.DateCreated.ShouldNotBe(default);
         product.IsDeleted.ShouldBeFalse();
     }
 
@@ -47,15 +54,15 @@ public class TechShopDatabaseContextTests
         await _techShopDatabaseContext.Products.AddAsync(product);
         await _techShopDatabaseContext.SaveChangesAsync();
 
-        var createdDate = product.CreatedDate;
+        var createdDate = product.DateCreated;
 
         // Act
         product.Rename("Updated Product");
         await _techShopDatabaseContext.SaveChangesAsync();
 
         // Assert
-        product.UpdatedDate.ShouldNotBeNull();
-        product.UpdatedDate!.Value.ShouldBeGreaterThan(createdDate);
+        product.DateModified.ShouldNotBeNull();
+        product.DateModified!.Value.ShouldBeGreaterThan(createdDate);
     }
 
     [Fact]
@@ -77,7 +84,7 @@ public class TechShopDatabaseContextTests
 
         // Assert
         product.IsDeleted.ShouldBeTrue();
-        product.UpdatedDate.ShouldNotBeNull();
+        product.DateModified.ShouldNotBeNull();
     }
 
 }

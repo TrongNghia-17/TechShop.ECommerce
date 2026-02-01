@@ -1,6 +1,11 @@
-﻿namespace TechShop.ECommerce.Persistence.DatabaseContext;
+﻿using TechShop.ECommerce.Application.Contracts.Identity;
 
-public class TechShopDatabaseContext(DbContextOptions<TechShopDatabaseContext> options) : DbContext(options)
+namespace TechShop.ECommerce.Persistence.DatabaseContext;
+
+public class TechShopDatabaseContext(
+    DbContextOptions<TechShopDatabaseContext> options,
+     IUserService userService)
+    : DbContext(options)
 {
     public DbSet<Category> Categories { get; set; }
     public DbSet<Product> Products { get; set; }
@@ -17,16 +22,18 @@ public class TechShopDatabaseContext(DbContextOptions<TechShopDatabaseContext> o
     public override Task<int> SaveChangesAsync(
         CancellationToken cancellationToken = default)
     {
+        var userId = userService.UserId;
+
         foreach (var entry in ChangeTracker.Entries<BaseEntity>())
         {
             if (entry.State == EntityState.Added)
             {
-                entry.Entity.MarkAsCreated();
+                entry.Entity.MarkAsCreated(userId);
             }
             else if (entry.State == EntityState.Modified)
             {
-                entry.Property(x => x.CreatedDate).IsModified = false;
-                entry.Entity.MarkAsUpdated();
+                entry.Property(x => x.DateCreated).IsModified = false;
+                entry.Entity.MarkAsUpdated(userId);
             }
         }
 
