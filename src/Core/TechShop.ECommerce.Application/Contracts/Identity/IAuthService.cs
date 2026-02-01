@@ -1,10 +1,7 @@
-﻿using TechShop.ECommerce.Application.Models.Identity;
-
-namespace TechShop.ECommerce.Application.Contracts.Identity;
+﻿namespace TechShop.ECommerce.Application.Contracts.Identity;
 
 public interface IAuthService
 {
     Task<AuthResponse> Login(AuthRequest request);
     Task<RegistrationResponse> Register(RegistrationRequest request);
-
 }

@@ -1,5 +1,7 @@
 ﻿global using MediatR;
 global using Microsoft.AspNetCore.Mvc;
+global using Newtonsoft.Json;
+global using Serilog;
 global using System.Net;
 global using TechShop.ECommerce.Api.Middleware;
 global using TechShop.ECommerce.Api.Models;

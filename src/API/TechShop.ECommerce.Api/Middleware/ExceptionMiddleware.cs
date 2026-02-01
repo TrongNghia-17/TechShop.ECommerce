@@ -1,6 +1,8 @@
 ﻿namespace TechShop.ECommerce.Api.Middleware;
 
-public class ExceptionMiddleware(RequestDelegate next)
+public class ExceptionMiddleware(
+    RequestDelegate next,
+    ILogger<ExceptionMiddleware> logger)
 {
     public async Task InvokeAsync(HttpContext httpContext)
     {
@@ -25,11 +27,10 @@ public class ExceptionMiddleware(RequestDelegate next)
                 statusCode = HttpStatusCode.BadRequest;
                 problem = new CustomProblemDetails
                 {
-                    Type = nameof(BadRequestException),
                     Title = badRequestException.Message,
                     Status = (int)statusCode,
                     Detail = badRequestException.InnerException?.Message,
-                    Instance = httpContext.Request.Path,
+                    Type = nameof(BadRequestException),
                     Errors = badRequestException.ValidationErrors
                 };
                 break;
@@ -37,26 +38,27 @@ public class ExceptionMiddleware(RequestDelegate next)
                 statusCode = HttpStatusCode.NotFound;
                 problem = new CustomProblemDetails
                 {
-                    Type = nameof(NotFoundException),
                     Title = NotFound.Message,
                     Status = (int)statusCode,
+                    Type = nameof(NotFoundException),
                     Detail = NotFound.InnerException?.Message,
-                    Instance = httpContext.Request.Path
                 };
                 break;
             default:
                 problem = new CustomProblemDetails
                 {
-                    Type = nameof(HttpStatusCode.InternalServerError),
                     Title = ex.Message,
                     Status = (int)statusCode,
+                    Type = nameof(HttpStatusCode.InternalServerError),
                     Detail = ex.StackTrace,
-                    Instance = httpContext.Request.Path
                 };
                 break;
         }
 
         httpContext.Response.StatusCode = (int)statusCode;
+        var logMessage = JsonConvert.SerializeObject(problem);
+        logger.LogError(logMessage);
         await httpContext.Response.WriteAsJsonAsync(problem);
+
     }
 }
