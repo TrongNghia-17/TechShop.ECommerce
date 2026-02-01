@@ -28,7 +28,7 @@ public class ProductsController(IMediator mediator) : ControllerBase
         return CreatedAtAction(
             nameof(Get),
             new { id },
-            null
+            new { id }
         );
 
     }
