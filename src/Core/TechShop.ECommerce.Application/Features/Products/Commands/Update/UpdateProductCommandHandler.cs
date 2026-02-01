@@ -17,15 +17,16 @@ public sealed class UpdateProductCommandHandler(
         var product = await productRepository.GetByIdAsync(request.Id)
             ?? throw new NotFoundException(nameof(Product), request.Id);
 
-        product.Rename(request.Name);
-        product.ChangePrice(request.Price);
-        product.UpdateDescription(request.Summary, request.Description);
-
         if (product.CategoryId != request.CategoryId)
         {
             var hasOrders = await productRepository.HasOrdersAsync(product.Id);
             product.ChangeCategory(request.CategoryId, hasOrders);
         }
+
+        // PUT semantics: replace entire Product state
+        product.Rename(request.Name);
+        product.ChangePrice(request.Price);
+        product.UpdateDescription(request.Summary, request.Description);
 
         await unitOfWork.SaveChangesAsync(cancellationToken);
 

@@ -1,6 +1,4 @@
-﻿using TechShop.ECommerce.Domain.Entities.Categories;
-
-namespace TechShop.ECommerce.Domain.Entities.Products;
+﻿namespace TechShop.ECommerce.Domain.Entities.Products;
 
 public class Product : BaseEntity
 {
