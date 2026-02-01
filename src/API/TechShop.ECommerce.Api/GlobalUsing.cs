@@ -1,4 +1,5 @@
-﻿global using MediatR;
+﻿global using Asp.Versioning;
+global using MediatR;
 global using Microsoft.AspNetCore.Mvc;
 global using Serilog;
 global using System.Runtime.ExceptionServices;

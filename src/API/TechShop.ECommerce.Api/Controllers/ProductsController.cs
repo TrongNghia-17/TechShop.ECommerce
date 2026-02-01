@@ -1,22 +1,17 @@
 ﻿namespace TechShop.ECommerce.Api.Controllers;
 
-[Route("api/[controller]")]
 [ApiController]
+[ApiVersion("1.0")]
+[Route("api/v{version:apiVersion}/[controller]")]
 public class ProductsController(IMediator mediator) : ControllerBase
 {
     [HttpGet]
     public async Task<ActionResult<IReadOnlyList<ProductDto>>> Get()
-    {
-        var products = await mediator.Send(new GetProductsQuery());
-        return Ok(products);
-    }
+        => Ok(await mediator.Send(new GetProductsQuery()));
 
     [HttpGet("{id}")]
     public async Task<ActionResult<ProductDetailsDto>> Get(int id)
-    {
-        var product = await mediator.Send(new GetProductDetailsQuery(id));
-        return Ok(product);
-    }
+        => Ok(await mediator.Send(new GetProductDetailsQuery(id)));
 
     [HttpPost]
     [ProducesResponseType(201)]
@@ -25,12 +20,7 @@ public class ProductsController(IMediator mediator) : ControllerBase
     public async Task<ActionResult> Post(CreateProductCommand command)
     {
         var id = await mediator.Send(command);
-        return CreatedAtAction(
-            nameof(Get),
-            new { id },
-            new { id }
-        );
-
+        return CreatedAtAction(nameof(Get), new { id, version = "1.0" }, new { id });
     }
 
     [HttpPut("{id}")]
@@ -40,14 +30,8 @@ public class ProductsController(IMediator mediator) : ControllerBase
     [ProducesDefaultResponseType]
     public async Task<ActionResult> Put(int id, UpdateProductCommand command)
     {
-        if (command.Id != 0 && command.Id != id)
-        {
-            return BadRequest("Route id and body id do not match");
-        }
-
         var updateCommand = command with { Id = id };
         await mediator.Send(updateCommand);
-
         return NoContent();
     }
 
