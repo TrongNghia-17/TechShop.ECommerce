@@ -4,6 +4,7 @@ global using Microsoft.Extensions.Configuration;
 global using Microsoft.Extensions.DependencyInjection;
 global using TechShop.ECommerce.Application.Contracts.Persistence;
 global using TechShop.ECommerce.Application.Features.Products.Queries.GetAll;
+global using TechShop.ECommerce.Application.Models;
 global using TechShop.ECommerce.Domain.Common;
 global using TechShop.ECommerce.Domain.Entities.Categories;
 global using TechShop.ECommerce.Domain.Entities.Orders;

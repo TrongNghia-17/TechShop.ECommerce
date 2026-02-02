@@ -1,5 +1,5 @@
 ﻿using TechShop.ECommerce.Application.Contracts.Persistence;
-using TechShop.ECommerce.Application.Features.Products.Queries.GetAll;
+using TechShop.ECommerce.Application.Features.Products.Dtos;
 
 namespace TechShop.ECommerce.Application.UnitTests.Mocks.Products;
 

@@ -1,4 +1,4 @@
-﻿namespace TechShop.ECommerce.Application.Features.Products.Queries.GetAll;
+﻿namespace TechShop.ECommerce.Application.Features.Products.Dtos;
 
 public sealed record ProductDto(
     int Id,

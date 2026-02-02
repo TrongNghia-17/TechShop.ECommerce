@@ -1,4 +1,6 @@
-﻿namespace TechShop.ECommerce.Application.Features.Products.Queries.GetAll;
+﻿using TechShop.ECommerce.Application.Features.Products.Dtos;
+
+namespace TechShop.ECommerce.Application.Features.Products.Queries.GetAll;
 
 public sealed class GetProductsQueryHandler(
     IProductRepository productRepository,

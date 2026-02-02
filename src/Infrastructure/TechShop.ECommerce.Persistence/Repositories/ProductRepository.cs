@@ -1,4 +1,7 @@
-﻿namespace TechShop.ECommerce.Persistence.Repositories;
+﻿using TechShop.ECommerce.Application.Features.Products.Dtos;
+using TechShop.ECommerce.Persistence.Extensions;
+
+namespace TechShop.ECommerce.Persistence.Repositories;
 
 public class ProductRepository(TechShopDatabaseContext context)
     : IProductRepository
@@ -22,6 +25,24 @@ public class ProductRepository(TechShopDatabaseContext context)
                 p.Category.Name
             ))
             .ToListAsync();
+    }
+
+    public Task<PagedResult<ProductDto>> GetPagedAsync(
+        int pageNumber,
+        int pageSize,
+        CancellationToken cancellationToken)
+    {
+        var query = context.Products
+            .AsNoTracking()
+            .OrderBy(p => p.Id)
+            .Select(p => new ProductDto(
+                p.Id,
+                p.Name,
+                p.Price,
+                p.Category.Name
+            ));
+
+        return query.ToPageResultAsync(pageNumber, pageSize, cancellationToken, maxPageSize: 100);
     }
 
     public async Task AddAsync(Product product)

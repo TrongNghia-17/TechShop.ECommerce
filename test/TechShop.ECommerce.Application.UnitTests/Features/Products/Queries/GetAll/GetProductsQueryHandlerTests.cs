@@ -1,5 +1,6 @@
 ﻿using TechShop.ECommerce.Application.Contracts.Logging;
 using TechShop.ECommerce.Application.Contracts.Persistence;
+using TechShop.ECommerce.Application.Features.Products.Dtos;
 using TechShop.ECommerce.Application.Features.Products.Queries.GetAll;
 
 namespace TechShop.ECommerce.Application.UnitTests.Features.Products.Queries.GetAll;
