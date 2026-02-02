@@ -1,8 +1,10 @@
-﻿namespace TechShop.ECommerce.Api.Controllers;
+﻿using TechShop.ECommerce.Application.Features.Products.Dtos;
 
-[ApiController]
+namespace TechShop.ECommerce.Api.Controllers.v1;
+
 [ApiVersion("1.0")]
 [Route("api/v{version:apiVersion}/[controller]")]
+[ApiController]
 public class ProductsController(IMediator mediator) : ControllerBase
 {
     [HttpGet]
@@ -20,7 +22,7 @@ public class ProductsController(IMediator mediator) : ControllerBase
     public async Task<ActionResult> Post(CreateProductCommand command)
     {
         var id = await mediator.Send(command);
-        return CreatedAtAction(nameof(Get), new { id, version = "1.0" }, new { id });
+        return CreatedAtAction(nameof(Get), new { id, version = "1" }, new { id });
     }
 
     [HttpPut("{id}")]

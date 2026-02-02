@@ -1,4 +1,4 @@
-﻿namespace TechShop.ECommerce.Api.Controllers;
+﻿namespace TechShop.ECommerce.Api.Controllers.v1;
 
 [Route("api/[controller]")]
 [ApiController]
