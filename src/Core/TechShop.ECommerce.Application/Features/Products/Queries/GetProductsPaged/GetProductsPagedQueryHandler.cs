@@ -1,6 +1,4 @@
-﻿using TechShop.ECommerce.Application.Models;
-
-namespace TechShop.ECommerce.Application.Features.Products.Queries.GetProductsPaged;
+﻿namespace TechShop.ECommerce.Application.Features.Products.Queries.GetProductsPaged;
 
 public sealed class GetProductsPagedQueryHandler(
     IProductRepository productRepository)
@@ -13,6 +11,8 @@ public sealed class GetProductsPagedQueryHandler(
         return await productRepository.GetPagedAsync(
             request.PageNumber,
             request.PageSize,
+            request.CategoryId,
+            request.Sort,
             cancellationToken);
     }
 }

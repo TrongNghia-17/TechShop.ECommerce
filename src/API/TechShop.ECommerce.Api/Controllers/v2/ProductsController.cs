@@ -8,11 +8,10 @@ public class ProductsController(IMediator mediator) : ControllerBase
     [HttpGet]
     public async Task<ActionResult<PagedResult<ProductDto>>> Get(
         [FromQuery] int pageNumber = 1,
-        [FromQuery] int pageSize = 10)
+        [FromQuery] int pageSize = 10,
+        [FromQuery] int? categoryId = null,
+        [FromQuery] string? sort = "price")
     {
-        var result = await mediator.Send(
-            new GetProductsPagedQuery(pageNumber, pageSize));
-
-        return Ok(result);
+        return Ok(await mediator.Send(new GetProductsPagedQuery(pageNumber, pageSize, categoryId, sort)));
     }
 }

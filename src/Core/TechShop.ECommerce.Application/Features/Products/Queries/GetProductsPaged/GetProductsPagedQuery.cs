@@ -2,6 +2,8 @@
 
 public sealed record GetProductsPagedQuery(
     int PageNumber = 1,
-    int PageSize = 10
+    int PageSize = 10,
+    int? CategoryId = null,
+    string? Sort = "price"
 ) : IRequest<PagedResult<ProductDto>>;
 

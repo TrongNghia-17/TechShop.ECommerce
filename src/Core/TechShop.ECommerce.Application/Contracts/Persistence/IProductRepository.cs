@@ -1,7 +1,4 @@
-﻿using TechShop.ECommerce.Application.Features.Products.Dtos;
-using TechShop.ECommerce.Application.Models;
-
-namespace TechShop.ECommerce.Application.Contracts.Persistence;
+﻿namespace TechShop.ECommerce.Application.Contracts.Persistence;
 
 public interface IProductRepository
 {
@@ -10,7 +7,9 @@ public interface IProductRepository
     Task<PagedResult<ProductDto>> GetPagedAsync(
         int pageNumber,
         int pageSize,
-        CancellationToken cancellationToken);
+        int? categoryId,
+        string? sort,
+        CancellationToken token);
     Task AddAsync(Product product);
     Task<bool> ExistsAsync(int id);
     Task<bool> ExistsByNameAsync(string name, int? excludeId = null);

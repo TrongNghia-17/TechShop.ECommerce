@@ -1,7 +1,4 @@
-﻿using TechShop.ECommerce.Application.Features.Products.Dtos;
-using TechShop.ECommerce.Persistence.Extensions;
-
-namespace TechShop.ECommerce.Persistence.Repositories;
+﻿namespace TechShop.ECommerce.Persistence.Repositories;
 
 public class ProductRepository(TechShopDatabaseContext context)
     : IProductRepository
@@ -30,19 +27,25 @@ public class ProductRepository(TechShopDatabaseContext context)
     public Task<PagedResult<ProductDto>> GetPagedAsync(
         int pageNumber,
         int pageSize,
-        CancellationToken cancellationToken)
+        int? categoryId,
+        string? sort,
+        CancellationToken token)
     {
         var query = context.Products
             .AsNoTracking()
-            .OrderBy(p => p.Id)
-            .Select(p => new ProductDto(
-                p.Id,
-                p.Name,
-                p.Price,
-                p.Category.Name
-            ));
+            .Where(p => !p.IsDeleted);
 
-        return query.ToPageResultAsync(pageNumber, pageSize, cancellationToken, maxPageSize: 100);
+        if (categoryId is not null)
+            query = query.Where(p => p.CategoryId == categoryId.Value);
+
+        var desc = !string.IsNullOrWhiteSpace(sort) && sort.StartsWith("-");
+        query = desc
+            ? query.OrderByDescending(p => p.Price)
+            : query.OrderBy(p => p.Price);
+
+        var dtoQuery = query.Select(p => new ProductDto(p.Id, p.Name, p.Price, p.Category.Name));
+
+        return dtoQuery.ToPageResultAsync(pageNumber, pageSize, token, maxPageSize: 100);
     }
 
     public async Task AddAsync(Product product)
