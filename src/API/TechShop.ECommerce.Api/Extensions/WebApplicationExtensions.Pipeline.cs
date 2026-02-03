@@ -17,6 +17,11 @@ public static class WebApplicationExtensions
                     options.SwaggerEndpoint($"/swagger/{desc.GroupName}/swagger.json", $"TechShop API {desc.GroupName}");
                 }
             });
+
+            app.MapScalarApiReference(options =>
+            {
+                options.OpenApiRoutePattern = "/swagger/{documentName}/swagger.json";
+            });
         }
 
         app.UseSerilogRequestLogging();
