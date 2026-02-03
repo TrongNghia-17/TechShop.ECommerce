@@ -6,6 +6,7 @@
 public class ProductsController(IMediator mediator) : ControllerBase
 {
     [HttpGet]
+    [OutputCache(PolicyName = "ProductsList")]
     public async Task<ActionResult<PagedResult<ProductDto>>> Get(
         [FromQuery] int pageNumber = 1,
         [FromQuery] int pageSize = 10,
@@ -13,5 +14,65 @@ public class ProductsController(IMediator mediator) : ControllerBase
         [FromQuery] string? sort = "price")
     {
         return Ok(await mediator.Send(new GetProductsPagedQuery(pageNumber, pageSize, categoryId, sort)));
+    }
+
+    [HttpGet("{id}")]
+    public async Task<ActionResult<ProductDetailsDto>> GetById(int id, CancellationToken ct)
+    {
+        var dto = await mediator.Send(new GetProductDetailsQuery(id), ct);
+
+        var lastModifiedUtc = (dto.DateModified ?? dto.DateCreated).ToUniversalTime();
+        var etag = HttpCachingExtensions.BuildWeakEtag(dto.Id, lastModifiedUtc);
+
+        if (Request.IsNotModified(etag))
+            return StatusCode(StatusCodes.Status304NotModified);
+
+        Response.ApplyCacheHeaders(etag, maxAgeSeconds: 60);
+        return Ok(dto);
+    }
+
+
+    [HttpPost]
+    [ProducesResponseType(201)]
+    [ProducesResponseType(400)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult> Post(
+        CreateProductCommand command,
+        [FromServices] IOutputCacheStore cache,
+        CancellationToken token)
+    {
+        var id = await mediator.Send(command, token);
+        await cache.EvictByTagAsync("products", token);
+        return CreatedAtAction(nameof(Get), new { id, version = "1" }, new { id });
+    }
+
+    [HttpPut("{id}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(400)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesDefaultResponseType]
+    public async Task<ActionResult> Put(
+        int id,
+        UpdateProductCommand command,
+        [FromServices] IOutputCacheStore cache,
+        CancellationToken token)
+    {
+        await mediator.Send(command with { Id = id }, token);
+        await cache.EvictByTagAsync("products", token);
+        return NoContent();
+    }
+
+    [HttpDelete("{id}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesDefaultResponseType]
+    public async Task<ActionResult> Delete(
+        int id,
+        [FromServices] IOutputCacheStore cache,
+        CancellationToken token)
+    {
+        await mediator.Send(new DeleteProductCommand(id), token);
+        await cache.EvictByTagAsync("products", token);
+        return NoContent();
     }
 }

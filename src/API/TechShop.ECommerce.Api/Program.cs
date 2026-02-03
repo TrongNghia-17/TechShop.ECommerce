@@ -1,6 +1,4 @@
-﻿using TechShop.ECommerce.Api.Swagger;
-
-var builder = WebApplication.CreateBuilder(args);
+﻿var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
@@ -14,6 +12,18 @@ builder.Services.AddPersistenceServices(builder.Configuration);
 builder.Services.AddIdentityServices(builder.Configuration);
 
 builder.Services.AddControllers();
+
+builder.Services.AddOutputCache(options =>
+{
+    options.AddPolicy("ProductsList", policy =>
+        policy.Expire(TimeSpan.FromMinutes(2))
+              .Tag("products")
+              .SetVaryByQuery(
+                  "pageNumber", "pageSize",
+                  "categoryId", "sort"
+              ));
+});
+
 
 builder.Services
     .AddApiVersioning(options =>
@@ -68,9 +78,10 @@ app.UseSerilogRequestLogging();
 app.UseHttpsRedirection();
 
 app.UseCors("all");
-
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.UseOutputCache();
 
 app.MapControllers();
 

@@ -1,6 +1,4 @@
-﻿using TechShop.ECommerce.Application.Features.Products.Dtos;
-
-namespace TechShop.ECommerce.Api.Controllers.v1;
+﻿namespace TechShop.ECommerce.Api.Controllers.v1;
 
 [ApiVersion("1.0")]
 [Route("api/v{version:apiVersion}/[controller]")]

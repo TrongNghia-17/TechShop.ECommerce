@@ -6,6 +6,8 @@ public sealed record ProductDetailsDto(
     string? Summary,
     string? Description,
     decimal Price,
-    int CategoryId
+    int CategoryId,
+    DateTime DateCreated,
+    DateTime? DateModified
 );
 
