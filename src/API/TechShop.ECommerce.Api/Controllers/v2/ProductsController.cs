@@ -7,6 +7,7 @@ public class ProductsController(IMediator mediator) : ControllerBase
 {
     [HttpGet]
     [OutputCache(PolicyName = "ProductsList")]
+    [EnableRateLimiting("ProductsSliding")]
     public async Task<ActionResult<PagedResult<ProductDto>>> Get(
         [FromQuery] int pageNumber = 1,
         [FromQuery] int pageSize = 10,
@@ -36,6 +37,7 @@ public class ProductsController(IMediator mediator) : ControllerBase
     [ProducesResponseType(201)]
     [ProducesResponseType(400)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [EnableRateLimiting("ProductsWrite")]
     public async Task<ActionResult> Post(
         CreateProductCommand command,
         [FromServices] IOutputCacheStore cache,
@@ -43,7 +45,7 @@ public class ProductsController(IMediator mediator) : ControllerBase
     {
         var id = await mediator.Send(command, token);
         await cache.EvictByTagAsync("products", token);
-        return CreatedAtAction(nameof(Get), new { id, version = "1" }, new { id });
+        return CreatedAtAction(nameof(Get), new { id, version = "2" }, new { id });
     }
 
     [HttpPut("{id}")]
@@ -51,6 +53,7 @@ public class ProductsController(IMediator mediator) : ControllerBase
     [ProducesResponseType(400)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesDefaultResponseType]
+    [EnableRateLimiting("ProductsWrite")]
     public async Task<ActionResult> Put(
         int id,
         UpdateProductCommand command,
@@ -66,6 +69,7 @@ public class ProductsController(IMediator mediator) : ControllerBase
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesDefaultResponseType]
+    [EnableRateLimiting("ProductsWrite")]
     public async Task<ActionResult> Delete(
         int id,
         [FromServices] IOutputCacheStore cache,
