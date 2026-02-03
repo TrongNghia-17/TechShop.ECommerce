@@ -3,12 +3,14 @@ global using Asp.Versioning.ApiExplorer;
 global using MediatR;
 global using Microsoft.AspNetCore.Mvc;
 global using Microsoft.AspNetCore.OutputCaching;
+global using Microsoft.AspNetCore.RateLimiting;
 global using Microsoft.Extensions.Options;
 global using Microsoft.Net.Http.Headers;
 global using Microsoft.OpenApi.Models;
 global using Serilog;
 global using Swashbuckle.AspNetCore.SwaggerGen;
 global using System.Runtime.ExceptionServices;
+global using System.Threading.RateLimiting;
 global using TechShop.ECommerce.Api.Extensions;
 global using TechShop.ECommerce.Api.Middleware;
 global using TechShop.ECommerce.Api.Models;
@@ -28,4 +30,5 @@ global using TechShop.ECommerce.Application.Models.Identity;
 global using TechShop.ECommerce.Identity;
 global using TechShop.ECommerce.Infrastructure;
 global using TechShop.ECommerce.Persistence;
+
 
