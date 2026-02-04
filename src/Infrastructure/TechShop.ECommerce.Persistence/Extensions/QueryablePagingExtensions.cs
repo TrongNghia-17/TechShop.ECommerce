@@ -1,4 +1,4 @@
-﻿namespace TechShop.ECommerce.Persistence.Common.Extensions;
+﻿namespace TechShop.ECommerce.Persistence.Extensions;
 
 public static class QueryablePagingExtensions
 {

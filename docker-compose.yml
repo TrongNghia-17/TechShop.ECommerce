@@ -6,13 +6,13 @@ services:
     environment:
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: secret
-      POSTGRES_DB: dotnetHero
+      POSTGRES_DB: TechShopDb
     ports:
-      - "5432:5432"
+      - "5433:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U admin -d dotnetHero"]
+      test: ["CMD-SHELL", "pg_isready -U admin -d TechShopDb"]
       interval: 10s
       timeout: 5s
       retries: 5

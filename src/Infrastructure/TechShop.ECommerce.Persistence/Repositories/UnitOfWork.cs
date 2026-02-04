@@ -1,4 +1,4 @@
-﻿using TechShop.ECommerce.Persistence.Common.DatabaseContext;
+﻿using TechShop.ECommerce.Persistence.DatabaseContext;
 
 namespace TechShop.ECommerce.Persistence.Repositories;
 

@@ -10,6 +10,5 @@ global using TechShop.ECommerce.Domain.Common;
 global using TechShop.ECommerce.Domain.Entities.Categories;
 global using TechShop.ECommerce.Domain.Entities.Orders;
 global using TechShop.ECommerce.Domain.Entities.Products;
-global using TechShop.ECommerce.Persistence.Common.DatabaseContext;
-global using TechShop.ECommerce.Persistence.Common.Extensions;
+global using TechShop.ECommerce.Persistence.DatabaseContext;
 global using TechShop.ECommerce.Persistence.Repositories;

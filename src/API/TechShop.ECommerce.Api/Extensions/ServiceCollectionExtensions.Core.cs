@@ -1,6 +1,4 @@
-﻿using TechShop.ECommerce.Persistence.Providers.SqlServer;
-
-namespace TechShop.ECommerce.Api.Extensions;
+﻿namespace TechShop.ECommerce.Api.Extensions;
 
 public static partial class ServiceCollectionExtensions
 {
@@ -8,7 +6,7 @@ public static partial class ServiceCollectionExtensions
     {
         services.AddApplicationServices();
         services.AddInfrastructureServices(config);
-        services.AddSqlServerPersistence(config);
+        services.AddPersistenceServices(config);
         services.AddIdentityServices(config);
 
         services.AddControllers();

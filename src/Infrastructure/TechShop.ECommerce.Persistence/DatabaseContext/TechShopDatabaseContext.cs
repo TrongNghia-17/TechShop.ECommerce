@@ -1,4 +1,4 @@
-﻿namespace TechShop.ECommerce.Persistence.Common.DatabaseContext;
+﻿namespace TechShop.ECommerce.Persistence.DatabaseContext;
 
 public class TechShopDatabaseContext(
     DbContextOptions<TechShopDatabaseContext> options,

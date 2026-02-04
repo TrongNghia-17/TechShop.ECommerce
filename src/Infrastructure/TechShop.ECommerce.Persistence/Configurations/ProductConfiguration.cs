@@ -1,4 +1,4 @@
-﻿namespace TechShop.ECommerce.Persistence.Common.Configurations;
+﻿namespace TechShop.ECommerce.Persistence.Configurations;
 
 public class ProductConfiguration : IEntityTypeConfiguration<Product>
 {

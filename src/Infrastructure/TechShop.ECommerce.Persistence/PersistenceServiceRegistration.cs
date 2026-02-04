@@ -1,14 +1,14 @@
-﻿namespace TechShop.ECommerce.Persistence.Providers.Postgres;
+﻿namespace TechShop.ECommerce.Persistence;
 
-public static class PostgresPersistenceRegistration
+public static class PersistenceServiceRegistration
 {
-    public static IServiceCollection AddPostgresPersistence(
+    public static IServiceCollection AddPersistenceServices(
         this IServiceCollection services,
         IConfiguration configuration)
     {
         services.AddDbContext<TechShopDatabaseContext>(options =>
             options.UseNpgsql(
-                configuration.GetConnectionString("Postgres")));
+                configuration.GetConnectionString("PostgreSQL")));
 
         services.AddScoped<IProductRepository, ProductRepository>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
