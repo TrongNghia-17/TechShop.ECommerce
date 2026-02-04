@@ -7,14 +7,13 @@ public class ProductRepository(TechShopDatabaseContext context)
     {
         return await context.Products
             .AsNoTracking()
-            .FirstOrDefaultAsync(p => p.Id == id && !p.IsDeleted);
+            .FirstOrDefaultAsync(p => p.Id == id);
     }
 
     public async Task<IReadOnlyList<ProductDto>> GetAllAsync()
     {
         return await context.Products
             .AsNoTracking()
-            .Where(p => !p.IsDeleted)
             .Select(p => new ProductDto(
                 p.Id,
                 p.Name,
@@ -32,8 +31,7 @@ public class ProductRepository(TechShopDatabaseContext context)
         CancellationToken token)
     {
         var query = context.Products
-            .AsNoTracking()
-            .Where(p => !p.IsDeleted);
+            .AsNoTracking();
 
         if (categoryId is not null)
             query = query.Where(p => p.CategoryId == categoryId.Value);
@@ -61,14 +59,13 @@ public class ProductRepository(TechShopDatabaseContext context)
     public async Task<bool> ExistsAsync(Guid id)
     {
         return await context.Products
-            .AnyAsync(p => p.Id == id && !p.IsDeleted);
+            .AnyAsync(p => p.Id == id);
     }
 
     public async Task<bool> ExistsByNameAsync(string name, Guid? excludeId = null)
     {
         return await context.Products.AnyAsync(p =>
             p.Name == name &&
-            !p.IsDeleted &&
             (!excludeId.HasValue || p.Id != excludeId.Value));
     }
 

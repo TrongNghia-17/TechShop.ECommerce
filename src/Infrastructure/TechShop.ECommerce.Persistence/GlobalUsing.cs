@@ -2,6 +2,7 @@
 global using Microsoft.EntityFrameworkCore.Metadata.Builders;
 global using Microsoft.Extensions.Configuration;
 global using Microsoft.Extensions.DependencyInjection;
+global using TechShop.ECommerce.Application.Contracts.Identity;
 global using TechShop.ECommerce.Application.Contracts.Persistence;
 global using TechShop.ECommerce.Application.Features.Products.Dtos;
 global using TechShop.ECommerce.Application.Models;
@@ -9,6 +10,6 @@ global using TechShop.ECommerce.Domain.Common;
 global using TechShop.ECommerce.Domain.Entities.Categories;
 global using TechShop.ECommerce.Domain.Entities.Orders;
 global using TechShop.ECommerce.Domain.Entities.Products;
-global using TechShop.ECommerce.Persistence.DatabaseContext;
-global using TechShop.ECommerce.Persistence.Extensions;
+global using TechShop.ECommerce.Persistence.Common.DatabaseContext;
+global using TechShop.ECommerce.Persistence.Common.Extensions;
 global using TechShop.ECommerce.Persistence.Repositories;

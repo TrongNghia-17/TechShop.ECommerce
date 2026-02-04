@@ -1,6 +1,6 @@
 ﻿using TechShop.ECommerce.Domain.Entities.Orders;
 
-namespace TechShop.ECommerce.Persistence.Configurations;
+namespace TechShop.ECommerce.Persistence.Common.Configurations;
 
 public class OrderConfiguration : IEntityTypeConfiguration<Order>
 {

@@ -3,20 +3,18 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using TechShop.ECommerce.Persistence.DatabaseContext;
+using TechShop.ECommerce.Persistence.Common.DatabaseContext;
+
 
 #nullable disable
 
 namespace TechShop.ECommerce.Persistence.Migrations
 {
     [DbContext(typeof(TechShopDatabaseContext))]
-    [Migration("20260204045304_InitialCreateWithGuid")]
-    partial class InitialCreateWithGuid
+    partial class TechShopDatabaseContextModelSnapshot : ModelSnapshot
     {
-        /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

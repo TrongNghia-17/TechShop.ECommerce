@@ -1,6 +1,4 @@
-﻿using TechShop.ECommerce.Application.Contracts.Identity;
-
-namespace TechShop.ECommerce.Persistence.DatabaseContext;
+﻿namespace TechShop.ECommerce.Persistence.Common.DatabaseContext;
 
 public class TechShopDatabaseContext(
     DbContextOptions<TechShopDatabaseContext> options,
@@ -15,6 +13,18 @@ public class TechShopDatabaseContext(
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(TechShopDatabaseContext).Assembly);
+
+        modelBuilder.Entity<Product>()
+            .HasQueryFilter("SoftDelete", p => !p.IsDeleted);
+
+        modelBuilder.Entity<Category>()
+            .HasQueryFilter("SoftDelete", c => !c.IsDeleted);
+
+        modelBuilder.Entity<Order>()
+            .HasQueryFilter("SoftDelete", o => !o.IsDeleted);
+
+        modelBuilder.Entity<OrderItem>()
+            .HasQueryFilter("SoftDelete", oi => !oi.IsDeleted);
 
         base.OnModelCreating(modelBuilder);
     }

@@ -1,4 +1,6 @@
-﻿namespace TechShop.ECommerce.Persistence.Repositories;
+﻿using TechShop.ECommerce.Persistence.Common.DatabaseContext;
+
+namespace TechShop.ECommerce.Persistence.Repositories;
 
 public class UnitOfWork(TechShopDatabaseContext context) : IUnitOfWork
 {
