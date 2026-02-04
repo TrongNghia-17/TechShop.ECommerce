@@ -3,7 +3,7 @@
 public class ProductRepository(TechShopDatabaseContext context)
     : IProductRepository
 {
-    public async Task<Product?> GetByIdAsync(int id)
+    public async Task<Product?> GetByIdAsync(Guid id)
     {
         return await context.Products
             .AsNoTracking()
@@ -27,7 +27,7 @@ public class ProductRepository(TechShopDatabaseContext context)
     public Task<PagedResult<ProductDto>> GetPagedAsync(
         int pageNumber,
         int pageSize,
-        int? categoryId,
+        Guid? categoryId,
         string? sort,
         CancellationToken token)
     {
@@ -53,13 +53,13 @@ public class ProductRepository(TechShopDatabaseContext context)
         await context.Products.AddAsync(product);
     }
 
-    public async Task<bool> ExistsAsync(int id)
+    public async Task<bool> ExistsAsync(Guid id)
     {
         return await context.Products
             .AnyAsync(p => p.Id == id && !p.IsDeleted);
     }
 
-    public async Task<bool> ExistsByNameAsync(string name, int? excludeId = null)
+    public async Task<bool> ExistsByNameAsync(string name, Guid? excludeId = null)
     {
         return await context.Products.AnyAsync(p =>
             p.Name == name &&
@@ -67,7 +67,7 @@ public class ProductRepository(TechShopDatabaseContext context)
             (!excludeId.HasValue || p.Id != excludeId.Value));
     }
 
-    public async Task<bool> HasOrdersAsync(int productId)
+    public async Task<bool> HasOrdersAsync(Guid productId)
     {
         return await context.OrderItems
             .AnyAsync(oi => oi.ProductId == productId);

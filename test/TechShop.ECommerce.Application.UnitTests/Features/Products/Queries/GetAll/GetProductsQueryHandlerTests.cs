@@ -32,12 +32,12 @@ public class GetProductsQueryHandlerTests
         result.Count.ShouldBe(2);
 
         // Assert - data 
-        result[0].Id.ShouldBe(1);
+        result[0].Id.ShouldNotBe(Guid.Empty);
         result[0].Name.ShouldBe("Product 1");
         result[0].Price.ShouldBe(100);
         result[0].CategoryName.ShouldBe("Category A");
 
-        result[1].Id.ShouldBe(2);
+        result[1].Id.ShouldNotBe(Guid.Empty);
         result[1].Name.ShouldBe("Product 2");
         result[1].Price.ShouldBe(200);
         result[1].CategoryName.ShouldBe("Category B");

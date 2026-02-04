@@ -18,8 +18,5 @@ public class UpdateProductCommandValidator : AbstractValidator<UpdateProductComm
 
         RuleFor(x => x.Price)
             .GreaterThan(0);
-
-        RuleFor(x => x.CategoryId)
-            .GreaterThan(0);
     }
 }

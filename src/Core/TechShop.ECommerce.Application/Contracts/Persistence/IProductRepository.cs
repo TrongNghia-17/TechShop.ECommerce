@@ -2,17 +2,17 @@
 
 public interface IProductRepository
 {
-    Task<Product?> GetByIdAsync(int id);
+    Task<Product?> GetByIdAsync(Guid id);
     Task<IReadOnlyList<ProductDto>> GetAllAsync();
     Task<PagedResult<ProductDto>> GetPagedAsync(
         int pageNumber,
         int pageSize,
-        int? categoryId,
+        Guid? categoryId,
         string? sort,
         CancellationToken token);
     Task AddAsync(Product product);
-    Task<bool> ExistsAsync(int id);
-    Task<bool> ExistsByNameAsync(string name, int? excludeId = null);
-    Task<bool> HasOrdersAsync(int productId);
+    Task<bool> ExistsAsync(Guid id);
+    Task<bool> ExistsByNameAsync(string name, Guid? excludeId = null);
+    Task<bool> HasOrdersAsync(Guid productId);
 
 }

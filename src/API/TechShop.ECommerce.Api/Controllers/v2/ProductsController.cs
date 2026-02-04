@@ -11,14 +11,14 @@ public class ProductsController(IMediator mediator) : ControllerBase
     public async Task<ActionResult<PagedResult<ProductDto>>> Get(
         [FromQuery] int pageNumber = 1,
         [FromQuery] int pageSize = 10,
-        [FromQuery] int? categoryId = null,
+        [FromQuery] Guid? categoryId = null,
         [FromQuery] string? sort = "price")
     {
         return Ok(await mediator.Send(new GetProductsPagedQuery(pageNumber, pageSize, categoryId, sort)));
     }
 
     [HttpGet("{id}")]
-    public async Task<ActionResult<ProductDetailsDto>> GetById(int id, CancellationToken ct)
+    public async Task<ActionResult<ProductDetailsDto>> GetById(Guid id, CancellationToken ct)
     {
         var dto = await mediator.Send(new GetProductDetailsQuery(id), ct);
 
@@ -55,7 +55,7 @@ public class ProductsController(IMediator mediator) : ControllerBase
     [ProducesDefaultResponseType]
     [EnableRateLimiting("ProductsWrite")]
     public async Task<ActionResult> Put(
-        int id,
+        Guid id,
         UpdateProductCommand command,
         [FromServices] IOutputCacheStore cache,
         CancellationToken token)
@@ -71,7 +71,7 @@ public class ProductsController(IMediator mediator) : ControllerBase
     [ProducesDefaultResponseType]
     [EnableRateLimiting("ProductsWrite")]
     public async Task<ActionResult> Delete(
-        int id,
+        Guid id,
         [FromServices] IOutputCacheStore cache,
         CancellationToken token)
     {

@@ -1,10 +1,10 @@
 ﻿namespace TechShop.ECommerce.Application.Features.Products.Commands.Update;
 
 public sealed record UpdateProductCommand(
-    int Id,
+    Guid Id,
     string Name,
     decimal Price,
-    int CategoryId,
+    Guid CategoryId,
     string? Summary,
     string? Description
 ) : IRequest<Unit>;

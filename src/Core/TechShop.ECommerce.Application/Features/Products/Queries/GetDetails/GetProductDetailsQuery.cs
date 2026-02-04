@@ -1,6 +1,6 @@
 ﻿namespace TechShop.ECommerce.Application.Features.Products.Queries.GetDetails;
 
-public sealed record GetProductDetailsQuery(int Id)
+public sealed record GetProductDetailsQuery(Guid Id)
     : IRequest<ProductDetailsDto>;
 
 

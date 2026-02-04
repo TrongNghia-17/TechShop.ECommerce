@@ -26,9 +26,6 @@ public class CreateProductCommandValidator : AbstractValidator<CreateProductComm
             .LessThanOrEqualTo(1000000).WithMessage("{PropertyName} cannot exceed 1,000,000")
             .PrecisionScale(18, 2, false).WithMessage("{PropertyName} must have maximum 18 digits and 2 decimal places");
 
-        RuleFor(p => p.CategoryId)
-            .GreaterThan(0).WithMessage("{PropertyName} must be greater than 0");
-
         RuleFor(p => p)
             .MustAsync(ProductNameUnique)
             .WithMessage("Product already exists");

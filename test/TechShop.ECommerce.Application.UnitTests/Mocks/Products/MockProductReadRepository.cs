@@ -9,8 +9,8 @@ public static class MockProductReadRepository
     {
         var productDtos = new List<ProductDto>
         {
-            new(1, "Product 1", 100, "Category A"),
-            new(2, "Product 2", 200, "Category B")
+            new(Guid.NewGuid(), "Product 1", 100, "Category A"),
+            new(Guid.NewGuid(), "Product 2", 200, "Category B")
         };
 
         var mockRepo = new Mock<IProductRepository>();

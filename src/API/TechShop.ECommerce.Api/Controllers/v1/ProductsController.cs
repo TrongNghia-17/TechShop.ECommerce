@@ -10,7 +10,7 @@ public class ProductsController(IMediator mediator) : ControllerBase
         => Ok(await mediator.Send(new GetProductsQuery()));
 
     [HttpGet("{id}")]
-    public async Task<ActionResult<ProductDetailsDto>> Get(int id)
+    public async Task<ActionResult<ProductDetailsDto>> Get(Guid id)
         => Ok(await mediator.Send(new GetProductDetailsQuery(id)));
 
     [HttpPost]
@@ -28,7 +28,7 @@ public class ProductsController(IMediator mediator) : ControllerBase
     [ProducesResponseType(400)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesDefaultResponseType]
-    public async Task<ActionResult> Put(int id, UpdateProductCommand command)
+    public async Task<ActionResult> Put(Guid id, UpdateProductCommand command)
     {
         var updateCommand = command with { Id = id };
         await mediator.Send(updateCommand);
@@ -39,7 +39,7 @@ public class ProductsController(IMediator mediator) : ControllerBase
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesDefaultResponseType]
-    public async Task<ActionResult> Delete(int id)
+    public async Task<ActionResult> Delete(Guid id)
     {
         await mediator.Send(new DeleteProductCommand(id));
         return NoContent();

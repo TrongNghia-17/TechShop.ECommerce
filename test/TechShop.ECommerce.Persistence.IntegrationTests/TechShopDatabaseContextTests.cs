@@ -29,7 +29,7 @@ public class TechShopDatabaseContextTests
         var product = Product.Create(
             name: "Test Product",
             price: 100_000m,
-            categoryId: 1
+            categoryId: Guid.NewGuid()
         );
 
         // Act
@@ -48,7 +48,7 @@ public class TechShopDatabaseContextTests
         var product = Product.Create(
             name: "Test Product",
             price: 100_000m,
-            categoryId: 1
+            categoryId: Guid.NewGuid()
         );
 
         await _techShopDatabaseContext.Products.AddAsync(product);
@@ -72,7 +72,7 @@ public class TechShopDatabaseContextTests
         var product = Product.Create(
             name: "Test Product",
             price: 100_000m,
-            categoryId: 1
+            categoryId: Guid.NewGuid()
         );
 
         await _techShopDatabaseContext.Products.AddAsync(product);

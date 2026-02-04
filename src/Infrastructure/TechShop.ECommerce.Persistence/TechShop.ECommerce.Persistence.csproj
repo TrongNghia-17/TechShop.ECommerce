@@ -15,4 +15,8 @@
 		<ProjectReference Include="..\..\Core\TechShop.ECommerce.Application\TechShop.ECommerce.Application.csproj" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Folder Include="Migrations\" />
+	</ItemGroup>
+
 </Project>

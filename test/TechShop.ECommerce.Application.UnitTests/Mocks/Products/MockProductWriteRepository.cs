@@ -11,7 +11,7 @@ public static class MockProductWriteRepository
         mockRepo
             .Setup(r => r.ExistsByNameAsync(
                 It.IsAny<string>(),
-                It.IsAny<int?>()))
+                It.IsAny<Guid?>()))
             .ReturnsAsync(false);
 
         return mockRepo;

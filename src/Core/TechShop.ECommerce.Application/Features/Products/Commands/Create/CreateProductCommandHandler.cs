@@ -4,9 +4,9 @@ public sealed class CreateProductCommandHandler(
     IProductRepository productRepository,
     IUnitOfWork unitOfWork,
     IAppLogger<CreateProductCommandHandler> logger)
-    : IRequestHandler<CreateProductCommand, int>
+    : IRequestHandler<CreateProductCommand, Guid>
 {
-    public async Task<int> Handle(
+    public async Task<Guid> Handle(
         CreateProductCommand request,
         CancellationToken cancellationToken)
     {

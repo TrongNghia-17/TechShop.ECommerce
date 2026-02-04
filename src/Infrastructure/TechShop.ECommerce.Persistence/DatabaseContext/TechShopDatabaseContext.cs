@@ -41,7 +41,7 @@ public class TechShopDatabaseContext(
             .Where(q => q.State == EntityState.Deleted))
         {
             entry.State = EntityState.Modified;
-            entry.Entity.MarkAsDeleted();
+            entry.Entity.MarkAsDeleted(userId);
         }
 
         return base.SaveChangesAsync(cancellationToken);

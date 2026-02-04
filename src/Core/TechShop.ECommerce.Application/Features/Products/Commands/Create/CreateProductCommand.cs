@@ -3,8 +3,8 @@
 public sealed record CreateProductCommand(
     string Name,
     decimal Price,
-    int CategoryId,
+    Guid CategoryId,
     string? Summary,
     string? Description
-) : IRequest<int>;
+) : IRequest<Guid>;
 

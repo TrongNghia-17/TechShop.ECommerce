@@ -7,7 +7,7 @@ public class Product : BaseEntity
     public string? Description { get; private set; }
     public decimal Price { get; private set; }
 
-    public int CategoryId { get; private set; }
+    public Guid CategoryId { get; private set; }
     public Category Category { get; private set; } = null!;
 
     private Product() { }
@@ -15,7 +15,7 @@ public class Product : BaseEntity
     public Product(
         string name,
         decimal price,
-        int categoryId,
+        Guid categoryId,
         string? summary = null,
         string? description = null)
     {
@@ -29,7 +29,7 @@ public class Product : BaseEntity
     public static Product Create(
         string name,
         decimal price,
-        int categoryId,
+        Guid categoryId,
         string? summary = null,
         string? description = null)
         => new(name, price, categoryId, summary, description);
@@ -66,7 +66,7 @@ public class Product : BaseEntity
     /// - Once a product has been ordered, its category cannot be changed
     ///   to ensure data consistency for historical orders.
     /// </summary>
-    public void ChangeCategory(int newCategoryId, bool hasOrders)
+    public void ChangeCategory(Guid newCategoryId, bool hasOrders)
     {
         if (CategoryId == newCategoryId)
             return;

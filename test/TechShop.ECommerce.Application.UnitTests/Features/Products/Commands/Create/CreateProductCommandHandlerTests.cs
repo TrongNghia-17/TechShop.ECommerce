@@ -31,7 +31,7 @@ public class CreateProductCommandHandlerTests
         var command = new CreateProductCommand(
             Name: "Test Product",
             Price: 100m,
-            CategoryId: 1,
+            CategoryId: Guid.NewGuid(),
             Summary: "Summary",
             Description: "Description"
         );
@@ -42,7 +42,6 @@ public class CreateProductCommandHandlerTests
             .Setup(r => r.AddAsync(It.IsAny<Product>()))
             .Callback<Product>(product =>
             {
-                product.SetId(1);
                 createdProduct = product;
             })
             .Returns(Task.CompletedTask);
@@ -51,7 +50,8 @@ public class CreateProductCommandHandlerTests
         var result = await handler.Handle(command, CancellationToken.None);
 
         // Assert - Result
-        result.ShouldBe(1);
+        result.ShouldNotBe(Guid.Empty);
+        result.ShouldBe(createdProduct!.Id);
 
         // Assert - Interactions
         _productRepository.Verify(
