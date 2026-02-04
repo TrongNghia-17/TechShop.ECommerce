@@ -8,19 +8,11 @@ public static class WebApplicationExtensions
 
         if (app.Environment.IsDevelopment())
         {
-            app.UseSwagger();
-            app.UseSwaggerUI(options =>
-            {
-                var provider = app.Services.GetRequiredService<IApiVersionDescriptionProvider>();
-                foreach (var desc in provider.ApiVersionDescriptions)
-                {
-                    options.SwaggerEndpoint($"/swagger/{desc.GroupName}/swagger.json", $"TechShop API {desc.GroupName}");
-                }
-            });
+            app.MapOpenApi("/openapi/{documentName}.json");
 
             app.MapScalarApiReference(options =>
             {
-                options.OpenApiRoutePattern = "/swagger/{documentName}/swagger.json";
+                options.OpenApiRoutePattern = "/openapi/{documentName}.json";
             });
         }
 

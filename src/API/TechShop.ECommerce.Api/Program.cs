@@ -10,7 +10,7 @@ builder.Services
     .AddOutputCachingPolicies()
     .AddApiVersioningWithExplorer()
     .AddCorsAll()
-    .AddSwaggerWithVersioning();
+    .AddOpenApiWithVersioning();
 
 var app = builder.Build();
 
