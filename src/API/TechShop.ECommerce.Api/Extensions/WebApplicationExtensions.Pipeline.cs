@@ -13,6 +13,9 @@ public static class WebApplicationExtensions
             app.MapScalarApiReference(options =>
             {
                 options.OpenApiRoutePattern = "/openapi/{documentName}.json";
+
+                options
+                   .WithTheme(ScalarTheme.Kepler);
             });
         }
 
