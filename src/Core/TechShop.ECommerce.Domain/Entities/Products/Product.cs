@@ -12,7 +12,7 @@ public class Product : BaseEntity
 
     private Product() { }
 
-    public Product(
+    private Product(
         string name,
         decimal price,
         Guid categoryId,
@@ -78,13 +78,5 @@ public class Product : BaseEntity
                 "Cannot change category of a product that has orders");
 
         CategoryId = newCategoryId;
-    }
-
-    public void Delete()
-    {
-        if (IsDeleted)
-            throw new DomainException("Product already deleted");
-
-        IsDeleted = true;
     }
 }

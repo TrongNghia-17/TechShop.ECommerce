@@ -17,7 +17,7 @@ public sealed class DeleteProductCommandHandler(
         var product = await productRepository.GetByIdAsync(request.Id)
             ?? throw new NotFoundException(nameof(Product), request.Id);
 
-        product.Delete();
+        productRepository.Delete(product);
 
         await unitOfWork.SaveChangesAsync(cancellationToken);
 

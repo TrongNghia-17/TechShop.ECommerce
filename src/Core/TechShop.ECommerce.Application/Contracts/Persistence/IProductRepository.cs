@@ -11,6 +11,7 @@ public interface IProductRepository
         string? sort,
         CancellationToken token);
     Task AddAsync(Product product);
+    void Delete(Product product);
     Task<bool> ExistsAsync(Guid id);
     Task<bool> ExistsByNameAsync(string name, Guid? excludeId = null);
     Task<bool> HasOrdersAsync(Guid productId);

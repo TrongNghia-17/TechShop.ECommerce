@@ -53,6 +53,11 @@ public class ProductRepository(TechShopDatabaseContext context)
         await context.Products.AddAsync(product);
     }
 
+    public void Delete(Product product)
+    {
+        context.Products.Remove(product);
+    }
+
     public async Task<bool> ExistsAsync(Guid id)
     {
         return await context.Products
