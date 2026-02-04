@@ -6,7 +6,6 @@ global using Microsoft.AspNetCore.OutputCaching;
 global using Microsoft.AspNetCore.RateLimiting;
 global using Microsoft.Extensions.Options;
 global using Microsoft.Net.Http.Headers;
-global using Microsoft.OpenApi.Models;
 global using Scalar.AspNetCore;
 global using Serilog;
 global using Swashbuckle.AspNetCore.SwaggerGen;

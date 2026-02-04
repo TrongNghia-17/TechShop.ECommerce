@@ -1,4 +1,6 @@
-﻿namespace TechShop.ECommerce.Api.Swagger;
+﻿using Microsoft.OpenApi;
+
+namespace TechShop.ECommerce.Api.Swagger;
 
 public sealed class ConfigureSwaggerOptions(
     IApiVersionDescriptionProvider provider)
