@@ -16,6 +16,6 @@ public static class HttpCachingExtensions
         response.Headers[HeaderNames.CacheControl] = $"private, max-age={maxAgeSeconds}";
     }
 
-    public static string BuildWeakEtag(int id, DateTime lastModifiedUtc)
+    public static string BuildWeakEtag(Guid id, DateTimeOffset lastModifiedUtc)
         => $"W/\"product-{id}-{lastModifiedUtc.ToUniversalTime().Ticks}\"";
 }

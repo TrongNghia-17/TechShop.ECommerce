@@ -1,5 +1,4 @@
-﻿using TechShop.ECommerce.Persistence.DatabaseContext;
-using TechShop.ECommerce.Persistence.Extensions;
+﻿using TechShop.ECommerce.Persistence.Extensions;
 
 namespace TechShop.ECommerce.Persistence.Repositories;
 
