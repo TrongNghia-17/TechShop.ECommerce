@@ -20,9 +20,5 @@ public class CategoryConfiguration : IEntityTypeConfiguration<Category>
             .IsUnique();
 
         // Relationships
-        builder.HasMany(c => c.Products)
-            .WithOne(p => p.Category)
-            .HasForeignKey(p => p.CategoryId)
-            .OnDelete(DeleteBehavior.Restrict);
     }
 }
