@@ -20,9 +20,6 @@ public class OrderConfiguration : IEntityTypeConfiguration<Order>
             .HasConversion<string>()
             .HasMaxLength(50);
 
-        builder.Property(o => o.ShippingAddress)
-            .HasMaxLength(500);
-
         builder.Property(o => o.Notes)
             .HasMaxLength(1000);
 
@@ -36,6 +33,25 @@ public class OrderConfiguration : IEntityTypeConfiguration<Order>
             .WithOne()
             .HasForeignKey(oi => oi.OrderId)
             .OnDelete(DeleteBehavior.Cascade);
+
+        builder.OwnsOne(o => o.ShippingAddress, address =>
+        {
+            address.Property(a => a.Street)
+                .HasMaxLength(200)
+                .HasColumnName("ShippingStreet");
+
+            address.Property(a => a.City)
+                .HasMaxLength(100)
+                .HasColumnName("ShippingCity");
+
+            address.Property(a => a.PostalCode)
+                .HasMaxLength(20)
+                .HasColumnName("ShippingPostalCode");
+
+            address.Property(a => a.Country)
+                .HasMaxLength(100)
+                .HasColumnName("ShippingCountry");
+        });
 
     }
 }

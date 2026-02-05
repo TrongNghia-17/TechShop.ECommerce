@@ -1,4 +1,6 @@
-﻿namespace TechShop.ECommerce.Domain.Entities.Orders;
+﻿using TechShop.ECommerce.Domain.ValueObjects;
+
+namespace TechShop.ECommerce.Domain.Entities.Orders;
 
 public class Order : BaseEntity
 {
@@ -6,7 +8,7 @@ public class Order : BaseEntity
     public DateTimeOffset OrderDate { get; private set; }
     public OrderStatus Status { get; private set; }
 
-    public string? ShippingAddress { get; private set; }
+    public Address? ShippingAddress { get; private set; }
     public string? Notes { get; private set; }
 
     private readonly List<OrderItem> _orderItems = [];
@@ -17,7 +19,7 @@ public class Order : BaseEntity
 
     private Order() { }
 
-    public Order(string userId, string? shippingAddress = null, string? notes = null)
+    public Order(string userId, Address? shippingAddress = null, string? notes = null)
     {
         UserId = userId;
         ShippingAddress = shippingAddress;
@@ -88,7 +90,7 @@ public class Order : BaseEntity
         Status = OrderStatus.Cancelled;
     }
 
-    public void UpdateShippingAddress(string address)
+    public void UpdateShippingAddress(Address address)
     {
         if (Status != OrderStatus.Pending)
             throw new DomainException("Cannot change address after confirmation");
