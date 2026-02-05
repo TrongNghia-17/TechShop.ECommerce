@@ -15,9 +15,12 @@ public static class PersistenceServiceRegistration
 
             options.UseAsyncSeeding(async (context, _, token) =>
             {
-                await TechShopDataSeeder.SeedAsync(
-                    (TechShopDatabaseContext)context,
-                    token);
+                var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+
+                if (env == "Development")
+                    await TechShopDataSeeder.SeedAsync(
+                        (TechShopDatabaseContext)context,
+                        token);
             });
         });
 

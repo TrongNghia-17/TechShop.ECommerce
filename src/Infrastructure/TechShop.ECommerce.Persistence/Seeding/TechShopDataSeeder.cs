@@ -6,6 +6,8 @@ public static class TechShopDataSeeder
         TechShopDatabaseContext context,
         CancellationToken token)
     {
+        if (await context.Categories.AnyAsync(token)) return;
+
         var laptopCategory = Category.Create("Laptop");
         var phoneCategory = Category.Create("Smartphone");
 
