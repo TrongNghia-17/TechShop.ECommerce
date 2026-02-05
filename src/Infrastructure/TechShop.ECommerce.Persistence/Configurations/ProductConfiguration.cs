@@ -33,7 +33,7 @@ public class ProductConfiguration : IEntityTypeConfiguration<Product>
             .OnDelete(DeleteBehavior.Restrict);
 
         builder.HasMany<OrderItem>()
-            .WithOne(oi => oi.Product)
+            .WithOne()
             .HasForeignKey(oi => oi.ProductId)
             .OnDelete(DeleteBehavior.Restrict);
     }

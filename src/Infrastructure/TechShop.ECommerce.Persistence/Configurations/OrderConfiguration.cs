@@ -1,6 +1,4 @@
-﻿using TechShop.ECommerce.Domain.Entities.Orders;
-
-namespace TechShop.ECommerce.Persistence.Configurations;
+﻿namespace TechShop.ECommerce.Persistence.Configurations;
 
 public class OrderConfiguration : IEntityTypeConfiguration<Order>
 {
@@ -39,7 +37,7 @@ public class OrderConfiguration : IEntityTypeConfiguration<Order>
 
         // Relationships
         builder.HasMany(o => o.OrderItems)
-            .WithOne(oi => oi.Order)
+            .WithOne()
             .HasForeignKey(oi => oi.OrderId)
             .OnDelete(DeleteBehavior.Cascade);
     }

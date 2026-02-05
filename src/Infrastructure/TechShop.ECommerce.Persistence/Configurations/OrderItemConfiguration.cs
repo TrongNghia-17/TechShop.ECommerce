@@ -1,6 +1,4 @@
-﻿using TechShop.ECommerce.Domain.Entities.Orders;
-
-namespace TechShop.ECommerce.Persistence.Configurations;
+﻿namespace TechShop.ECommerce.Persistence.Configurations;
 
 public class OrderItemConfiguration : IEntityTypeConfiguration<OrderItem>
 {
@@ -10,25 +8,23 @@ public class OrderItemConfiguration : IEntityTypeConfiguration<OrderItem>
         builder.ToTable("OrderItems");
 
         // Composite unique constraint
-        builder.HasIndex(oi => new { oi.OrderId, oi.ProductId })
-            .IsUnique();
+        builder.HasKey(oi => new { oi.OrderId, oi.ProductId });
 
         // Properties
         builder.Property(oi => oi.Quantity)
-            .IsRequired()
-            .HasDefaultValue(1);
+            .IsRequired();
 
         builder.Property(oi => oi.UnitPrice)
             .HasPrecision(18, 2)
             .IsRequired();
 
         // Relationships
-        builder.HasOne(oi => oi.Order)
+        builder.HasOne<Order>()
             .WithMany(o => o.OrderItems)
             .HasForeignKey(oi => oi.OrderId)
             .OnDelete(DeleteBehavior.Cascade);
 
-        builder.HasOne(oi => oi.Product)
+        builder.HasOne<Product>()
             .WithMany()
             .HasForeignKey(oi => oi.ProductId)
             .OnDelete(DeleteBehavior.Restrict);
