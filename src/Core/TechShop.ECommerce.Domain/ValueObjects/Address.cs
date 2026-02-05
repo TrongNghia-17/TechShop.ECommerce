@@ -2,10 +2,10 @@
 
 public sealed class Address
 {
-    public string Street { get; private set; }
-    public string City { get; private set; }
-    public string PostalCode { get; private set; }
-    public string Country { get; private set; }
+    public string Street { get; private set; } = null!;
+    public string City { get; private set; } = null!;
+    public string PostalCode { get; private set; } = null!;
+    public string Country { get; private set; } = null!;
 
     private Address() { }
 

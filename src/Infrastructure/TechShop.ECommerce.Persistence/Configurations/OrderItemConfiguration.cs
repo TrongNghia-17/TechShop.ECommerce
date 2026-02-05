@@ -9,6 +9,7 @@ public class OrderItemConfiguration : IEntityTypeConfiguration<OrderItem>
 
         // Composite unique constraint
         builder.HasKey(oi => new { oi.OrderId, oi.ProductId });
+        builder.HasIndex(oi => oi.ProductId);
 
         // Properties
         builder.Property(oi => oi.Quantity)

@@ -1,6 +1,4 @@
-﻿using TechShop.ECommerce.Domain.Entities.Categories;
-
-namespace TechShop.ECommerce.Persistence.Configurations;
+﻿namespace TechShop.ECommerce.Persistence.Configurations;
 
 public class CategoryConfiguration : IEntityTypeConfiguration<Category>
 {

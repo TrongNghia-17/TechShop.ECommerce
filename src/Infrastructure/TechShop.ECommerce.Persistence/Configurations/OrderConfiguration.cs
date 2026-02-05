@@ -27,6 +27,7 @@ public class OrderConfiguration : IEntityTypeConfiguration<Order>
         builder.HasIndex(o => o.UserId);
         builder.HasIndex(o => o.OrderDate);
         builder.HasIndex(o => o.Status);
+        builder.HasIndex(o => new { o.UserId, o.OrderDate });
 
         // Relationships
         builder.HasMany(o => o.OrderItems)
