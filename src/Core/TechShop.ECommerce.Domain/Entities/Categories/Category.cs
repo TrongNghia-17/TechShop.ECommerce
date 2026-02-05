@@ -1,11 +1,24 @@
-﻿using TechShop.ECommerce.Domain.Entities.Products;
-
-namespace TechShop.ECommerce.Domain.Entities.Categories;
+﻿namespace TechShop.ECommerce.Domain.Entities.Categories;
 
 public class Category : BaseEntity
 {
-    public required string Name { get; set; }
-    public string? Description { get; set; }
+    public string Name { get; private set; } = null!;
+    public string? Description { get; private set; }
 
-    public ICollection<Product> Products { get; set; } = [];
+    public ICollection<Product> Products { get; private set; } = new List<Product>();
+
+    private Category() { }
+
+    public static Category Create(string name, string? description = null)
+    {
+        if (string.IsNullOrWhiteSpace(name))
+            throw new ArgumentException("Category name cannot be empty.", nameof(name));
+
+        return new Category
+        {
+            Name = name,
+            Description = description
+        };
+    }
 }
+

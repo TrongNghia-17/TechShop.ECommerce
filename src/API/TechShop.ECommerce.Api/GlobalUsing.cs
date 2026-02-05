@@ -1,10 +1,9 @@
 ﻿global using Asp.Versioning;
-global using Asp.Versioning.ApiExplorer;
 global using MediatR;
 global using Microsoft.AspNetCore.Mvc;
 global using Microsoft.AspNetCore.OutputCaching;
 global using Microsoft.AspNetCore.RateLimiting;
-global using Microsoft.Extensions.Options;
+global using Microsoft.EntityFrameworkCore;
 global using Microsoft.Net.Http.Headers;
 global using Microsoft.OpenApi;
 global using Scalar.AspNetCore;
@@ -29,6 +28,6 @@ global using TechShop.ECommerce.Application.Models.Identity;
 global using TechShop.ECommerce.Identity;
 global using TechShop.ECommerce.Infrastructure;
 global using TechShop.ECommerce.Persistence;
-
+global using TechShop.ECommerce.Persistence.DatabaseContext;
 
 

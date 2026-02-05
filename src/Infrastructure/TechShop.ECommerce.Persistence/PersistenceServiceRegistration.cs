@@ -1,4 +1,6 @@
-﻿namespace TechShop.ECommerce.Persistence;
+﻿using TechShop.ECommerce.Persistence.Seeding;
+
+namespace TechShop.ECommerce.Persistence;
 
 public static class PersistenceServiceRegistration
 {
@@ -7,8 +9,17 @@ public static class PersistenceServiceRegistration
         IConfiguration configuration)
     {
         services.AddDbContext<TechShopDatabaseContext>(options =>
+        {
             options.UseNpgsql(
-                configuration.GetConnectionString("PostgreSQL")));
+                configuration.GetConnectionString("PostgreSQL"));
+
+            options.UseAsyncSeeding(async (context, _, token) =>
+            {
+                await TechShopDataSeeder.SeedAsync(
+                    (TechShopDatabaseContext)context,
+                    token);
+            });
+        });
 
         services.AddScoped<IProductRepository, ProductRepository>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
