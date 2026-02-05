@@ -15,14 +15,10 @@ public class OrderConfiguration : IEntityTypeConfiguration<Order>
         builder.Property(o => o.OrderDate)
             .IsRequired();
 
-        builder.Property(o => o.TotalPrice)
-            .HasPrecision(18, 2)
-            .IsRequired();
-
         builder.Property(o => o.Status)
             .IsRequired()
-            .HasConversion<int>()
-            .HasDefaultValue(OrderStatus.Pending);
+            .HasConversion<string>()
+            .HasMaxLength(50);
 
         builder.Property(o => o.ShippingAddress)
             .HasMaxLength(500);
@@ -40,5 +36,6 @@ public class OrderConfiguration : IEntityTypeConfiguration<Order>
             .WithOne()
             .HasForeignKey(oi => oi.OrderId)
             .OnDelete(DeleteBehavior.Cascade);
+
     }
 }

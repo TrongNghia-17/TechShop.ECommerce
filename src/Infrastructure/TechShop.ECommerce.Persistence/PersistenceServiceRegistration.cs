@@ -22,6 +22,17 @@ public static class PersistenceServiceRegistration
                         (TechShopDatabaseContext)context,
                         token);
             });
+
+            options.UseSeeding((context, _) =>
+            {
+                var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+
+                if (env == "Development")
+                {
+                    TechShopDataSeeder.Seed(
+                        (TechShopDatabaseContext)context);
+                }
+            });
         });
 
         services.AddScoped<IProductRepository, ProductRepository>();
