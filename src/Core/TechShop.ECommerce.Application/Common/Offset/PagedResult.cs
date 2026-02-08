@@ -1,4 +1,4 @@
-﻿namespace TechShop.ECommerce.Application.Models;
+﻿namespace TechShop.ECommerce.Application.Common.Offset;
 
 public sealed class PagedResult<T>
 {

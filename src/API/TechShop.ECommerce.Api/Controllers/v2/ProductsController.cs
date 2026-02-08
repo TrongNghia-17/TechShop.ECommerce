@@ -1,4 +1,8 @@
-﻿namespace TechShop.ECommerce.Api.Controllers.v2;
+﻿using TechShop.ECommerce.Application.Common.Cursors;
+using TechShop.ECommerce.Application.Common.Offset;
+using TechShop.ECommerce.Application.Features.Products.Queries.GetProductsCursor;
+
+namespace TechShop.ECommerce.Api.Controllers.v2;
 
 [ApiVersion("2.0")]
 [Route("api/v{version:apiVersion}/[controller]")]
@@ -15,6 +19,21 @@ public class ProductsController(IMediator mediator) : ControllerBase
         [FromQuery] string? sort = "price")
     {
         return Ok(await mediator.Send(new GetProductsPagedQuery(pageNumber, pageSize, categoryId, sort)));
+    }
+
+    [HttpGet("cursor")]
+    [EnableRateLimiting("ProductsSliding")]
+    public async Task<ActionResult<CursorPagedResult<ProductDto>>> GetCursor(
+        [FromQuery] string? search = null,
+        [FromQuery] string? after = null,
+        [FromQuery] int limit = 10,
+        CancellationToken cancellationToken = default)
+    {
+        var result = await mediator.Send(
+            new GetProductsCursorQuery(search, after, limit),
+            cancellationToken);
+
+        return Ok(result);
     }
 
     [HttpGet("{id}")]

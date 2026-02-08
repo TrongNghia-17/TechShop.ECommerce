@@ -1,4 +1,5 @@
-﻿using TechShop.ECommerce.Persistence.Extensions;
+﻿using TechShop.ECommerce.Application.Common.Cursors;
+using TechShop.ECommerce.Application.Common.Offset;
 
 namespace TechShop.ECommerce.Persistence.Repositories;
 
@@ -47,6 +48,67 @@ public class ProductRepository(TechShopDatabaseContext context)
 
         return dtoQuery.ToPageResultAsync(pageNumber, pageSize, token, maxPageSize: 100);
     }
+
+    public async Task<CursorPagedResult<ProductFeedItemDto>> GetAllCursorAsync(
+       string? search,
+       ProductCursor? after,
+       int limit,
+       CancellationToken token)
+    {
+        var take = Math.Clamp(limit, 1, 100);
+
+        IQueryable<Product> query = context.Products.AsNoTracking();
+
+        if (!string.IsNullOrWhiteSpace(search))
+        {
+            var keyword = search.Trim();
+
+            query = query.Where(p =>
+                p.Name.Contains(keyword) ||
+                (p.Summary != null && p.Summary.Contains(keyword)) ||
+                (p.Description != null && p.Description.Contains(keyword)));
+        }
+
+        if (after is not null)
+            query = query.Where(p =>
+                p.DateCreated < after.DateCreated ||
+                (p.DateCreated == after.DateCreated && p.Id < after.Id));
+
+        query = query
+            .OrderByDescending(p => p.DateCreated)
+            .ThenByDescending(p => p.Id);
+
+        var entities = await query
+            .Take(take + 1)
+            .Select(p => new ProductFeedItemDto(
+                p.Id,
+                p.Name,
+                p.Price,
+                p.Category.Name,
+                p.DateCreated
+            ))
+            .ToListAsync(token);
+
+        var hasMore = entities.Count > take;
+        var items = hasMore ? [.. entities.Take(take)] : entities;
+
+        string? nextCursor = null;
+
+        if (hasMore)
+        {
+            var last = items[^1];
+            nextCursor = CursorEncoder.Encode(
+                new ProductCursor(last.DateCreated, last.Id));
+        }
+
+        return new CursorPagedResult<ProductFeedItemDto>
+        {
+            Items = items,
+            Limit = take,
+            NextCursor = nextCursor
+        };
+    }
+
 
     public async Task AddAsync(Product product)
     {

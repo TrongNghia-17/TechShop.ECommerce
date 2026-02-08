@@ -1,4 +1,7 @@
-﻿namespace TechShop.ECommerce.Application.Contracts.Persistence;
+﻿using TechShop.ECommerce.Application.Common.Cursors;
+using TechShop.ECommerce.Application.Common.Offset;
+
+namespace TechShop.ECommerce.Application.Contracts.Persistence;
 
 public interface IProductRepository
 {
@@ -9,6 +12,11 @@ public interface IProductRepository
         int pageSize,
         Guid? categoryId,
         string? sort,
+        CancellationToken token);
+    Task<CursorPagedResult<ProductFeedItemDto>> GetAllCursorAsync(
+        string? search,
+        ProductCursor? after,
+        int pageSize,
         CancellationToken token);
     Task AddAsync(Product product);
     void Delete(Product product);

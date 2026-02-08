@@ -1,4 +1,6 @@
-﻿namespace TechShop.ECommerce.Application.Features.Products.Queries.GetProductsPaged;
+﻿using TechShop.ECommerce.Application.Common.Offset;
+
+namespace TechShop.ECommerce.Application.Features.Products.Queries.GetProductsPaged;
 
 public sealed record GetProductsPagedQuery(
     int PageNumber = 1,

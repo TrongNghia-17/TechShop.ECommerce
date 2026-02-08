@@ -25,6 +25,8 @@ public class ProductConfiguration : IEntityTypeConfiguration<Product>
         // Indexes
         builder.HasIndex(p => p.Name);
         builder.HasIndex(p => p.CategoryId);
+        builder.HasIndex(p => new { p.DateCreated, p.Id })
+            .IsDescending(true, true);
 
         // Relationships
         builder.HasOne(p => p.Category)
