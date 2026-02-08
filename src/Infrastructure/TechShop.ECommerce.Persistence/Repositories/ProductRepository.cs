@@ -1,4 +1,5 @@
-﻿using TechShop.ECommerce.Application.Common.Cursors;
+﻿using NpgsqlTypes;
+using TechShop.ECommerce.Application.Common.Cursors;
 using TechShop.ECommerce.Application.Common.Offset;
 
 namespace TechShop.ECommerce.Persistence.Repositories;
@@ -64,9 +65,8 @@ public class ProductRepository(TechShopDatabaseContext context)
             var keyword = search.Trim();
 
             query = query.Where(p =>
-                p.Name.Contains(keyword) ||
-                (p.Summary != null && p.Summary.Contains(keyword)) ||
-                (p.Description != null && p.Description.Contains(keyword)));
+                EF.Property<NpgsqlTsVector>(p, "SearchVector")
+                    .Matches(EF.Functions.PlainToTsQuery(search)));
         }
 
         if (after is not null)
