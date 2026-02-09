@@ -11,6 +11,8 @@ public class Product : BaseEntity, ISoftDelete
     public Category Category { get; private set; } = null!;
 
     public bool IsDeleted { get; private set; }
+    public DateTimeOffset? DateDeleted { get; private set; }
+    public string? DeletedBy { get; private set; }
 
     private Product() { }
 
@@ -85,12 +87,16 @@ public class Product : BaseEntity, ISoftDelete
     public void MarkAsDeleted(string? userId)
     {
         IsDeleted = true;
-        MarkAsUpdated(userId);
+        DateDeleted = DateTimeOffset.UtcNow;
+        DeletedBy = userId;
     }
 
     public void Restore(string? userId)
     {
         IsDeleted = false;
+        DateDeleted = null;
+        DeletedBy = null;
+
         MarkAsUpdated(userId);
     }
 }

@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using NpgsqlTypes;
@@ -12,9 +13,11 @@ using TechShop.ECommerce.Persistence.DatabaseContext;
 namespace TechShop.ECommerce.Persistence.Migrations
 {
     [DbContext(typeof(TechShopDatabaseContext))]
-    partial class TechShopDatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20260209110929_AddSoftDeleteAuditFields")]
+    partial class AddSoftDeleteAuditFields
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
