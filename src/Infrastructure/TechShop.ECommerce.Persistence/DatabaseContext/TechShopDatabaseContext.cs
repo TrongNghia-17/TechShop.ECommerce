@@ -1,4 +1,6 @@
-﻿namespace TechShop.ECommerce.Persistence.DatabaseContext;
+﻿using TechShop.ECommerce.Domain.Abstractions;
+
+namespace TechShop.ECommerce.Persistence.DatabaseContext;
 
 public class TechShopDatabaseContext(
     DbContextOptions<TechShopDatabaseContext> options)

@@ -1,6 +1,4 @@
-﻿using NpgsqlTypes;
-
-namespace TechShop.ECommerce.Persistence.Configurations;
+﻿namespace TechShop.ECommerce.Persistence.Configurations;
 
 public class ProductConfiguration : IEntityTypeConfiguration<Product>
 {
@@ -38,13 +36,20 @@ public class ProductConfiguration : IEntityTypeConfiguration<Product>
                 stored: true);
 
         // Indexes
-        builder.HasIndex(p => p.Name);
-        builder.HasIndex(p => p.CategoryId);
+        builder.HasIndex(p => p.Name)
+            .IsUnique()
+            .HasFilter("\"IsDeleted\" = false");
+
+        builder.HasIndex(p => p.CategoryId)
+            .HasFilter("\"IsDeleted\" = false");
+
         builder.HasIndex(p => new { p.DateCreated, p.Id })
-            .IsDescending(true, true);
+            .IsDescending(true, true)
+            .HasFilter("\"IsDeleted\" = false");
 
         builder.HasIndex("SearchVector")
-            .HasMethod("GIN");
+            .HasMethod("GIN")
+            .HasFilter("\"IsDeleted\" = false");
 
         // Relationships
         builder.HasOne(p => p.Category)

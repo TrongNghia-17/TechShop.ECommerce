@@ -17,7 +17,8 @@ public class CategoryConfiguration : IEntityTypeConfiguration<Category>
 
         // Indexes
         builder.HasIndex(c => c.Name)
-            .IsUnique();
+            .IsUnique()
+            .HasFilter("\"IsDeleted\" = false");
 
         // Relationships
     }

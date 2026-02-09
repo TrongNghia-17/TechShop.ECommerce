@@ -1,4 +1,6 @@
-﻿namespace TechShop.ECommerce.Domain.Entities.Products;
+﻿using TechShop.ECommerce.Domain.Abstractions;
+
+namespace TechShop.ECommerce.Domain.Entities.Products;
 
 public class Product : BaseEntity, ISoftDelete
 {

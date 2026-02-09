@@ -1,4 +1,4 @@
-﻿namespace TechShop.ECommerce.Domain.Common;
+﻿namespace TechShop.ECommerce.Domain.Exceptions;
 
 public class DomainException(string message) : Exception(message)
 {

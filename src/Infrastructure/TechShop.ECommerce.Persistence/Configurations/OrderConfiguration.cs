@@ -25,8 +25,11 @@ public class OrderConfiguration : IEntityTypeConfiguration<Order>
 
         // Indexes
         builder.HasIndex(o => o.UserId);
+
         builder.HasIndex(o => o.OrderDate);
+
         builder.HasIndex(o => o.Status);
+
         builder.HasIndex(o => new { o.UserId, o.OrderDate });
 
         // Relationships
