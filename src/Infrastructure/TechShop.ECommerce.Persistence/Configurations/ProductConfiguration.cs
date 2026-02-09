@@ -35,6 +35,8 @@ public class ProductConfiguration : IEntityTypeConfiguration<Product>
                 """,
                 stored: true);
 
+        builder.HasQueryFilter("SoftDelete", p => !p.IsDeleted);
+
         // Indexes
         builder.HasIndex(p => p.Name)
             .IsUnique()

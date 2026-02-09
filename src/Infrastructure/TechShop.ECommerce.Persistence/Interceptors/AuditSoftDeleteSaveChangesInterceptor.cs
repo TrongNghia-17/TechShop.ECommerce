@@ -1,6 +1,4 @@
-﻿using TechShop.ECommerce.Domain.Abstractions;
-
-namespace TechShop.ECommerce.Persistence.Interceptors;
+﻿namespace TechShop.ECommerce.Persistence.Interceptors;
 
 public sealed class AuditSoftDeleteSaveChangesInterceptor(
     IUserService UserService)
