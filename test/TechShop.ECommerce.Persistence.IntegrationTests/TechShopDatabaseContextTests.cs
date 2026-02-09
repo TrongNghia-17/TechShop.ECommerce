@@ -19,7 +19,7 @@ public class TechShopDatabaseContextTests
         _userServiceMock = new Mock<IUserService>();
         _userServiceMock.Setup(m => m.UserId).Returns(_userId);
 
-        _techShopDatabaseContext = new TechShopDatabaseContext(dbOptions, _userServiceMock.Object);
+        _techShopDatabaseContext = new TechShopDatabaseContext(dbOptions);
     }
 
     [Fact]

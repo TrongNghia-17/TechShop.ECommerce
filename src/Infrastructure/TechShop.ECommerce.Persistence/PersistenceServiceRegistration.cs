@@ -1,4 +1,5 @@
-﻿using TechShop.ECommerce.Persistence.Seeding;
+﻿using TechShop.ECommerce.Persistence.Interceptors;
+using TechShop.ECommerce.Persistence.Seeding;
 
 namespace TechShop.ECommerce.Persistence;
 
@@ -8,7 +9,9 @@ public static class PersistenceServiceRegistration
         this IServiceCollection services,
         IConfiguration configuration)
     {
-        services.AddDbContext<TechShopDatabaseContext>(options =>
+        services.AddScoped<AuditSoftDeleteSaveChangesInterceptor>();
+
+        services.AddDbContext<TechShopDatabaseContext>((serviceProvider, options) =>
         {
             options.UseNpgsql(
                 configuration.GetConnectionString("PostgreSQL"));
@@ -33,6 +36,8 @@ public static class PersistenceServiceRegistration
                         (TechShopDatabaseContext)context);
                 }
             });
+
+            options.AddInterceptors(serviceProvider.GetRequiredService<AuditSoftDeleteSaveChangesInterceptor>());
         });
 
         services.AddScoped<IProductRepository, ProductRepository>();

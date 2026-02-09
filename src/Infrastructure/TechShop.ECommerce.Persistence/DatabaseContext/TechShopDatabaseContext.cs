@@ -1,10 +1,7 @@
-﻿using System.Linq.Expressions;
-
-namespace TechShop.ECommerce.Persistence.DatabaseContext;
+﻿namespace TechShop.ECommerce.Persistence.DatabaseContext;
 
 public class TechShopDatabaseContext(
-    DbContextOptions<TechShopDatabaseContext> options,
-    IUserService userService)
+    DbContextOptions<TechShopDatabaseContext> options)
     : DbContext(options)
 {
     public DbSet<Category> Categories => Set<Category>();
@@ -39,43 +36,5 @@ public class TechShopDatabaseContext(
         var isDeleted = Expression.Property(param, nameof(ISoftDelete.IsDeleted));
         var notDeleted = Expression.Not(isDeleted);
         return Expression.Lambda(notDeleted, param);
-    }
-
-    public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
-    {
-        var userId = userService.UserId;
-
-        ApplyAuditFields(userId);
-        ApplySoftDelete(userId);
-
-        return base.SaveChangesAsync(cancellationToken);
-    }
-
-    private void ApplyAuditFields(string? userId)
-    {
-        foreach (var entry in ChangeTracker.Entries<BaseEntity>())
-        {
-            if (entry.State == EntityState.Added)
-            {
-                entry.Entity.MarkAsCreated(userId);
-                continue;
-            }
-
-            if (entry.State == EntityState.Modified)
-            {
-                entry.Property(x => x.DateCreated).IsModified = false;
-                entry.Entity.MarkAsUpdated(userId);
-            }
-        }
-    }
-
-    private void ApplySoftDelete(string? userId)
-    {
-        foreach (var entry in ChangeTracker.Entries<ISoftDelete>()
-                     .Where(e => e.State == EntityState.Deleted))
-        {
-            entry.State = EntityState.Modified;
-            entry.Entity.MarkAsDeleted(userId);
-        }
     }
 }
