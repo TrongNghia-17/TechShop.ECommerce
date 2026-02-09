@@ -9,8 +9,6 @@ public abstract class BaseEntity
     public DateTimeOffset? DateModified { get; protected set; }
     public string? ModifiedBy { get; protected set; }
 
-    public bool IsDeleted { get; protected set; }
-
     protected BaseEntity()
     {
         Id = Guid.NewGuid();
@@ -20,25 +18,10 @@ public abstract class BaseEntity
     {
         DateCreated = DateTimeOffset.UtcNow;
         CreatedBy = userId;
-        IsDeleted = false;
     }
 
     internal void MarkAsUpdated(string? userId)
     {
-        DateModified = DateTimeOffset.UtcNow;
-        ModifiedBy = userId;
-    }
-
-    internal void MarkAsDeleted(string? userId)
-    {
-        IsDeleted = true;
-        DateModified = DateTimeOffset.UtcNow;
-        ModifiedBy = userId;
-    }
-
-    internal void Restore(string? userId)
-    {
-        IsDeleted = false;
         DateModified = DateTimeOffset.UtcNow;
         ModifiedBy = userId;
     }

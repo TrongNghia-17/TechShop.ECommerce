@@ -1,6 +1,6 @@
 ﻿namespace TechShop.ECommerce.Domain.Entities.Products;
 
-public class Product : BaseEntity
+public class Product : BaseEntity, ISoftDelete
 {
     public string Name { get; private set; } = null!;
     public string? Summary { get; private set; }
@@ -9,6 +9,8 @@ public class Product : BaseEntity
 
     public Guid CategoryId { get; private set; }
     public Category Category { get; private set; } = null!;
+
+    public bool IsDeleted { get; private set; }
 
     private Product() { }
 
@@ -78,5 +80,17 @@ public class Product : BaseEntity
                 "Cannot change category of a product that has orders");
 
         CategoryId = newCategoryId;
+    }
+
+    public void MarkAsDeleted(string? userId)
+    {
+        IsDeleted = true;
+        MarkAsUpdated(userId);
+    }
+
+    public void Restore(string? userId)
+    {
+        IsDeleted = false;
+        MarkAsUpdated(userId);
     }
 }
