@@ -7,6 +7,7 @@ public sealed record ProductDetailsDto(
     string? Description,
     decimal Price,
     Guid CategoryId,
+    int RowVersion,
     DateTimeOffset DateCreated,
     DateTimeOffset? DateModified
 );
