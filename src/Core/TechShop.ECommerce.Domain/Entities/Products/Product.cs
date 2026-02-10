@@ -1,6 +1,4 @@
-﻿using TechShop.ECommerce.Domain.Abstractions;
-
-namespace TechShop.ECommerce.Domain.Entities.Products;
+﻿namespace TechShop.ECommerce.Domain.Entities.Products;
 
 public class Product : BaseEntity, ISoftDelete
 {
@@ -15,6 +13,8 @@ public class Product : BaseEntity, ISoftDelete
     public bool IsDeleted { get; private set; }
     public DateTimeOffset? DateDeleted { get; private set; }
     public string? DeletedBy { get; private set; }
+
+    public uint RowVersion { get; private set; }
 
     private Product() { }
 

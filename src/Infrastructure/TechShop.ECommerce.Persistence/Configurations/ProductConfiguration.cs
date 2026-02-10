@@ -35,6 +35,12 @@ public class ProductConfiguration : IEntityTypeConfiguration<Product>
                 """,
                 stored: true);
 
+        builder.Property(p => p.RowVersion)
+            .IsConcurrencyToken()
+            .HasColumnType("integer")
+            .HasDefaultValue(1)
+            .ValueGeneratedOnAddOrUpdate();
+
         builder.HasQueryFilter("SoftDelete", p => !p.IsDeleted);
 
         // Indexes
