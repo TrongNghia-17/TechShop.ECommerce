@@ -61,6 +61,19 @@ public class ExceptionMiddleware(
                 logLevel = LogLevel.Information;
                 break;
 
+            case ConcurrencyException concurrency:
+                problem = new CustomProblemDetails
+                {
+                    Title = "Concurrency conflict",
+                    Status = StatusCodes.Status409Conflict,
+                    Type = "https://httpstatuses.com/409",
+                    Detail = concurrency.Message,
+                    Instance = context.Request.Path,
+                    ErrorCode = "CONCURRENCY_CONFLICT"
+                };
+                logLevel = LogLevel.Warning;
+                break;
+
             default:
                 problem = new CustomProblemDetails
                 {

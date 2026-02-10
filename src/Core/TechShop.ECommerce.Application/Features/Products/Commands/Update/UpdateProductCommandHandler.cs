@@ -17,6 +17,12 @@ public sealed class UpdateProductCommandHandler(
         var product = await productRepository.GetByIdAsync(request.Id)
             ?? throw new NotFoundException(nameof(Product), request.Id);
 
+        unitOfWork.SetConcurrencyToken(
+            product,
+            p => p.RowVersion,
+            request.RowVersion);
+
+
         if (product.CategoryId != request.CategoryId)
         {
             var hasOrders = await productRepository.HasOrdersAsync(product.Id);

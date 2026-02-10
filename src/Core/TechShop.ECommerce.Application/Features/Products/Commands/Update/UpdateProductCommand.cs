@@ -6,6 +6,7 @@ public sealed record UpdateProductCommand(
     decimal Price,
     Guid CategoryId,
     string? Summary,
-    string? Description
+    string? Description,
+    int RowVersion
 ) : IRequest<Unit>;
 

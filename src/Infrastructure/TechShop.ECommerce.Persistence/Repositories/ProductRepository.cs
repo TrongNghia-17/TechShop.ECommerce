@@ -6,7 +6,6 @@ public class ProductRepository(TechShopDatabaseContext context)
     public async Task<Product?> GetByIdAsync(Guid id)
     {
         return await context.Products
-            .AsNoTracking()
             .FirstOrDefaultAsync(p => p.Id == id);
     }
 

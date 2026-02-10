@@ -3,4 +3,9 @@
 public interface IUnitOfWork
 {
     Task SaveChangesAsync(CancellationToken cancellationToken = default);
+    void SetConcurrencyToken<TEntity, TToken>(
+        TEntity entity,
+        Expression<Func<TEntity, TToken>> property,
+        TToken originaValue)
+        where TEntity : class;
 }
