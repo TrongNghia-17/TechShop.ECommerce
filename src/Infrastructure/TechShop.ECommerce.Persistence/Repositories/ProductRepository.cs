@@ -1,8 +1,4 @@
-﻿using NpgsqlTypes;
-using TechShop.ECommerce.Application.Common.Cursors;
-using TechShop.ECommerce.Application.Common.Offset;
-
-namespace TechShop.ECommerce.Persistence.Repositories;
+﻿namespace TechShop.ECommerce.Persistence.Repositories;
 
 public class ProductRepository(TechShopDatabaseContext context)
     : IProductRepository
@@ -137,5 +133,30 @@ public class ProductRepository(TechShopDatabaseContext context)
     {
         return await context.OrderItems
             .AnyAsync(oi => oi.ProductId == productId);
+    }
+
+    public async Task UpdatePriceByCategoryAsync(
+        Guid categoryId,
+        decimal priceMultiplier,
+        string modifiedBy,
+        CancellationToken token = default)
+    {
+        await context.Products
+            .Where(p => p.CategoryId == categoryId)
+            .ExecuteUpdateAsync(setters => setters
+                .SetProperty(p => p.Price, p => p.Price * priceMultiplier)
+                .SetProperty(p => p.DateModified, DateTimeOffset.UtcNow)
+                .SetProperty(p => p.ModifiedBy, modifiedBy),
+                token);
+    }
+
+    public async Task<int> DeleteSoftDeletedProductsAsync(
+        DateTimeOffset thresholdDate,
+        CancellationToken token = default)
+    {
+        return await context.Products
+             .IgnoreQueryFilters()
+             .Where(p => p.IsDeleted && p.DateDeleted < thresholdDate)
+             .ExecuteDeleteAsync(token);
     }
 }

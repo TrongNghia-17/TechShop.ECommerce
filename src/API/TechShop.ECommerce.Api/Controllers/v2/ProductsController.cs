@@ -1,6 +1,4 @@
-﻿using TechShop.ECommerce.Application.Common.Cursors;
-using TechShop.ECommerce.Application.Common.Offset;
-using TechShop.ECommerce.Application.Features.Products.Queries.GetProductsCursor;
+﻿using TechShop.ECommerce.Application.Features.Products.Commands.BulkPurge;
 
 namespace TechShop.ECommerce.Api.Controllers.v2;
 
@@ -37,6 +35,9 @@ public class ProductsController(IMediator mediator) : ControllerBase
     }
 
     [HttpGet("{id}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status304NotModified)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<ProductDetailsDto>> GetById(Guid id, CancellationToken ct)
     {
         var dto = await mediator.Send(new GetProductDetailsQuery(id), ct);
@@ -57,45 +58,39 @@ public class ProductsController(IMediator mediator) : ControllerBase
     [ProducesResponseType(400)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [EnableRateLimiting("ProductsWrite")]
-    public async Task<ActionResult> Post(
-        CreateProductCommand command,
+    public async Task<ActionResult> BulkUpdatePrice(
+        [FromBody] BulkUpdatePriceCommand command,
         [FromServices] IOutputCacheStore cache,
         CancellationToken token)
     {
-        var id = await mediator.Send(command, token);
-        await cache.EvictByTagAsync("products", token);
-        return CreatedAtAction(nameof(Get), new { id, version = "2" }, new { id });
-    }
+        await mediator.Send(command, token);
 
-    [HttpPut("{id}")]
-    [ProducesResponseType(StatusCodes.Status204NoContent)]
-    [ProducesResponseType(400)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [ProducesDefaultResponseType]
-    [EnableRateLimiting("ProductsWrite")]
-    public async Task<ActionResult> Put(
-        Guid id,
-        UpdateProductCommand command,
-        [FromServices] IOutputCacheStore cache,
-        CancellationToken token)
-    {
-        await mediator.Send(command with { Id = id }, token);
         await cache.EvictByTagAsync("products", token);
+
         return NoContent();
     }
 
-    [HttpDelete("{id}")]
-    [ProducesResponseType(StatusCodes.Status204NoContent)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [ProducesDefaultResponseType]
+    /// <summary>
+    /// Permanently deletes soft-deleted products older than the specified number of days.
+    /// </summary>
+    /// <param name="daysOld">Minimum age of deleted status (e.g., 30 days).</param>
+    /// <returns>Number of records deleted.</returns>
+    [HttpDelete("bulk/purge")]
+    [ProducesResponseType(typeof(int), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [EnableRateLimiting("ProductsWrite")]
-    public async Task<ActionResult> Delete(
-        Guid id,
+    // [Authorize(Roles = "Admin")] 
+    public async Task<ActionResult<int>> BulkPurgeDeleted(
+        [FromQuery] int daysOld,
         [FromServices] IOutputCacheStore cache,
         CancellationToken token)
     {
-        await mediator.Send(new DeleteProductCommand(id), token);
+        var command = new BulkPurgeProductsCommand(daysOld);
+
+        var deletedCount = await mediator.Send(command, token);
+
         await cache.EvictByTagAsync("products", token);
-        return NoContent();
+
+        return Ok(new { Count = deletedCount });
     }
 }
