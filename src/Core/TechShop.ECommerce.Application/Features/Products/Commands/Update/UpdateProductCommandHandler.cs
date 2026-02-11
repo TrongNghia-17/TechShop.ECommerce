@@ -1,4 +1,6 @@
-﻿namespace TechShop.ECommerce.Application.Features.Products.Commands.Update;
+﻿using TechShop.ECommerce.Domain.Entities.Catalog;
+
+namespace TechShop.ECommerce.Application.Features.Products.Commands.Update;
 
 public sealed class UpdateProductCommandHandler(
     IProductRepository productRepository,

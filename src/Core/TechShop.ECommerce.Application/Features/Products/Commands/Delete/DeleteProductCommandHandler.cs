@@ -1,4 +1,6 @@
-﻿namespace TechShop.ECommerce.Application.Features.Products.Commands.Delete;
+﻿using TechShop.ECommerce.Domain.Entities.Catalog;
+
+namespace TechShop.ECommerce.Application.Features.Products.Commands.Delete;
 
 public sealed class DeleteProductCommandHandler(
     IProductRepository productRepository,

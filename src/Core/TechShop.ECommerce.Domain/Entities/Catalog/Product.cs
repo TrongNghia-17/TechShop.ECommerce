@@ -1,4 +1,4 @@
-﻿namespace TechShop.ECommerce.Domain.Entities.Products;
+﻿namespace TechShop.ECommerce.Domain.Entities.Catalog;
 
 public class Product : BaseEntity, ISoftDelete
 {

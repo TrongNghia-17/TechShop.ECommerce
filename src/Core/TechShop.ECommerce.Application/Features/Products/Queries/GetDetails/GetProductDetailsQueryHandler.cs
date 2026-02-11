@@ -1,4 +1,6 @@
-﻿namespace TechShop.ECommerce.Application.Features.Products.Queries.GetDetails;
+﻿using TechShop.ECommerce.Domain.Entities.Catalog;
+
+namespace TechShop.ECommerce.Application.Features.Products.Queries.GetDetails;
 
 public sealed class GetProductDetailsQueryHandler(
     IMapper mapper,

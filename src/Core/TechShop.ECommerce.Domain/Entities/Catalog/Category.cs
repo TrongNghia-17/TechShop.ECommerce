@@ -1,6 +1,4 @@
-﻿using TechShop.ECommerce.Domain.Abstractions;
-
-namespace TechShop.ECommerce.Domain.Entities.Categories;
+﻿namespace TechShop.ECommerce.Domain.Entities.Catalog;
 
 public class Category : BaseEntity
 {

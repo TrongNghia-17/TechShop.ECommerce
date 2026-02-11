@@ -1,7 +1,4 @@
-﻿using TechShop.ECommerce.Persistence.Interceptors;
-using TechShop.ECommerce.Persistence.Seeding;
-
-namespace TechShop.ECommerce.Persistence;
+﻿namespace TechShop.ECommerce.Persistence;
 
 public static class PersistenceServiceRegistration
 {

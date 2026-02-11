@@ -1,4 +1,6 @@
-﻿namespace TechShop.ECommerce.Persistence.Seeding;
+﻿using TechShop.ECommerce.Domain.Entities.Catalog;
+
+namespace TechShop.ECommerce.Persistence.Seeding;
 
 public static class TechShopDataSeeder
 {

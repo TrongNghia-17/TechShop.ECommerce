@@ -1,4 +1,6 @@
-﻿namespace TechShop.ECommerce.Application.Features.Products.Commands.Create;
+﻿using TechShop.ECommerce.Domain.Entities.Catalog;
+
+namespace TechShop.ECommerce.Application.Features.Products.Commands.Create;
 
 public sealed class CreateProductCommandHandler(
     IProductRepository productRepository,

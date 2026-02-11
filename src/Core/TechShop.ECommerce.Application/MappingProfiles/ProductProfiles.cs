@@ -1,4 +1,6 @@
-﻿namespace TechShop.ECommerce.Application.MappingProfiles;
+﻿using TechShop.ECommerce.Domain.Entities.Catalog;
+
+namespace TechShop.ECommerce.Application.MappingProfiles;
 
 public class ProductProfiles : Profile
 {
