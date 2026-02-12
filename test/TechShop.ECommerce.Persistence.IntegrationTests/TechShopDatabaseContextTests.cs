@@ -28,6 +28,7 @@ public class TechShopDatabaseContextTests
         // Arrange
         var product = Product.Create(
             name: "Test Product",
+            stockQuantity: 50,
             price: 100_000m,
             categoryId: Guid.NewGuid()
         );
@@ -47,6 +48,7 @@ public class TechShopDatabaseContextTests
         // Arrange
         var product = Product.Create(
             name: "Test Product",
+            stockQuantity: 50,
             price: 100_000m,
             categoryId: Guid.NewGuid()
         );
@@ -71,6 +73,7 @@ public class TechShopDatabaseContextTests
         // Arrange
         var product = Product.Create(
             name: "Test Product",
+            stockQuantity: 50,
             price: 100_000m,
             categoryId: Guid.NewGuid()
         );

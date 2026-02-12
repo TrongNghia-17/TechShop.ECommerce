@@ -1,6 +1,4 @@
-﻿using TechShop.ECommerce.Domain.Entities.Catalog;
-
-namespace TechShop.ECommerce.Persistence.Repositories;
+﻿namespace TechShop.ECommerce.Persistence.Repositories;
 
 public class ProductRepository(TechShopDatabaseContext context)
     : IProductRepository

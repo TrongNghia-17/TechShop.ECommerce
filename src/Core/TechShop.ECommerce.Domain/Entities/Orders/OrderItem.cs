@@ -1,6 +1,4 @@
-﻿using TechShop.ECommerce.Domain.Abstractions;
-
-namespace TechShop.ECommerce.Domain.Entities.Orders;
+﻿namespace TechShop.ECommerce.Domain.Entities.Orders;
 
 public class OrderItem : BaseEntity
 {

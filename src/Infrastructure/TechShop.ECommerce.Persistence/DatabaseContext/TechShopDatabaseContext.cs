@@ -1,6 +1,4 @@
-﻿using TechShop.ECommerce.Domain.Entities.Catalog;
-
-namespace TechShop.ECommerce.Persistence.DatabaseContext;
+﻿namespace TechShop.ECommerce.Persistence.DatabaseContext;
 
 public class TechShopDatabaseContext(
     DbContextOptions<TechShopDatabaseContext> options)

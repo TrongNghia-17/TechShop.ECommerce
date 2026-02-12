@@ -17,6 +17,7 @@ global using TechShop.ECommerce.Application.Features.Products.Dtos;
 global using TechShop.ECommerce.Application.Features.Products.Queries.GetDetails;
 global using TechShop.ECommerce.Application.Models.Email;
 global using TechShop.ECommerce.Application.Models.Identity;
+global using TechShop.ECommerce.Domain.Entities.Catalog;
 
 
 

@@ -3,6 +3,7 @@
 public sealed record CreateProductCommand(
     string Name,
     decimal Price,
+    int StockQuantity,
     Guid CategoryId,
     string? Summary,
     string? Description

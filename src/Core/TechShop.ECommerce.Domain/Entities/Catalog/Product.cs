@@ -6,6 +6,7 @@ public class Product : BaseEntity, ISoftDelete
     public string? Summary { get; private set; }
     public string? Description { get; private set; }
     public decimal Price { get; private set; }
+    public int StockQuantity { get; private set; }
 
     public Guid CategoryId { get; private set; }
     public Category Category { get; private set; } = null!;
@@ -21,12 +22,14 @@ public class Product : BaseEntity, ISoftDelete
     private Product(
         string name,
         decimal price,
+        int stockQuantity,
         Guid categoryId,
         string? summary = null,
         string? description = null)
     {
         Rename(name);
         ChangePrice(price);
+        SetInitialStock(stockQuantity);
 
         CategoryId = categoryId;
         Summary = summary;
@@ -35,10 +38,11 @@ public class Product : BaseEntity, ISoftDelete
     public static Product Create(
         string name,
         decimal price,
+        int stockQuantity,
         Guid categoryId,
         string? summary = null,
         string? description = null)
-        => new(name, price, categoryId, summary, description);
+        => new(name, price, stockQuantity, categoryId, summary, description);
     public void Rename(string name)
     {
         if (string.IsNullOrWhiteSpace(name))
@@ -100,5 +104,32 @@ public class Product : BaseEntity, ISoftDelete
         DeletedBy = null;
 
         MarkAsUpdated(userId);
+    }
+
+    private void SetInitialStock(int quantity)
+    {
+        if (quantity < 0)
+        {
+            throw new DomainException("Initial stock cannot be negative.");
+        }
+    }
+
+    public void AddStock(int quantity)
+    {
+        if (quantity <= 0)
+            throw new DomainException("Quantity to add must be greater than zero.");
+
+        StockQuantity += quantity;
+    }
+
+    public void RemoveStock(int quantity)
+    {
+        if (quantity <= 0)
+            throw new DomainException("Quantity to remove must be greater than zero.");
+
+        if (StockQuantity < quantity)
+            throw new DomainException($"Not enough stock for product '{Name}'. Available: {StockQuantity}, Requested: {quantity}");
+
+        StockQuantity -= quantity;
     }
 }

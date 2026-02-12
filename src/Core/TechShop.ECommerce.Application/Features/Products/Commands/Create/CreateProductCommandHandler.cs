@@ -1,6 +1,4 @@
-﻿using TechShop.ECommerce.Domain.Entities.Catalog;
-
-namespace TechShop.ECommerce.Application.Features.Products.Commands.Create;
+﻿namespace TechShop.ECommerce.Application.Features.Products.Commands.Create;
 
 public sealed class CreateProductCommandHandler(
     IProductRepository productRepository,
@@ -19,6 +17,7 @@ public sealed class CreateProductCommandHandler(
         var product = Product.Create(
             request.Name,
             request.Price,
+            request.StockQuantity,
             request.CategoryId,
             request.Summary,
             request.Description

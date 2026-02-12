@@ -31,6 +31,7 @@ public class CreateProductCommandHandlerTests
         var command = new CreateProductCommand(
             Name: "Test Product",
             Price: 100m,
+            StockQuantity: 50,
             CategoryId: Guid.NewGuid(),
             Summary: "Summary",
             Description: "Description"

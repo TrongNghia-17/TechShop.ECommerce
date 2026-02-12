@@ -1,6 +1,4 @@
-﻿using TechShop.ECommerce.Domain.Entities.Catalog;
-
-namespace TechShop.ECommerce.Persistence.Seeding;
+﻿namespace TechShop.ECommerce.Persistence.Seeding;
 
 public static class TechShopDataSeeder
 {
@@ -15,9 +13,9 @@ public static class TechShopDataSeeder
 
         var products = new[]
         {
-            Product.Create("MacBook Pro 14", 52_000_000, laptopCategory.Id),
-            Product.Create("Dell XPS 13", 41_000_000, laptopCategory.Id),
-            Product.Create("iPhone 15 Pro", 35_000_000, phoneCategory.Id)
+            Product.Create("MacBook Pro 14", 50, 52_000_000, laptopCategory.Id),
+            Product.Create("Dell XPS 13", 50, 41_000_000, laptopCategory.Id),
+            Product.Create("iPhone 15 Pro", 50, 35_000_000, phoneCategory.Id)
         };
 
         context.AddRange(laptopCategory, phoneCategory);
@@ -35,9 +33,9 @@ public static class TechShopDataSeeder
 
         var products = new[]
         {
-        Product.Create("MacBook Pro 14", 52_000_000, laptopCategory.Id),
-        Product.Create("Dell XPS 13", 41_000_000, laptopCategory.Id),
-        Product.Create("iPhone 15 Pro", 35_000_000, phoneCategory.Id)
+        Product.Create("MacBook Pro 14", 50, 52_000_000, laptopCategory.Id),
+        Product.Create("Dell XPS 13", 50, 41_000_000, laptopCategory.Id),
+        Product.Create("iPhone 15 Pro", 50, 35_000_000, phoneCategory.Id)
     };
 
         context.AddRange(laptopCategory, phoneCategory);
