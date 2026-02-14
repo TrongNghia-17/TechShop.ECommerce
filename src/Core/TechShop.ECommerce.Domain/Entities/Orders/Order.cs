@@ -2,98 +2,75 @@
 
 public class Order : BaseEntity
 {
-    public string UserId { get; private set; } = null!;
+    public Guid CustomerId { get; private set; }
+
     public DateTimeOffset OrderDate { get; private set; }
     public OrderStatus Status { get; private set; }
-
-    public Address? ShippingAddress { get; private set; }
     public string? Notes { get; private set; }
+    public Address? ShippingAddress { get; private set; }
+
 
     private readonly List<OrderItem> _orderItems = [];
     public IReadOnlyCollection<OrderItem> OrderItems => _orderItems.AsReadOnly();
 
-    public decimal TotalPrice =>
-        _orderItems.Sum(i => i.UnitPrice * i.Quantity);
+    public decimal TotalAmount { get; private set; }
 
     private Order() { }
 
-    public Order(string userId, Address? shippingAddress = null, string? notes = null)
+    public static Order Create(Guid customerId, Address shippingAddress, string? notes = null)
     {
-        UserId = userId;
-        ShippingAddress = shippingAddress;
-        Notes = notes;
-        OrderDate = DateTime.UtcNow;
-        Status = OrderStatus.Pending;
+        var order = new Order
+        {
+            Id = Guid.NewGuid(),
+            CustomerId = customerId,
+            ShippingAddress = shippingAddress,
+            Notes = notes,
+            Status = OrderStatus.Pending,
+            OrderDate = DateTimeOffset.UtcNow,
+            TotalAmount = 0
+        };
+
+        return order;
     }
 
     public void AddItem(Guid productId, decimal unitPrice, int quantity)
     {
         if (Status != OrderStatus.Pending)
-            throw new DomainException("Cannot modify a non-pending order");
+            throw new DomainException("Can only add items to a Pending order.");
 
-        var existingItem = _orderItems
-            .FirstOrDefault(i => i.ProductId == productId);
+        if (quantity <= 0)
+            throw new DomainException("Quantity must be greater than zero.");
 
+        var existingItem = _orderItems.FirstOrDefault(i => i.ProductId == productId);
         if (existingItem != null)
         {
             existingItem.IncreaseQuantity(quantity);
-            return;
+        }
+        else
+        {
+            var newItem = new OrderItem(Id, productId, unitPrice, quantity);
+            _orderItems.Add(newItem);
         }
 
-        var orderItem = new OrderItem(Id, productId, unitPrice, quantity);
-        _orderItems.Add(orderItem);
+        CalculateTotal();
     }
 
     public void RemoveItem(Guid productId)
     {
         if (Status != OrderStatus.Pending)
-            throw new DomainException("Cannot modify a non-pending order");
+            throw new DomainException("Can only remove items from a Pending order.");
 
         var item = _orderItems.FirstOrDefault(i => i.ProductId == productId);
-        if (item == null)
-            return;
-
-        _orderItems.Remove(item);
+        if (item != null)
+        {
+            _orderItems.Remove(item);
+            CalculateTotal();
+        }
     }
 
-    public void Confirm()
+    private void CalculateTotal()
     {
-        if (_orderItems.Count == 0)
-            throw new DomainException("Cannot confirm an empty order");
-
-        Status = OrderStatus.Confirmed;
-    }
-
-    public void Ship()
-    {
-        if (Status != OrderStatus.Confirmed)
-            throw new DomainException("Order must be confirmed before shipping");
-
-        Status = OrderStatus.Shipped;
-    }
-
-    public void Complete()
-    {
-        if (Status != OrderStatus.Shipped)
-            throw new DomainException("Order must be shipped before completion");
-
-        Status = OrderStatus.Completed;
-    }
-
-    public void Cancel()
-    {
-        if (Status == OrderStatus.Completed)
-            throw new DomainException("Completed order cannot be cancelled");
-
-        Status = OrderStatus.Cancelled;
-    }
-
-    public void UpdateShippingAddress(Address address)
-    {
-        if (Status != OrderStatus.Pending)
-            throw new DomainException("Cannot change address after confirmation");
-
-        ShippingAddress = address;
+        TotalAmount = _orderItems.Sum(i => i.UnitPrice * i.Quantity);
     }
 }
 

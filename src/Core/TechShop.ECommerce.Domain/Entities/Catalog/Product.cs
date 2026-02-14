@@ -13,7 +13,7 @@ public class Product : BaseEntity, ISoftDelete
 
     public bool IsDeleted { get; private set; }
     public DateTimeOffset? DateDeleted { get; private set; }
-    public string? DeletedBy { get; private set; }
+    public Guid? DeletedBy { get; private set; }
 
     public int RowVersion { get; private set; }
 
@@ -90,14 +90,14 @@ public class Product : BaseEntity, ISoftDelete
         CategoryId = newCategoryId;
     }
 
-    public void MarkAsDeleted(string? userId)
+    public void MarkAsDeleted(Guid? userId)
     {
         IsDeleted = true;
         DateDeleted = DateTimeOffset.UtcNow;
         DeletedBy = userId;
     }
 
-    public void Restore(string? userId)
+    public void Restore(Guid? userId)
     {
         IsDeleted = false;
         DateDeleted = null;
@@ -112,6 +112,8 @@ public class Product : BaseEntity, ISoftDelete
         {
             throw new DomainException("Initial stock cannot be negative.");
         }
+
+        StockQuantity = quantity;
     }
 
     public void AddStock(int quantity)

@@ -8,14 +8,14 @@ namespace TechShop.ECommerce.Persistence.IntegrationTests;
 public class TechShopDatabaseContextTests
 {
     private readonly TechShopDatabaseContext _techShopDatabaseContext;
-    private readonly string _userId;
+    private readonly Guid _userId;
     private readonly Mock<IUserService> _userServiceMock;
 
     public TechShopDatabaseContextTests()
     {
         var dbOptions = new DbContextOptionsBuilder<TechShopDatabaseContext>()
                 .UseInMemoryDatabase(Guid.NewGuid().ToString()).Options;
-        _userId = "00000000-0000-0000-0000-000000000000";
+        _userId = Guid.NewGuid();
         _userServiceMock = new Mock<IUserService>();
         _userServiceMock.Setup(m => m.UserId).Returns(_userId);
 

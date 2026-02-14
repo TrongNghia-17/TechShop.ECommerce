@@ -18,6 +18,9 @@ global using TechShop.ECommerce.Application.Common.Cursors;
 global using TechShop.ECommerce.Application.Common.Offset;
 global using TechShop.ECommerce.Application.Contracts.Identity;
 global using TechShop.ECommerce.Application.Exceptions;
+global using TechShop.ECommerce.Application.Features.Orders.Commands.CreateOrder;
+global using TechShop.ECommerce.Application.Features.Orders.Dtos;
+global using TechShop.ECommerce.Application.Features.Products.Commands.BulkPurge;
 global using TechShop.ECommerce.Application.Features.Products.Commands.BulkUpdatePrice;
 global using TechShop.ECommerce.Application.Features.Products.Commands.Create;
 global using TechShop.ECommerce.Application.Features.Products.Commands.Delete;
@@ -32,6 +35,7 @@ global using TechShop.ECommerce.Identity;
 global using TechShop.ECommerce.Infrastructure;
 global using TechShop.ECommerce.Persistence;
 global using TechShop.ECommerce.Persistence.DatabaseContext;
+
 
 
 
