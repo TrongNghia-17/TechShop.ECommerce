@@ -31,7 +31,7 @@ public sealed class AuditSoftDeleteSaveChangesInterceptor(
         ApplySoftDelete(context.ChangeTracker, userId);
     }
 
-    private static void ApplyAuditFields(ChangeTracker changeTracker, string? userId)
+    private static void ApplyAuditFields(ChangeTracker changeTracker, Guid? userId)
     {
         foreach (var entry in changeTracker.Entries<BaseEntity>())
         {
@@ -49,7 +49,7 @@ public sealed class AuditSoftDeleteSaveChangesInterceptor(
         }
     }
 
-    private static void ApplySoftDelete(ChangeTracker changeTracker, string? userId)
+    private static void ApplySoftDelete(ChangeTracker changeTracker, Guid? userId)
     {
         foreach (var entry in changeTracker.Entries<ISoftDelete>())
         {

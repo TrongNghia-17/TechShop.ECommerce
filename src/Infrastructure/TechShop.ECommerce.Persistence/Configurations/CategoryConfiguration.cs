@@ -1,6 +1,4 @@
-﻿using TechShop.ECommerce.Domain.Entities.Catalog;
-
-namespace TechShop.ECommerce.Persistence.Configurations;
+﻿namespace TechShop.ECommerce.Persistence.Configurations;
 
 public class CategoryConfiguration : IEntityTypeConfiguration<Category>
 {
@@ -19,8 +17,7 @@ public class CategoryConfiguration : IEntityTypeConfiguration<Category>
 
         // Indexes
         builder.HasIndex(c => c.Name)
-            .IsUnique()
-            .HasFilter("\"IsDeleted\" = false");
+            .IsUnique();
 
         // Relationships
     }

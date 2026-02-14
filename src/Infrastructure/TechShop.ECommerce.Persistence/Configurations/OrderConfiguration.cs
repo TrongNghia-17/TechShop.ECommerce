@@ -8,7 +8,7 @@ public class OrderConfiguration : IEntityTypeConfiguration<Order>
         builder.ToTable("Orders");
 
         // Properties
-        builder.Property(o => o.UserId)
+        builder.Property(o => o.CustomerId)
             .IsRequired()
             .HasMaxLength(450);
 
@@ -24,13 +24,13 @@ public class OrderConfiguration : IEntityTypeConfiguration<Order>
             .HasMaxLength(1000);
 
         // Indexes
-        builder.HasIndex(o => o.UserId);
+        builder.HasIndex(o => o.CustomerId);
 
         builder.HasIndex(o => o.OrderDate);
 
         builder.HasIndex(o => o.Status);
 
-        builder.HasIndex(o => new { o.UserId, o.OrderDate });
+        builder.HasIndex(o => new { o.CustomerId, o.OrderDate });
 
         // Relationships
         builder.HasMany(o => o.OrderItems)

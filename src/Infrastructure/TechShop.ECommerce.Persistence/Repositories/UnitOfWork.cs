@@ -26,5 +26,26 @@ public class UnitOfWork(TechShopDatabaseContext context) : IUnitOfWork
             .Property(property)
             .OriginalValue = originaValue;
     }
+
+    public async Task ExecuteInTransactionAsync(Func<Task> action, CancellationToken token)
+    {
+        var strategy = context.Database.CreateExecutionStrategy();
+
+        await strategy.ExecuteAsync(async () =>
+        {
+            using var transaction = await context.Database.BeginTransactionAsync(token);
+            try
+            {
+                await action();
+                await context.SaveChangesAsync(token);
+                await transaction.CommitAsync(token);
+            }
+            catch
+            {
+                await transaction.RollbackAsync(token);
+                throw;
+            }
+        });
+    }
 }
 

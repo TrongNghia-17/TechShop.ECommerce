@@ -137,7 +137,7 @@ public class ProductRepository(TechShopDatabaseContext context)
     public async Task UpdatePriceByCategoryAsync(
         Guid categoryId,
         decimal priceMultiplier,
-        string modifiedBy,
+        Guid modifiedBy,
         CancellationToken token = default)
     {
         await context.Products
