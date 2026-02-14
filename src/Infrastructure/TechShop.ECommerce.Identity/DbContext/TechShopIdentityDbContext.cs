@@ -2,7 +2,7 @@
 
 public class TechShopIdentityDbContext(
     DbContextOptions<TechShopIdentityDbContext> options)
-    : IdentityDbContext<ApplicationUser>(options)
+    : IdentityDbContext<ApplicationUser, IdentityRole<Guid>, Guid>(options)
 {
     protected override void OnModelCreating(ModelBuilder builder)
     {

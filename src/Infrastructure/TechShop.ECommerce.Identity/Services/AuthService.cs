@@ -1,30 +1,20 @@
 ﻿namespace TechShop.ECommerce.Identity.Services;
 
-public class AuthService : IAuthService
+public class AuthService(
+    UserManager<ApplicationUser> userManager,
+    IOptions<JwtSettings> jwtSettings,
+    SignInManager<ApplicationUser> signInManager,
+    IUnitOfWork unitOfWork)
+    : IAuthService
 {
-    private readonly UserManager<ApplicationUser> _userManager;
-    private readonly SignInManager<ApplicationUser> _signInManager;
-    private readonly JwtSettings _jwtSettings;
-
-    public AuthService(UserManager<ApplicationUser> userManager,
-        IOptions<JwtSettings> jwtSettings,
-        SignInManager<ApplicationUser> signInManager)
-    {
-        _userManager = userManager;
-        _jwtSettings = jwtSettings.Value;
-        _signInManager = signInManager;
-    }
+    private readonly JwtSettings _jwtSettings = jwtSettings.Value;
 
     public async Task<AuthResponse> Login(AuthRequest request)
     {
-        var user = await _userManager.FindByEmailAsync(request.Email);
+        var user = await userManager.FindByEmailAsync(request.Email)
+            ?? throw new NotFoundException($"User with {request.Email} not found.", request.Email);
 
-        if (user == null)
-        {
-            throw new NotFoundException($"User with {request.Email} not found.", request.Email);
-        }
-
-        var result = await _signInManager.CheckPasswordSignInAsync(user, request.Password, false);
+        var result = await signInManager.CheckPasswordSignInAsync(user, request.Password, false);
 
         if (result.Succeeded == false)
         {
@@ -37,13 +27,12 @@ public class AuthService : IAuthService
         {
             Id = user.Id,
             Token = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken),
-            Email = user.Email,
-            UserName = user.UserName
+            Email = user.Email ?? string.Empty,
+            UserName = user.UserName ?? string.Empty
         };
 
         return response;
     }
-
 
     public async Task<RegistrationResponse> Register(RegistrationRequest request)
     {
@@ -56,39 +45,41 @@ public class AuthService : IAuthService
             EmailConfirmed = true
         };
 
-        var result = await _userManager.CreateAsync(user, request.Password);
+        await unitOfWork.ExecuteInTransactionAsync(async () =>
+        {
+            var createResult = await userManager.CreateAsync(user, request.Password);
 
-        if (result.Succeeded)
-        {
-            await _userManager.AddToRoleAsync(user, "Employee");
-            return new RegistrationResponse() { UserId = user.Id };
-        }
-        else
-        {
-            StringBuilder str = new StringBuilder();
-            foreach (var err in result.Errors)
+            if (!createResult.Succeeded)
             {
-                str.AppendFormat("•{0}\n", err.Description);
+                var errors = string.Join("\n", createResult.Errors.Select(e => e.Description));
+                throw new BadRequestException(errors);
             }
 
-            throw new BadRequestException($"{str}");
-        }
+            var roleResult = await userManager.AddToRoleAsync(user, "User");
+
+            if (!roleResult.Succeeded)
+            {
+                var errors = string.Join("\n", roleResult.Errors.Select(e => e.Description));
+                throw new BadRequestException(errors);
+            }
+        }, CancellationToken.None);
+
+        return new RegistrationResponse() { UserId = user.Id };
     }
 
     private async Task<JwtSecurityToken> GenerateToken(ApplicationUser user)
     {
-        var userClaims = await _userManager.GetClaimsAsync(user);
-        var roles = await _userManager.GetRolesAsync(user);
+        var userClaims = await userManager.GetClaimsAsync(user);
+        var roles = await userManager.GetRolesAsync(user);
 
         var roleClaims = roles.Select(q => new Claim(ClaimTypes.Role, q)).ToList();
 
         var claims = new[]
         {
-                new Claim(JwtRegisteredClaimNames.Sub, user.UserName),
+                new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString() ?? string.Empty),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                new Claim(JwtRegisteredClaimNames.Email, user.Email),
-                new Claim("uid", user.Id)
-            }
+                new Claim(JwtRegisteredClaimNames.Email, user.Email ?? string.Empty),
+        }
         .Union(userClaims)
         .Union(roleClaims);
 

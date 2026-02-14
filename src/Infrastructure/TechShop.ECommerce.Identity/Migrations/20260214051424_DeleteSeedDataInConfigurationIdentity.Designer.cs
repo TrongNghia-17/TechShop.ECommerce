@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using TechShop.ECommerce.Identity.DbContext;
@@ -11,9 +12,11 @@ using TechShop.ECommerce.Identity.DbContext;
 namespace TechShop.ECommerce.Identity.Migrations
 {
     [DbContext(typeof(TechShopIdentityDbContext))]
-    partial class TechShopIdentityDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260214051424_DeleteSeedDataInConfigurationIdentity")]
+    partial class DeleteSeedDataInConfigurationIdentity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

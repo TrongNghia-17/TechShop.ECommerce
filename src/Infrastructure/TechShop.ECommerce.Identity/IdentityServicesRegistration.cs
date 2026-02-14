@@ -7,10 +7,11 @@ public static class IdentityServicesRegistration
         services.Configure<JwtSettings>(configuration.GetSection("JwtSettings"));
 
         services.AddDbContext<TechShopIdentityDbContext>(options =>
-           options.UseSqlServer(configuration.GetConnectionString("TechShopDatabaseConnectionString")));
+           options.UseNpgsql(configuration.GetConnectionString("PostgreSQL")));
 
-        services.AddIdentity<ApplicationUser, IdentityRole>()
-            .AddEntityFrameworkStores<TechShopIdentityDbContext>().AddDefaultTokenProviders();
+        services.AddIdentity<ApplicationUser, IdentityRole<Guid>>()
+            .AddEntityFrameworkStores<TechShopIdentityDbContext>()
+            .AddDefaultTokenProviders();
 
         services.AddTransient<IAuthService, AuthService>();
         services.AddTransient<IUserService, UserService>();
