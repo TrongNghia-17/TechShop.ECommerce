@@ -3,6 +3,6 @@
 public interface IUserService
 {
     Task<List<Employee>> GetEmployees();
-    Task<Employee> GetEmployee(string userId);
-    public string UserId { get; }
+    Task<Employee> GetEmployee(Guid userId);
+    public Guid UserId { get; }
 }

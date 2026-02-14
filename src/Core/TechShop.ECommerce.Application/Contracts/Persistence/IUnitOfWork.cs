@@ -8,4 +8,5 @@ public interface IUnitOfWork
         Expression<Func<TEntity, TToken>> property,
         TToken originaValue)
         where TEntity : class;
+    Task ExecuteInTransactionAsync(Func<Task> action, CancellationToken token);
 }

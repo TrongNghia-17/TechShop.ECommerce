@@ -12,7 +12,7 @@ public sealed class BulkUpdatePriceCommandHandler(
 
         var multiplier = 1 + (request.PercentageChange / 100m);
 
-        var currentUserId = userService.UserId ?? "System_BulkUpdate";
+        var currentUserId = userService.UserId;
 
         await productRepository.UpdatePriceByCategoryAsync(
             request.CategoryId,

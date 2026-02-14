@@ -1,6 +1,4 @@
-﻿using TechShop.ECommerce.Domain.Entities.Catalog;
-
-namespace TechShop.ECommerce.Application.Contracts.Persistence;
+﻿namespace TechShop.ECommerce.Application.Contracts.Persistence;
 
 public interface IProductRepository
 {
@@ -26,7 +24,7 @@ public interface IProductRepository
     Task UpdatePriceByCategoryAsync(
         Guid categoryId,
         decimal priceMultiplier,
-        string modifiedBy,
+        Guid modifiedBy,
         CancellationToken token = default);
 
     Task<int> DeleteSoftDeletedProductsAsync(
