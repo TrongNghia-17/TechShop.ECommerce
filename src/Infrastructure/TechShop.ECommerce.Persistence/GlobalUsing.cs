@@ -13,6 +13,7 @@ global using TechShop.ECommerce.Application.Contracts.Persistence;
 global using TechShop.ECommerce.Application.Exceptions;
 global using TechShop.ECommerce.Application.Features.Products.Dtos;
 global using TechShop.ECommerce.Domain.Abstractions;
+global using TechShop.ECommerce.Domain.Entities.Cart;
 global using TechShop.ECommerce.Domain.Entities.Catalog;
 global using TechShop.ECommerce.Domain.Entities.Orders;
 global using TechShop.ECommerce.Persistence.DatabaseContext;
@@ -20,3 +21,4 @@ global using TechShop.ECommerce.Persistence.Extensions;
 global using TechShop.ECommerce.Persistence.Interceptors;
 global using TechShop.ECommerce.Persistence.Repositories;
 global using TechShop.ECommerce.Persistence.Seeding;
+
