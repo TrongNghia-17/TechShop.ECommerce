@@ -3,10 +3,12 @@
 public class ProductRepository(TechShopDatabaseContext context)
     : IProductRepository
 {
-    public async Task<Product?> GetByIdAsync(Guid id)
+    public async Task<Product?> GetByIdAsync(
+        Guid id,
+        CancellationToken token)
     {
         return await context.Products
-            .FirstOrDefaultAsync(p => p.Id == id);
+            .FirstOrDefaultAsync(p => p.Id == id, cancellationToken: token);
     }
 
     public async Task<IReadOnlyList<ProductDto>> GetAllAsync()

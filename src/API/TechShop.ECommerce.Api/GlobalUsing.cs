@@ -1,5 +1,6 @@
 ﻿global using Asp.Versioning;
 global using MediatR;
+global using Microsoft.AspNetCore.Authorization;
 global using Microsoft.AspNetCore.Mvc;
 global using Microsoft.AspNetCore.OutputCaching;
 global using Microsoft.AspNetCore.RateLimiting;
@@ -18,6 +19,8 @@ global using TechShop.ECommerce.Application.Common.Cursors;
 global using TechShop.ECommerce.Application.Common.Offset;
 global using TechShop.ECommerce.Application.Contracts.Identity;
 global using TechShop.ECommerce.Application.Exceptions;
+global using TechShop.ECommerce.Application.Features.Carts.Commands.AddToCart;
+global using TechShop.ECommerce.Application.Features.Carts.Dtos;
 global using TechShop.ECommerce.Application.Features.Orders.Commands.CreateOrder;
 global using TechShop.ECommerce.Application.Features.Orders.Dtos;
 global using TechShop.ECommerce.Application.Features.Products.Commands.BulkPurge;

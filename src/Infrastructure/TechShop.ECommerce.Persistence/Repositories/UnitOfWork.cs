@@ -1,12 +1,12 @@
 ﻿namespace TechShop.ECommerce.Persistence.Repositories;
 
-public class UnitOfWork(TechShopDatabaseContext context) : IUnitOfWork
+public sealed class UnitOfWork(TechShopDatabaseContext context) : IUnitOfWork
 {
-    public async Task SaveChangesAsync(CancellationToken cancellationToken)
+    public async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
         try
         {
-            await context.SaveChangesAsync(cancellationToken);
+            return await context.SaveChangesAsync(cancellationToken);
         }
         catch (DbUpdateConcurrencyException ex)
         {

@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
-
-namespace TechShop.ECommerce.Api.Controllers.v2;
+﻿namespace TechShop.ECommerce.Api.Controllers.v2;
 
 [ApiVersion("2.0")]
 [Route("api/v{version:apiVersion}/[controller]")]

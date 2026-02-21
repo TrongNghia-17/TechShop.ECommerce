@@ -11,16 +11,22 @@ public class Cart : BaseEntity
 
     private Cart(Guid customerId)
     {
+        if (customerId == Guid.Empty)
+            throw new DomainException("CustomerId is required.");
+
         CustomerId = customerId;
     }
 
-    public static Cart Create(Guid customerId)
-    {
-        return new Cart(customerId);
-    }
+    public static Cart Create(Guid customerId) => new(customerId);
 
     public void AddItem(Guid productId, decimal unitPrice, int quantity)
     {
+        if (productId == Guid.Empty)
+            throw new DomainException("ProductId is required.");
+
+        if (unitPrice <= 0)
+            throw new DomainException("UnitPrice must be greater than zero.");
+
         if (quantity <= 0)
             throw new DomainException("Quantity must be greater than zero");
 
@@ -32,12 +38,8 @@ public class Cart : BaseEntity
             return;
         }
 
-        var item = new CartItem(productId, unitPrice, quantity);
-        _items.Add(item);
+        _items.Add(CartItem.Create(productId, unitPrice, quantity));
     }
 
-    public decimal GetTotal()
-    {
-        return _items.Sum(x => x.SubTotal);
-    }
+    public decimal GetTotal() => _items.Sum(x => x.SubTotal);
 }

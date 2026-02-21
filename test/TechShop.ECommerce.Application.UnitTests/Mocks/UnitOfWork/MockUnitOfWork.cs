@@ -10,7 +10,7 @@ public static class MockUnitOfWork
 
         mockUow
             .Setup(u => u.SaveChangesAsync(It.IsAny<CancellationToken>()))
-            .Returns(Task.CompletedTask);
+            .ReturnsAsync(1);
 
         return mockUow;
     }

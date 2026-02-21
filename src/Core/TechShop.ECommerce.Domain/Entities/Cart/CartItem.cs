@@ -11,12 +11,15 @@ public class CartItem : BaseEntity
 
     private CartItem() { }
 
-    internal CartItem(Guid productId, decimal unitPrice, int quantity)
+    private CartItem(Guid productId, decimal unitPrice, int quantity)
     {
         ProductId = productId;
         UnitPrice = unitPrice;
         Quantity = quantity;
     }
+
+    internal static CartItem Create(Guid productId, decimal unitPrice, int quantity)
+        => new(productId, unitPrice, quantity);
 
     internal void IncreaseQuantity(int quantity)
     {
@@ -24,6 +27,14 @@ public class CartItem : BaseEntity
             throw new DomainException("Invalid quantity");
 
         Quantity += quantity;
+    }
+
+    internal void UpdateUnitPrice(decimal unitPrice)
+    {
+        if (unitPrice <= 0)
+            throw new DomainException("Invalid unit price.");
+
+        UnitPrice = unitPrice;
     }
 }
 
