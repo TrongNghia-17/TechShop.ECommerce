@@ -29,6 +29,17 @@ public class CartItem : BaseEntity
         Quantity += quantity;
     }
 
+    internal void DecreaseQuantity(int quantity)
+    {
+        if (quantity <= 0)
+            throw new DomainException("Invalid quantity");
+
+        if (quantity > Quantity)
+            throw new DomainException("Quantity to remove cannot exceed current quantity.");
+
+        Quantity -= quantity;
+    }
+
     internal void UpdateUnitPrice(decimal unitPrice)
     {
         if (unitPrice <= 0)
@@ -37,4 +48,3 @@ public class CartItem : BaseEntity
         UnitPrice = unitPrice;
     }
 }
-

@@ -25,4 +25,23 @@ public sealed class CartsController(
         var result = await mediator.Send(command, cancellationToken);
         return Ok(result);
     }
+
+    [HttpDelete("items")]
+    [ProducesResponseType(typeof(AddToCartResult), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult<AddToCartResult>> RemoveItem(
+        [FromBody] RemoveFromCartRequest request,
+        CancellationToken cancellationToken)
+    {
+        var command = new RemoveFromCartCommand(
+            CustomerId: userService.UserId,
+            ProductId: request.ProductId,
+            Quantity: request.Quantity
+        );
+
+        var result = await mediator.Send(command, cancellationToken);
+        return Ok(result);
+    }
+
 }

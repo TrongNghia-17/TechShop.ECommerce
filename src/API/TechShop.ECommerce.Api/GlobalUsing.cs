@@ -20,6 +20,7 @@ global using TechShop.ECommerce.Application.Common.Offset;
 global using TechShop.ECommerce.Application.Contracts.Identity;
 global using TechShop.ECommerce.Application.Exceptions;
 global using TechShop.ECommerce.Application.Features.Carts.Commands.AddToCart;
+global using TechShop.ECommerce.Application.Features.Carts.Commands.RemoveFromCart;
 global using TechShop.ECommerce.Application.Features.Carts.Dtos;
 global using TechShop.ECommerce.Application.Features.Orders.Commands.CreateOrder;
 global using TechShop.ECommerce.Application.Features.Orders.Dtos;
