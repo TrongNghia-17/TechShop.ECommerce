@@ -41,5 +41,25 @@ public class Cart : BaseEntity
         _items.Add(CartItem.Create(productId, unitPrice, quantity));
     }
 
+    public void RemoveItem(Guid productId, int quantity)
+    {
+        if (productId == Guid.Empty)
+            throw new DomainException("ProductId is required.");
+
+        if (quantity <= 0)
+            throw new DomainException("Quantity must be greater than zero");
+
+        var existingItem = _items.FirstOrDefault(x => x.ProductId == productId)
+            ?? throw new DomainException("Product does not exist in cart.");
+
+        if (quantity >= existingItem.Quantity)
+        {
+            _items.Remove(existingItem);
+            return;
+        }
+
+        existingItem.DecreaseQuantity(quantity);
+    }
+
     public decimal GetTotal() => _items.Sum(x => x.SubTotal);
 }
