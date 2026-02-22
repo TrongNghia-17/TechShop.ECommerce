@@ -44,4 +44,14 @@ public sealed class CartsController(
         return Ok(result);
     }
 
+    [HttpGet]
+    [ProducesResponseType(typeof(GetCartResult), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<ActionResult<GetCartResult>> GetCart(CancellationToken cancellationToken)
+    {
+        var query = new GetCartQuery(userService.UserId);
+        var result = await mediator.Send(query, cancellationToken);
+
+        return Ok(result);
+    }
 }
