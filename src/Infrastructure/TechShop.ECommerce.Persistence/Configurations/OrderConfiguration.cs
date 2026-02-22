@@ -23,6 +23,8 @@ public class OrderConfiguration : IEntityTypeConfiguration<Order>
         builder.Property(o => o.Notes)
             .HasMaxLength(1000);
 
+        builder.Property(x => x.Id).ValueGeneratedNever();
+
         // Indexes
         builder.HasIndex(o => o.CustomerId);
 

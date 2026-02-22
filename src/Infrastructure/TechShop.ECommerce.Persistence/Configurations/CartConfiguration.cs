@@ -14,12 +14,15 @@ public class CartConfiguration : IEntityTypeConfiguration<Cart>
         builder.Property(x => x.CustomerId)
             .IsRequired();
 
+        builder.Property(x => x.Id).ValueGeneratedNever();
+
         builder.HasMany(c => c.Items)
-            .WithOne()
+            .WithOne(ci => ci.Cart)
             .HasForeignKey(ci => ci.CartId)
             .OnDelete(DeleteBehavior.Cascade);
 
         builder.Navigation(c => c.Items)
+            .HasField("_items")
             .UsePropertyAccessMode(PropertyAccessMode.Field);
     }
 }

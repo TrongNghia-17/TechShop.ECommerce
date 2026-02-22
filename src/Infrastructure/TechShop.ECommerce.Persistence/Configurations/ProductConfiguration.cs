@@ -1,6 +1,4 @@
-﻿using TechShop.ECommerce.Domain.Entities.Catalog;
-
-namespace TechShop.ECommerce.Persistence.Configurations;
+﻿namespace TechShop.ECommerce.Persistence.Configurations;
 
 public class ProductConfiguration : IEntityTypeConfiguration<Product>
 {
@@ -23,6 +21,8 @@ public class ProductConfiguration : IEntityTypeConfiguration<Product>
         builder.Property(p => p.Price)
             .HasPrecision(18, 2)
             .IsRequired();
+
+        builder.Property(x => x.Id).ValueGeneratedNever();
 
         builder.Property<NpgsqlTsVector>("SearchVector")
             .HasColumnType("tsvector")

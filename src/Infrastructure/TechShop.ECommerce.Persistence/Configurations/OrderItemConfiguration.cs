@@ -1,6 +1,4 @@
-﻿using TechShop.ECommerce.Domain.Entities.Catalog;
-
-namespace TechShop.ECommerce.Persistence.Configurations;
+﻿namespace TechShop.ECommerce.Persistence.Configurations;
 
 public class OrderItemConfiguration : IEntityTypeConfiguration<OrderItem>
 {
@@ -20,6 +18,8 @@ public class OrderItemConfiguration : IEntityTypeConfiguration<OrderItem>
         builder.Property(oi => oi.UnitPrice)
             .HasPrecision(18, 2)
             .IsRequired();
+
+        builder.Property(x => x.Id).ValueGeneratedNever();
 
         // Relationships
         builder.HasOne<Order>()

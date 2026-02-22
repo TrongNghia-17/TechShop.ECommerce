@@ -2,16 +2,15 @@
 
 public sealed class UnitOfWork(TechShopDatabaseContext context) : IUnitOfWork
 {
-    public async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+    public async Task<int> SaveChangesAsync(CancellationToken token = default)
     {
         try
         {
-            return await context.SaveChangesAsync(cancellationToken);
+            return await context.SaveChangesAsync(token);
         }
         catch (DbUpdateConcurrencyException ex)
         {
-            throw new ConcurrencyException(
-                "A concurrency conflict occurred.", ex);
+            throw new ConcurrencyException("A concurrency conflict occurred.", ex);
         }
     }
 

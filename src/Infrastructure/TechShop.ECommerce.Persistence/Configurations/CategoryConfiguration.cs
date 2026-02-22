@@ -15,6 +15,8 @@ public class CategoryConfiguration : IEntityTypeConfiguration<Category>
         builder.Property(c => c.Description)
             .HasMaxLength(1000);
 
+        builder.Property(x => x.Id).ValueGeneratedNever();
+
         // Indexes
         builder.HasIndex(c => c.Name)
             .IsUnique();
