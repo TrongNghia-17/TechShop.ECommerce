@@ -15,27 +15,6 @@ public static class PersistenceServiceRegistration
             options.UseNpgsql(
                 configuration.GetConnectionString("PostgreSQL"));
 
-            options.UseAsyncSeeding(async (context, _, token) =>
-            {
-                var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
-
-                if (env == "Development")
-                    await TechShopDataSeeder.SeedAsync(
-                        (TechShopDatabaseContext)context,
-                        token);
-            });
-
-            options.UseSeeding((context, _) =>
-            {
-                var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
-
-                if (env == "Development")
-                {
-                    TechShopDataSeeder.Seed(
-                        (TechShopDatabaseContext)context);
-                }
-            });
-
             options.AddInterceptors(
                 serviceProvider.GetRequiredService<AuditSaveChangesInterceptor>(),
                 serviceProvider.GetRequiredService<SoftDeleteSaveChangesInterceptor>(),
@@ -46,6 +25,9 @@ public static class PersistenceServiceRegistration
         services.AddScoped<IOrderRepository, OrderRepository>();
         services.AddScoped<ICartRepository, CartRepository>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+        services.AddScoped<IDataSeeder, CategorySeeder>();
+        services.AddScoped<IDataSeeder, ProductSeeder>();
 
         return services;
     }

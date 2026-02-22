@@ -16,6 +16,9 @@ public static class IdentityServicesRegistration
         services.AddTransient<IAuthService, AuthService>();
         services.AddTransient<IUserService, UserService>();
 
+        services.AddScoped<IIdentitySeeder, RoleSeeder>();
+        services.AddScoped<IIdentitySeeder, UserSeeder>();
+
         services.AddAuthentication(options =>
         {
             options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;

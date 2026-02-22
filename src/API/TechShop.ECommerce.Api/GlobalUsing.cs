@@ -37,9 +37,13 @@ global using TechShop.ECommerce.Application.Features.Products.Queries.GetProduct
 global using TechShop.ECommerce.Application.Features.Products.Queries.GetProductsPaged;
 global using TechShop.ECommerce.Application.Models.Identity;
 global using TechShop.ECommerce.Identity;
+global using TechShop.ECommerce.Identity.DbContext;
+global using TechShop.ECommerce.Identity.Seeding;
 global using TechShop.ECommerce.Infrastructure;
 global using TechShop.ECommerce.Persistence;
 global using TechShop.ECommerce.Persistence.DatabaseContext;
+global using TechShop.ECommerce.Persistence.Seeding;
+
 
 
 

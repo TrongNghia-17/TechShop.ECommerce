@@ -17,4 +17,5 @@ global using TechShop.ECommerce.Application.Exceptions;
 global using TechShop.ECommerce.Application.Models.Identity;
 global using TechShop.ECommerce.Identity.DbContext;
 global using TechShop.ECommerce.Identity.Models;
+global using TechShop.ECommerce.Identity.Seeding;
 global using TechShop.ECommerce.Identity.Services;
