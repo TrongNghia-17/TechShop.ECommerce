@@ -1,6 +1,7 @@
 ﻿namespace TechShop.ECommerce.Application.Features.Orders.Commands.CreateOrder;
 
 public class PlaceOrderCommandHandler(
+    ICartRepository cartRepository,
     IProductRepository productRepository,
     IOrderRepository orderRepository,
     IUnitOfWork unitOfWork,
@@ -13,6 +14,12 @@ public class PlaceOrderCommandHandler(
 
         await unitOfWork.ExecuteInTransactionAsync(async () =>
         {
+            var cart = await cartRepository.GetByCustomerIdAsync(request.CustomerId, token)
+                      ?? throw new NotFoundException(nameof(Cart), request.CustomerId);
+
+            if (cart.Items is null || cart.Items.Count == 0)
+                throw new BadRequestException("Cart is empty.");
+
             var address = new Address(
                 request.ShippingAddress.Street,
                 request.ShippingAddress.City,
@@ -22,7 +29,7 @@ public class PlaceOrderCommandHandler(
 
             var order = Order.Create(request.CustomerId, address, request.Notes);
 
-            foreach (var item in request.Items)
+            foreach (var item in cart.Items)
             {
                 var product = await productRepository.GetByIdAsync(item.ProductId)
                     ?? throw new NotFoundException(nameof(Product), item.ProductId);
@@ -33,6 +40,8 @@ public class PlaceOrderCommandHandler(
             }
 
             await orderRepository.AddAsync(order);
+
+            cart.Clear();
 
             orderId = order.Id;
 

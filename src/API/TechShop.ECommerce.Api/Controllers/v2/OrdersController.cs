@@ -14,7 +14,6 @@ public class OrdersController(
 
         var command = new PlaceOrderCommand(
             CustomerId: userService.UserId,
-            Items: request.Items,
             ShippingAddress: request.ShippingAddress,
             Notes: request.Notes
         );

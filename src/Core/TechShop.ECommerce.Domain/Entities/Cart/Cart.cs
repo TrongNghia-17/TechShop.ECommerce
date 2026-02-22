@@ -61,5 +61,10 @@ public class Cart : BaseEntity
         existingItem.DecreaseQuantity(quantity);
     }
 
+    public void Clear()
+    {
+        _items.Clear();
+    }
+
     public decimal GetTotal() => _items.Sum(x => x.SubTotal);
 }

@@ -2,7 +2,6 @@
 
 public sealed record PlaceOrderCommand(
     Guid CustomerId,
-    List<OrderItemDto> Items,
     AddressDto ShippingAddress,
     string? Notes
 ) : IRequest<Guid>;
