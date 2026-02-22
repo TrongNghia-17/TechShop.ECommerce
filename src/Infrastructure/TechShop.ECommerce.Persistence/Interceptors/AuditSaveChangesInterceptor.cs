@@ -1,14 +1,14 @@
 ﻿namespace TechShop.ECommerce.Persistence.Interceptors;
 
-public sealed class AuditSoftDeleteSaveChangesInterceptor(
-    IUserService UserService)
+public sealed class AuditSaveChangesInterceptor(
+    IUserService userService)
     : SaveChangesInterceptor
 {
     public override InterceptionResult<int> SavingChanges(
         DbContextEventData eventData,
         InterceptionResult<int> result)
     {
-        ApplyRules(eventData.Context);
+        ApplyAudit(eventData.Context);
         return base.SavingChanges(eventData, result);
     }
 
@@ -17,23 +17,17 @@ public sealed class AuditSoftDeleteSaveChangesInterceptor(
         InterceptionResult<int> result,
         CancellationToken cancellationToken = default)
     {
-        ApplyRules(eventData.Context);
+        ApplyAudit(eventData.Context);
         return base.SavingChangesAsync(eventData, result, cancellationToken);
     }
 
-    private void ApplyRules(DbContext? context)
+    private void ApplyAudit(DbContext? context)
     {
         if (context is null) return;
 
-        var userId = UserService.UserId;
+        var userId = userService.UserId;
 
-        ApplyAuditFields(context.ChangeTracker, userId);
-        ApplySoftDelete(context.ChangeTracker, userId);
-    }
-
-    private static void ApplyAuditFields(ChangeTracker changeTracker, Guid? userId)
-    {
-        foreach (var entry in changeTracker.Entries<BaseEntity>())
+        foreach (var entry in context.ChangeTracker.Entries<BaseEntity>())
         {
             if (entry.State == EntityState.Added)
             {
@@ -46,17 +40,6 @@ public sealed class AuditSoftDeleteSaveChangesInterceptor(
                 entry.Property(x => x.DateCreated).IsModified = false;
                 entry.Entity.MarkAsUpdated(userId);
             }
-        }
-    }
-
-    private static void ApplySoftDelete(ChangeTracker changeTracker, Guid? userId)
-    {
-        foreach (var entry in changeTracker.Entries<ISoftDelete>())
-        {
-            if (entry.State != EntityState.Deleted) continue;
-
-            entry.State = EntityState.Modified;
-            entry.Entity.MarkAsDeleted(userId);
         }
     }
 }

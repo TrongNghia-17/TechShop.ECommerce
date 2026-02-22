@@ -6,8 +6,9 @@ public static class PersistenceServiceRegistration
         this IServiceCollection services,
         IConfiguration configuration)
     {
-        services.AddScoped<AuditSoftDeleteSaveChangesInterceptor>();
         services.AddScoped<SlowQueryInterceptor>();
+        services.AddScoped<AuditSaveChangesInterceptor>();
+        services.AddScoped<SoftDeleteSaveChangesInterceptor>();
 
         services.AddDbContext<TechShopDatabaseContext>((serviceProvider, options) =>
         {
@@ -36,7 +37,8 @@ public static class PersistenceServiceRegistration
             });
 
             options.AddInterceptors(
-                serviceProvider.GetRequiredService<AuditSoftDeleteSaveChangesInterceptor>(),
+                serviceProvider.GetRequiredService<AuditSaveChangesInterceptor>(),
+                serviceProvider.GetRequiredService<SoftDeleteSaveChangesInterceptor>(),
                 serviceProvider.GetRequiredService<SlowQueryInterceptor>());
         });
 
