@@ -4,7 +4,7 @@ public static class WebApplicationExtensions
 {
     public static WebApplication UseApiPipeline(this WebApplication app)
     {
-        app.UseMiddleware<ExceptionMiddleware>();
+        app.UseExceptionHandler();
 
         if (app.Environment.IsDevelopment())
         {

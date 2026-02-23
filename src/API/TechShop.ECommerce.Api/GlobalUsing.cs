@@ -1,6 +1,7 @@
 ﻿global using Asp.Versioning;
 global using MediatR;
 global using Microsoft.AspNetCore.Authorization;
+global using Microsoft.AspNetCore.Diagnostics;
 global using Microsoft.AspNetCore.Mvc;
 global using Microsoft.AspNetCore.OutputCaching;
 global using Microsoft.AspNetCore.RateLimiting;
@@ -9,7 +10,6 @@ global using Microsoft.Net.Http.Headers;
 global using Microsoft.OpenApi;
 global using Scalar.AspNetCore;
 global using Serilog;
-global using System.Runtime.ExceptionServices;
 global using System.Threading.RateLimiting;
 global using TechShop.ECommerce.Api.Extensions;
 global using TechShop.ECommerce.Api.Middleware;

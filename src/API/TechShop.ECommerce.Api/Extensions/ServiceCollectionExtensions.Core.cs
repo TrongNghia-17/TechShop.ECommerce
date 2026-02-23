@@ -12,6 +12,9 @@ public static partial class ServiceCollectionExtensions
         services.AddControllers();
         services.AddHttpContextAccessor();
 
+        services.AddProblemDetails();
+        services.AddExceptionHandler<GlobalExceptionHandler>();
+
         return services;
     }
 }
