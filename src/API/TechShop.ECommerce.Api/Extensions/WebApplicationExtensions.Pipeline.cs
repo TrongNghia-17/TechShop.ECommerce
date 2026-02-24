@@ -5,6 +5,7 @@ public static class WebApplicationExtensions
     public static WebApplication UseApiPipeline(this WebApplication app)
     {
         app.UseExceptionHandler();
+        app.UseMiddleware<CorrelationIdMiddleware>();
 
         if (app.Environment.IsDevelopment())
         {
