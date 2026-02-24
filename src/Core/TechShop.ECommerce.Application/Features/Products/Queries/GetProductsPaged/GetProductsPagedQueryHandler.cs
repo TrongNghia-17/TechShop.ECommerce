@@ -1,6 +1,4 @@
-﻿using TechShop.ECommerce.Application.Common.Offset;
-
-namespace TechShop.ECommerce.Application.Features.Products.Queries.GetProductsPaged;
+﻿namespace TechShop.ECommerce.Application.Features.Products.Queries.GetProductsPaged;
 
 public sealed class GetProductsPagedQueryHandler(
     IProductRepository productRepository)

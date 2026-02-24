@@ -1,6 +1,4 @@
-﻿using TechShop.ECommerce.Domain.Entities.Catalog;
-
-namespace TechShop.ECommerce.Application.Features.Products.Queries.GetDetails;
+﻿namespace TechShop.ECommerce.Application.Features.Products.Queries.GetDetails;
 
 public sealed class GetProductDetailsQueryHandler(
     IMapper mapper,
@@ -16,7 +14,7 @@ public sealed class GetProductDetailsQueryHandler(
             "Retrieving product details for product id {ProductId}",
             request.Id);
 
-        var product = await productRepository.GetByIdAsync(request.Id)
+        var product = await productRepository.GetByIdAsync(request.Id, cancellationToken)
             ?? throw new NotFoundException(nameof(Product), request.Id);
 
         var data = mapper.Map<ProductDetailsDto>(product);
