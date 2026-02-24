@@ -1,7 +1,6 @@
-﻿namespace TechShop.ECommerce.Api.Controllers.v2;
+﻿namespace TechShop.ECommerce.Api.Controllers;
 
-[ApiVersion("2.0")]
-[Route("api/v{version:apiVersion}/[controller]")]
+[Route("api/[controller]")]
 [ApiController]
 [Authorize]
 public class OrdersController(

@@ -7,10 +7,7 @@
 		<UserSecretsId>cbd57680-6124-4165-9769-6252ceee42f7</UserSecretsId>
 	</PropertyGroup>
 
-	<ItemGroup>
-		<PackageReference Include="Asp.Versioning.Http" Version="8.1.1" />
-		<PackageReference Include="Asp.Versioning.Mvc" Version="8.1.1" />
-		<PackageReference Include="Asp.Versioning.Mvc.ApiExplorer" Version="8.1.1" />
+	<ItemGroup>		
 		<PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.2" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="10.0.2">
 			<PrivateAssets>all</PrivateAssets>

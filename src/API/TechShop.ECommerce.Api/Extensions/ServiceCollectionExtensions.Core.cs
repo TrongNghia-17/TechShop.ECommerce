@@ -15,6 +15,8 @@ public static partial class ServiceCollectionExtensions
         services.AddProblemDetails();
         services.AddExceptionHandler<GlobalExceptionHandler>();
 
+        services.AddOpenApi();
+
         return services;
     }
 }

@@ -7,33 +7,24 @@ public static class WebApplicationExtensions
         app.UseExceptionHandler();
         app.UseMiddleware<CorrelationIdMiddleware>();
 
-        if (app.Environment.IsDevelopment())
-        {
-            app.MapOpenApi("/openapi/{documentName}.json");
-
-            app.MapScalarApiReference(options =>
-            {
-                options.OpenApiRoutePattern = "/openapi/{documentName}.json";
-
-                options
-                   .WithTheme(ScalarTheme.Kepler);
-            });
-        }
-
         app.UseSerilogRequestLogging();
         app.UseHttpsRedirection();
-
         app.UseCors("all");
+
         app.UseAuthentication();
         app.UseAuthorization();
-
-        // (prod note) forwarded headers should go before rate limiter
-        // app.UseForwardedHeaders();
 
         app.UseRateLimiter();
         app.UseOutputCache();
 
+        if (app.Environment.IsDevelopment())
+        {
+            app.MapOpenApi();
+            app.MapScalarApiReference();
+        }
         app.MapControllers();
+        app.MapCartEndpoints();
+
         return app;
     }
 }

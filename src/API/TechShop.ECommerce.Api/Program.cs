@@ -8,9 +8,7 @@ builder.Services
     .AddApiCore(builder.Configuration)
     .AddRateLimitingPolicies()
     .AddOutputCachingPolicies()
-    .AddApiVersioningWithExplorer()
-    .AddCorsAll()
-    .AddOpenApiWithVersioning();
+    .AddCorsAll();
 
 var app = builder.Build();
 

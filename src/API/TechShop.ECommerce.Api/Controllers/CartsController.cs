@@ -1,7 +1,6 @@
-﻿namespace TechShop.ECommerce.Api.Controllers.v2;
+﻿namespace TechShop.ECommerce.Api.Controllers;
 
-[ApiVersion("2.0")]
-[Route("api/v{version:apiVersion}/[controller]")]
+[Route("api/[controller]")]
 [ApiController]
 [Authorize]
 public sealed class CartsController(
@@ -13,7 +12,7 @@ public sealed class CartsController(
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<AddToCartResult>> AddItem(
-        [FromBody] AddToCartRequest request,
+        [FromBody] CartItemRequest request,
         CancellationToken cancellationToken)
     {
         var command = new AddToCartCommand(
@@ -31,7 +30,7 @@ public sealed class CartsController(
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<AddToCartResult>> RemoveItem(
-        [FromBody] RemoveFromCartRequest request,
+        [FromBody] CartItemRequest request,
         CancellationToken cancellationToken)
     {
         var command = new RemoveFromCartCommand(

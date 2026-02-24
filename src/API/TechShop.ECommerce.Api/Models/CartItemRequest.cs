@@ -1,6 +1,6 @@
 ﻿namespace TechShop.ECommerce.Api.Models;
 
-public sealed record AddToCartRequest(
+public sealed record CartItemRequest(
     Guid ProductId,
     int Quantity
 );
