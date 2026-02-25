@@ -24,6 +24,7 @@ global using TechShop.ECommerce.Application.Features.Carts.Commands.AddToCart;
 global using TechShop.ECommerce.Application.Features.Carts.Commands.RemoveFromCart;
 global using TechShop.ECommerce.Application.Features.Carts.Dtos;
 global using TechShop.ECommerce.Application.Features.Carts.Queries.GetCart;
+global using TechShop.ECommerce.Application.Features.Orders.Commands.PlaceOrder;
 global using TechShop.ECommerce.Application.Features.Orders.Dtos;
 global using TechShop.ECommerce.Application.Features.Products.Commands.BulkPurge;
 global using TechShop.ECommerce.Application.Features.Products.Commands.BulkUpdatePrice;

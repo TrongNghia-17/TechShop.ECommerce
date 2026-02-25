@@ -25,6 +25,7 @@ public static class WebApplicationExtensions
 
         app.MapControllers();
         app.MapCartEndpoints();
+        app.MapOrderEndpoints();
 
         return app;
     }

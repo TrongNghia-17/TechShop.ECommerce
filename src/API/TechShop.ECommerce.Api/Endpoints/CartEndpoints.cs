@@ -45,14 +45,14 @@ public static class CartEndpoints
         [FromBody] CartItemRequest request,
         [FromServices] IMediator mediator,
         [FromServices] IUserService userService,
-        CancellationToken ct)
+        CancellationToken token)
     {
         var command = new AddToCartCommand(
             CustomerId: userService.UserId,
             ProductId: request.ProductId,
             Quantity: request.Quantity);
 
-        var result = await mediator.Send(command, ct);
+        var result = await mediator.Send(command, token);
 
         return TypedResults.Ok(result);
     }
@@ -61,14 +61,14 @@ public static class CartEndpoints
         [FromBody] CartItemRequest request,
         [FromServices] IMediator mediator,
         [FromServices] IUserService userService,
-        CancellationToken ct)
+        CancellationToken token)
     {
         var command = new RemoveFromCartCommand(
             CustomerId: userService.UserId,
             ProductId: request.ProductId,
             Quantity: request.Quantity);
 
-        var result = await mediator.Send(command, ct);
+        var result = await mediator.Send(command, token);
 
         return TypedResults.Ok(result);
     }
@@ -76,11 +76,11 @@ public static class CartEndpoints
     private static async Task<Ok<GetCartResult>> GetCart(
         [FromServices] IMediator mediator,
         [FromServices] IUserService userService,
-        CancellationToken ct)
+        CancellationToken token)
     {
         var query = new GetCartQuery(userService.UserId);
 
-        var result = await mediator.Send(query, ct);
+        var result = await mediator.Send(query, token);
 
         return TypedResults.Ok(result);
     }
