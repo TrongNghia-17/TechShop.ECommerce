@@ -1,11 +1,13 @@
-﻿namespace TechShop.ECommerce.Identity;
+﻿using TechShop.ECommerce.Identity.Security;
+
+namespace TechShop.ECommerce.Identity;
 
 public static class IdentityServicesRegistration
 {
-    public static IServiceCollection AddIdentityServices(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AddIdentityServices(
+        this IServiceCollection services,
+        IConfiguration configuration)
     {
-        services.Configure<JwtSettings>(configuration.GetSection("JwtSettings"));
-
         services.AddDbContext<TechShopIdentityDbContext>(options =>
            options.UseNpgsql(configuration.GetConnectionString("PostgreSQL")));
 
@@ -19,25 +21,19 @@ public static class IdentityServicesRegistration
         services.AddScoped<IIdentitySeeder, RoleSeeder>();
         services.AddScoped<IIdentitySeeder, UserSeeder>();
 
+        services.AddOptions<JwtSettings>()
+            .Bind(configuration.GetSection("JwtSettings"))
+            .ValidateDataAnnotations()
+            .ValidateOnStart();
+
         services.AddAuthentication(options =>
         {
             options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
             options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-        }).AddJwtBearer(o =>
-        {
-            o.TokenValidationParameters = new TokenValidationParameters
-            {
-                ValidateIssuerSigningKey = true,
-                ValidateIssuer = true,
-                ValidateAudience = true,
-                ValidateLifetime = true,
-                ClockSkew = TimeSpan.Zero,
-                ValidIssuer = configuration["JwtSettings:Issuer"],
-                ValidAudience = configuration["JwtSettings:Audience"],
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JwtSettings:Key"]))
+        })
+        .AddJwtBearer();
 
-            };
-        });
+        services.ConfigureOptions<JwtBearerOptionsSetup>();
 
         return services;
 

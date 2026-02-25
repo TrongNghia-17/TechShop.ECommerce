@@ -2,8 +2,15 @@
 
 public class JwtSettings
 {
-    public string Key { get; set; }
-    public string Issuer { get; set; }
-    public string Audience { get; set; }
-    public double DurationInMinutes { get; set; }
+    [Required]
+    public string Key { get; set; } = default!;
+
+    [Required]
+    public string Issuer { get; set; } = default!;
+
+    [Required]
+    public string Audience { get; set; } = default!;
+
+    [Range(1, 1440)]
+    public int DurationInMinutes { get; set; }
 }

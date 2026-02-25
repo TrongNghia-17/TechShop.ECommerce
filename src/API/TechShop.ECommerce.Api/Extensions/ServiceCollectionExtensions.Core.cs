@@ -9,6 +9,8 @@ public static partial class ServiceCollectionExtensions
         services.AddPersistenceServices(config);
         services.AddIdentityServices(config);
 
+        services.AddAuthorization();
+
         services.AddControllers();
         services.AddHttpContextAccessor();
 

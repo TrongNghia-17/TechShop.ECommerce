@@ -22,6 +22,7 @@ public static class WebApplicationExtensions
             app.MapOpenApi();
             app.MapScalarApiReference();
         }
+
         app.MapControllers();
         app.MapCartEndpoints();
 
