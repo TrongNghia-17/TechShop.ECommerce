@@ -1,6 +1,4 @@
-﻿namespace TechShop.ECommerce.Api.Endpoints;
-
-public static class OrderEndpoints
+﻿public static class OrderEndpoints
 {
     public static RouteGroupBuilder MapOrderEndpoints(this IEndpointRouteBuilder app)
     {
@@ -10,24 +8,18 @@ public static class OrderEndpoints
 
         group.MapPost("/", CreateOrder)
             .WithName("Order_Create")
-            .WithSummary("Create a new order");
-
-        group.MapGet("/{id:guid}",
-            () => TypedResults.StatusCode(StatusCodes.Status501NotImplemented))
-            .WithName("Order_GetById");
+            .WithSummary("Create a new order")
+            .Produces<CreateOrderResponse>(StatusCodes.Status201Created)
+            .ProducesProblem(StatusCodes.Status400BadRequest);
 
         return group;
     }
-
-    // ================================
-    // Handlers
-    // ================================
 
     private static async Task<Created<CreateOrderResponse>> CreateOrder(
         [FromBody] CreateOrderRequest request,
         [FromServices] IMediator mediator,
         [FromServices] IUserService userService,
-        CancellationToken ct)
+        CancellationToken token)
     {
         var command = new PlaceOrderCommand(
             CustomerId: userService.UserId,
@@ -35,7 +27,7 @@ public static class OrderEndpoints
             Notes: request.Notes
         );
 
-        var orderId = await mediator.Send(command, ct);
+        var orderId = await mediator.Send(command, token);
 
         return TypedResults.Created(
             $"/api/orders/{orderId}",
