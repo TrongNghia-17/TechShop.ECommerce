@@ -2,36 +2,33 @@
 
 public class Order : BaseEntity
 {
-    public Guid CustomerId { get; private set; }
+    private readonly List<OrderItem> _orderItems = [];
+    public IReadOnlyCollection<OrderItem> OrderItems => _orderItems.AsReadOnly();
 
+    public Guid CustomerId { get; private set; }
     public DateTimeOffset OrderDate { get; private set; }
     public OrderStatus Status { get; private set; }
     public string? Notes { get; private set; }
     public Address? ShippingAddress { get; private set; }
-
-
-    private readonly List<OrderItem> _orderItems = [];
-    public IReadOnlyCollection<OrderItem> OrderItems => _orderItems.AsReadOnly();
-
     public decimal TotalAmount { get; private set; }
 
     private Order() { }
 
-    public static Order Create(Guid customerId, Address shippingAddress, string? notes = null)
+    private Order(Guid customerId, Address address, string? notes)
     {
-        var order = new Order
-        {
-            Id = Guid.NewGuid(),
-            CustomerId = customerId,
-            ShippingAddress = shippingAddress,
-            Notes = notes,
-            Status = OrderStatus.Pending,
-            OrderDate = DateTimeOffset.UtcNow,
-            TotalAmount = 0
-        };
+        if (customerId == Guid.Empty)
+            throw new DomainException("CustomerId is required.");
 
-        return order;
+        CustomerId = customerId;
+        ShippingAddress = address ?? throw new DomainException("Shipping address is required.");
+        Notes = notes;
+        Status = OrderStatus.Pending;
+        OrderDate = DateTimeOffset.UtcNow;
+        TotalAmount = 0;
     }
+
+    public static Order Create(Guid customerId, Address address, string? notes)
+        => new(customerId, address, notes);
 
     public void AddItem(Guid productId, decimal unitPrice, int quantity)
     {
@@ -40,6 +37,9 @@ public class Order : BaseEntity
 
         if (quantity <= 0)
             throw new DomainException("Quantity must be greater than zero.");
+
+        if (unitPrice <= 0)
+            throw new DomainException("UnitPrice must be greater than zero.");
 
         var existingItem = _orderItems.FirstOrDefault(i => i.ProductId == productId);
         if (existingItem != null)
@@ -66,11 +66,24 @@ public class Order : BaseEntity
             _orderItems.Remove(item);
             CalculateTotal();
         }
+        else
+            throw new DomainException("Product not found in order.");
     }
 
     private void CalculateTotal()
     {
         TotalAmount = _orderItems.Sum(i => i.UnitPrice * i.Quantity);
+    }
+
+    public void Confirm()
+    {
+        if (Status != OrderStatus.Pending)
+            throw new DomainException("Order already processed.");
+
+        if (_orderItems.Count == 0)
+            throw new DomainException("Order must have at least one item.");
+
+        Status = OrderStatus.Confirmed;
     }
 }
 

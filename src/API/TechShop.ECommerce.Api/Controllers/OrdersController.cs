@@ -1,4 +1,6 @@
-﻿namespace TechShop.ECommerce.Api.Controllers;
+﻿using TechShop.ECommerce.Application.Features.Orders.Commands.PlaceOrder;
+
+namespace TechShop.ECommerce.Api.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]

@@ -16,13 +16,13 @@ public class UserService(
         }
     }
 
-    public async Task<Employee> GetEmployee(Guid userId)
+    public async Task<Customer> GetCustomer(Guid userId)
     {
         var employee = await userManager.FindByIdAsync(userId.ToString());
 
         return employee == null
             ? throw new KeyNotFoundException($"User with id {userId} not found.")
-            : new Employee
+            : new Customer
             {
                 Email = employee.Email ?? string.Empty,
                 Id = employee.Id,
@@ -31,10 +31,10 @@ public class UserService(
             };
     }
 
-    public async Task<List<Employee>> GetEmployees()
+    public async Task<List<Customer>> GetCustomers()
     {
         var employees = await userManager.GetUsersInRoleAsync("Employee");
-        return [.. employees.Select(q => new Employee
+        return [.. employees.Select(q => new Customer
         {
             Id = q.Id,
             Email = q.Email ?? string.Empty,

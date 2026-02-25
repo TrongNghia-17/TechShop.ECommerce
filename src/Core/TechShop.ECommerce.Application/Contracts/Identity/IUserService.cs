@@ -2,7 +2,7 @@
 
 public interface IUserService
 {
-    Task<List<Employee>> GetEmployees();
-    Task<Employee> GetEmployee(Guid userId);
+    Task<List<Customer>> GetCustomers();
+    Task<Customer> GetCustomer(Guid userId);
     public Guid UserId { get; }
 }

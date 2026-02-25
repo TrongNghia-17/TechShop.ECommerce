@@ -1,6 +1,6 @@
 ﻿namespace TechShop.ECommerce.Application.Models.Identity;
 
-public class Employee
+public class Customer
 {
     public Guid Id { get; set; }
     public string Email { get; set; } = default!;
