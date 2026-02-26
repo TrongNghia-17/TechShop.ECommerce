@@ -1,4 +1,4 @@
-﻿namespace TechShop.ECommerce.Identity.Security;
+﻿namespace TechShop.ECommerce.Identity.Authentication;
 
 public class JwtBearerOptionsSetup(IOptions<JwtSettings> options)
         : IConfigureNamedOptions<JwtBearerOptions>

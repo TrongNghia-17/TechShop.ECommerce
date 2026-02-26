@@ -2,7 +2,13 @@
 
 public class EmailSettings
 {
-    public required string ApiKey { get; set; }
-    public required string FromAddress { get; set; }
-    public required string FromName { get; set; }
+    [Required]
+    public string ApiKey { get; set; } = default!;
+
+    [Required]
+    [EmailAddress]
+    public string FromAddress { get; set; } = default!;
+
+    [Required]
+    public string FromName { get; set; } = default!;
 }

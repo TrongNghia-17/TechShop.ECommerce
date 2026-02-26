@@ -1,6 +1,4 @@
-﻿using TechShop.ECommerce.Identity.Security;
-
-namespace TechShop.ECommerce.Identity;
+﻿namespace TechShop.ECommerce.Identity;
 
 public static class IdentityServicesRegistration
 {
@@ -15,8 +13,10 @@ public static class IdentityServicesRegistration
             .AddEntityFrameworkStores<TechShopIdentityDbContext>()
             .AddDefaultTokenProviders();
 
-        services.AddTransient<IAuthService, AuthService>();
-        services.AddTransient<IUserService, UserService>();
+        services.AddTransient<IUserQueryService, UserQueryService>();
+        services.AddScoped<IIdentityService, IdentityService>();
+        services.AddScoped<ICurrentUserService, CurrentUserService>();
+        services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
 
         services.AddScoped<IIdentitySeeder, RoleSeeder>();
         services.AddScoped<IIdentitySeeder, UserSeeder>();

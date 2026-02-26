@@ -1,10 +1,12 @@
-﻿namespace TechShop.ECommerce.Identity.Seeding;
+﻿using TechShop.ECommerce.Application.Common.Constants;
+
+namespace TechShop.ECommerce.Identity.Seeding;
 
 public sealed class RoleSeeder(RoleManager<IdentityRole<Guid>> roleManager) : IIdentitySeeder
 {
     public async Task SeedAsync(CancellationToken cancellationToken = default)
     {
-        string[] roles = { "Admin", "User" };
+        string[] roles = { Roles.Admin, Roles.Customer };
 
         foreach (var roleName in roles)
         {

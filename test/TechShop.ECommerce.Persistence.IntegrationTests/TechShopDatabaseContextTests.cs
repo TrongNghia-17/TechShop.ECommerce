@@ -9,14 +9,14 @@ public class TechShopDatabaseContextTests
 {
     private readonly TechShopDatabaseContext _techShopDatabaseContext;
     private readonly Guid _userId;
-    private readonly Mock<IUserService> _userServiceMock;
+    private readonly Mock<ICurrentUserService> _userServiceMock;
 
     public TechShopDatabaseContextTests()
     {
         var dbOptions = new DbContextOptionsBuilder<TechShopDatabaseContext>()
                 .UseInMemoryDatabase(Guid.NewGuid().ToString()).Options;
         _userId = Guid.NewGuid();
-        _userServiceMock = new Mock<IUserService>();
+        _userServiceMock = new Mock<ICurrentUserService>();
         _userServiceMock.Setup(m => m.UserId).Returns(_userId);
 
         _techShopDatabaseContext = new TechShopDatabaseContext(dbOptions);

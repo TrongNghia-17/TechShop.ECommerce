@@ -1,7 +1,7 @@
 ﻿namespace TechShop.ECommerce.Persistence.Interceptors;
 
 public sealed class AuditSaveChangesInterceptor(
-    IUserService userService)
+    ICurrentUserService currentUserService)
     : SaveChangesInterceptor
 {
     public override InterceptionResult<int> SavingChanges(
@@ -25,7 +25,7 @@ public sealed class AuditSaveChangesInterceptor(
     {
         if (context is null) return;
 
-        var userId = userService.UserId;
+        var userId = currentUserService.UserId;
 
         foreach (var entry in context.ChangeTracker.Entries<BaseEntity>())
         {
