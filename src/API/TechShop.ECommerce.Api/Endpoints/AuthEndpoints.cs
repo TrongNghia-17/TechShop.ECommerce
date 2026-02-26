@@ -8,42 +8,38 @@ public static class AuthEndpoints
         var group = app.MapGroup("/api/auth")
             .WithTags("Auth");
 
-        group.MapPost("/login", Login)
+        // POST /api/auth/login
+        group.MapPost("/login",
+            async Task<Results<
+                Ok<LoginResponse>,
+                BadRequest>> (
+                [FromBody] LoginCommand command,
+                ISender sender,
+                CancellationToken token) =>
+            {
+                var result = await sender.Send(command, token);
+                return TypedResults.Ok(result);
+            })
             .WithName("Auth_Login")
             .WithSummary("User login")
-            .Produces<LoginResponse>(StatusCodes.Status200OK)
-            .ProducesProblem(StatusCodes.Status400BadRequest)
             .RequireRateLimiting("AuthFixed");
 
-        group.MapPost("/register", Register)
+        // POST /api/auth/register
+        group.MapPost("/register",
+            async Task<Results<
+                Ok<RegisterResponse>,
+                BadRequest>> (
+                [FromBody] RegisterCommand command,
+                ISender sender,
+                CancellationToken token) =>
+            {
+                var result = await sender.Send(command, token);
+                return TypedResults.Ok(result);
+            })
             .WithName("Auth_Register")
             .WithSummary("User registration")
-            .Produces<RegisterResponse>(StatusCodes.Status200OK)
-            .ProducesProblem(StatusCodes.Status400BadRequest)
             .RequireRateLimiting("AuthFixed");
 
         return group;
-    }
-
-    // ==========================
-    // Handlers
-    // ==========================
-
-    private static async Task<Ok<LoginResponse>> Login(
-        [FromBody] LoginCommand command,
-        [FromServices] ISender sender,
-        CancellationToken token)
-    {
-        var result = await sender.Send(command, token);
-        return TypedResults.Ok(result);
-    }
-
-    private static async Task<Ok<RegisterResponse>> Register(
-        [FromBody] RegisterCommand command,
-        [FromServices] ISender sender,
-        CancellationToken token)
-    {
-        var result = await sender.Send(command, token);
-        return TypedResults.Ok(result);
     }
 }

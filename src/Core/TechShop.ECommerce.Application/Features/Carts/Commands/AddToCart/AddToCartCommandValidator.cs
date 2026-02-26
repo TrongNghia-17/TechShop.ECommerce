@@ -4,10 +4,6 @@ public sealed class AddToCartCommandValidator : AbstractValidator<AddToCartComma
 {
     public AddToCartCommandValidator()
     {
-        RuleFor(x => x.CustomerId)
-            .NotEmpty()
-            .WithMessage("CustomerId is required.");
-
         RuleFor(x => x.ProductId)
             .NotEmpty()
             .WithMessage("ProductId is required.");

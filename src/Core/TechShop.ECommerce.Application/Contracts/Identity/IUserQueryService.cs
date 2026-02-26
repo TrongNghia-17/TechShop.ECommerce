@@ -1,8 +1,7 @@
 ﻿namespace TechShop.ECommerce.Application.Contracts.Identity;
 
-public interface IUserService
+public interface IUserQueryService
 {
     Task<List<Customer>> GetCustomers();
     Task<Customer> GetCustomer(Guid userId);
-    public Guid UserId { get; }
 }

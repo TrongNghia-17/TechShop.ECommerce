@@ -2,7 +2,7 @@
 
 public class SendOrderConfirmationEmailHandler(
     IEmailSender emailSender,
-    IUserService userService
+    IUserQueryService userService
 ) : INotificationHandler<OrderPlacedNotification>
 {
     public async Task Handle(OrderPlacedNotification notification, CancellationToken token)
@@ -10,10 +10,10 @@ public class SendOrderConfirmationEmailHandler(
         var user = await userService.GetCustomer(notification.CustomerId);
 
         await emailSender.SendEmail(new EmailMessage
-        {
-            To = user.Email,
-            Subject = $"Order {notification.OrderId} confirmed",
-            Body = "Thanks for your purchase!"
-        });
+        (
+            To: user.Email,
+            Subject: $"Order {notification.OrderId} confirmed",
+            Body: "Thanks for your purchase!"
+        ));
     }
 }

@@ -10,6 +10,7 @@ global using System.Reflection;
 global using TechShop.ECommerce.Application.Behaviors;
 global using TechShop.ECommerce.Application.Common.Cursors;
 global using TechShop.ECommerce.Application.Common.Offset;
+global using TechShop.ECommerce.Application.Contracts.Authentication;
 global using TechShop.ECommerce.Application.Contracts.Email;
 global using TechShop.ECommerce.Application.Contracts.Identity;
 global using TechShop.ECommerce.Application.Contracts.Logging;

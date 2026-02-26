@@ -9,79 +9,52 @@ public static class CartEndpoints
             .RequireAuthorization();
 
         // POST /api/carts/items
-        group.MapPost("/items", AddItem)
+        group.MapPost("/items",
+            async Task<Results<
+                Ok<AddToCartResult>,
+                NotFound>> (
+                [FromBody] AddToCartCommand command,
+                ISender sender,
+                CancellationToken token) =>
+            {
+                var result = await sender.Send(command, token);
+                return TypedResults.Ok(result);
+            })
             .WithName("Cart_AddItem")
-            .WithSummary("Adds an item to the cart")
-            .WithDescription("Adds a product with specified quantity to the current user's cart.")
-            .Produces<AddToCartResult>(StatusCodes.Status200OK)
-            .ProducesProblem(StatusCodes.Status400BadRequest)
-            .ProducesProblem(StatusCodes.Status404NotFound);
+            .WithSummary("Adds an item to the cart");
 
         // DELETE /api/carts/items
-        group.MapDelete("/items", RemoveItem)
+        group.MapDelete("/items",
+            async Task<Results<
+                Ok<AddToCartResult>,
+                NotFound>> (
+                [FromBody] RemoveFromCartCommand command,
+                ISender sender,
+                CancellationToken token) =>
+            {
+                var result = await sender.Send(command, token);
+                return TypedResults.Ok(result);
+            })
             .WithName("Cart_RemoveItem")
-            .WithSummary("Removes an item from the cart")
-            .WithDescription("Removes a product with specified quantity from the current user's cart.")
-            .Produces<AddToCartResult>(StatusCodes.Status200OK)
-            .ProducesProblem(StatusCodes.Status400BadRequest)
-            .ProducesProblem(StatusCodes.Status404NotFound);
+            .WithSummary("Removes an item from the cart");
 
         // GET /api/carts
-        group.MapGet("/", GetCart)
+        group.MapGet("/",
+            async Task<Results<
+                Ok<GetCartResult>,
+                NotFound>> (
+                ISender sender,
+                CancellationToken token) =>
+            {
+                var result = await sender.Send(
+                    new GetCartQuery(),
+                    token);
+
+                return TypedResults.Ok(result);
+            })
             .WithName("Cart_Get")
-            .WithSummary("Gets current user's cart")
-            .WithDescription("Returns the current authenticated user's shopping cart.")
-            .Produces<GetCartResult>(StatusCodes.Status200OK)
-            .ProducesProblem(StatusCodes.Status400BadRequest);
+            .WithSummary("Gets current user's cart");
 
         return group;
-    }
-
-    // ============================
-    // Handlers
-    // ============================
-
-    private static async Task<Ok<AddToCartResult>> AddItem(
-        [FromBody] CartItemRequest request,
-        [FromServices] IMediator mediator,
-        [FromServices] IUserService userService,
-        CancellationToken token)
-    {
-        var command = new AddToCartCommand(
-            CustomerId: userService.UserId,
-            ProductId: request.ProductId,
-            Quantity: request.Quantity);
-
-        var result = await mediator.Send(command, token);
-
-        return TypedResults.Ok(result);
-    }
-
-    private static async Task<Ok<AddToCartResult>> RemoveItem(
-        [FromBody] CartItemRequest request,
-        [FromServices] IMediator mediator,
-        [FromServices] IUserService userService,
-        CancellationToken token)
-    {
-        var command = new RemoveFromCartCommand(
-            CustomerId: userService.UserId,
-            ProductId: request.ProductId,
-            Quantity: request.Quantity);
-
-        var result = await mediator.Send(command, token);
-
-        return TypedResults.Ok(result);
-    }
-
-    private static async Task<Ok<GetCartResult>> GetCart(
-        [FromServices] IMediator mediator,
-        [FromServices] IUserService userService,
-        CancellationToken token)
-    {
-        var query = new GetCartQuery(userService.UserId);
-
-        var result = await mediator.Send(query, token);
-
-        return TypedResults.Ok(result);
     }
 }

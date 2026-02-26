@@ -3,6 +3,7 @@
 public sealed class AddToCartCommandHandler(
     ICartRepository cartRepository,
     IProductRepository productRepository,
+    ICurrentUserService currentUserService,
     IUnitOfWork unitOfWork
 ) : IRequestHandler<AddToCartCommand, AddToCartResult>
 {
@@ -10,16 +11,18 @@ public sealed class AddToCartCommandHandler(
         AddToCartCommand request,
         CancellationToken cancellationToken)
     {
+        var customerId = currentUserService.UserId;
+
         var product = await productRepository.GetByIdAsync(request.ProductId, cancellationToken);
 
         if (product is null)
             throw new NotFoundException(nameof(product), request.ProductId);
 
-        var cart = await cartRepository.GetByCustomerIdAsync(request.CustomerId, cancellationToken);
+        var cart = await cartRepository.GetByCustomerIdAsync(customerId, cancellationToken);
 
         if (cart is null)
         {
-            cart = Cart.Create(request.CustomerId);
+            cart = Cart.Create(customerId);
             await cartRepository.AddAsync(cart, cancellationToken);
         }
 

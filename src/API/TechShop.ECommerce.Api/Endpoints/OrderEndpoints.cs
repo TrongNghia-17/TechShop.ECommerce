@@ -18,11 +18,11 @@
     private static async Task<Created<CreateOrderResponse>> CreateOrder(
         [FromBody] CreateOrderRequest request,
         [FromServices] IMediator mediator,
-        [FromServices] IUserService userService,
+        [FromServices] ICurrentUserService currentUserService,
         CancellationToken token)
     {
         var command = new PlaceOrderCommand(
-            CustomerId: userService.UserId,
+            CustomerId: currentUserService.UserId,
             ShippingAddress: request.ShippingAddress,
             Notes: request.Notes
         );

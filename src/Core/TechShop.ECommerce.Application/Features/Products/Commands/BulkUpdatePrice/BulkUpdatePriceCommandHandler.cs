@@ -2,7 +2,7 @@
 
 public sealed class BulkUpdatePriceCommandHandler(
     IProductRepository productRepository,
-    IUserService userService,
+    ICurrentUserService currentUserService,
     IAppLogger<BulkUpdatePriceCommandHandler> logger)
     : IRequestHandler<BulkUpdatePriceCommand, Unit>
 {
@@ -12,7 +12,7 @@ public sealed class BulkUpdatePriceCommandHandler(
 
         var multiplier = 1 + (request.PercentageChange / 100m);
 
-        var currentUserId = userService.UserId;
+        var currentUserId = currentUserService.UserId;
 
         await productRepository.UpdatePriceByCategoryAsync(
             request.CategoryId,

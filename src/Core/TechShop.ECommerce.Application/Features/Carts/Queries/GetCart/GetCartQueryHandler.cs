@@ -1,15 +1,18 @@
 ﻿namespace TechShop.ECommerce.Application.Features.Carts.Queries.GetCart;
 
 public sealed class GetCartQueryHandler(
-    ICartRepository cartRepository
+    ICartRepository cartRepository,
+    ICurrentUserService currentUserService
 ) : IRequestHandler<GetCartQuery, GetCartResult>
 {
     public async Task<GetCartResult> Handle(
         GetCartQuery request,
         CancellationToken cancellationToken)
     {
+        var customerId = currentUserService.UserId;
+
         var cart = await cartRepository
-            .GetByCustomerIdAsync(request.CustomerId, cancellationToken);
+            .GetByCustomerIdAsync(customerId, cancellationToken);
 
         if (cart is null)
             return new GetCartResult(null, [], 0);

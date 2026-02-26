@@ -5,10 +5,6 @@ public sealed class RemoveFromCartCommandValidator
 {
     public RemoveFromCartCommandValidator()
     {
-        RuleFor(x => x.CustomerId)
-            .NotEmpty()
-            .WithMessage("CustomerId is required.");
-
         RuleFor(x => x.ProductId)
             .NotEmpty()
             .WithMessage("ProductId is required.");

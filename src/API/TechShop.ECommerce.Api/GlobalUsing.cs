@@ -1,5 +1,4 @@
 ﻿global using MediatR;
-global using Microsoft.AspNetCore.Authorization;
 global using Microsoft.AspNetCore.Diagnostics;
 global using Microsoft.AspNetCore.Http.HttpResults;
 global using Microsoft.AspNetCore.Mvc;
@@ -24,6 +23,8 @@ global using TechShop.ECommerce.Application.Features.Carts.Commands.AddToCart;
 global using TechShop.ECommerce.Application.Features.Carts.Commands.RemoveFromCart;
 global using TechShop.ECommerce.Application.Features.Carts.Dtos;
 global using TechShop.ECommerce.Application.Features.Carts.Queries.GetCart;
+global using TechShop.ECommerce.Application.Features.Identity.Commands.Login;
+global using TechShop.ECommerce.Application.Features.Identity.Commands.Register;
 global using TechShop.ECommerce.Application.Features.Orders.Commands.PlaceOrder;
 global using TechShop.ECommerce.Application.Features.Orders.Dtos;
 global using TechShop.ECommerce.Application.Features.Products.Commands.BulkPurge;
@@ -40,7 +41,6 @@ global using TechShop.ECommerce.Infrastructure;
 global using TechShop.ECommerce.Persistence;
 global using TechShop.ECommerce.Persistence.DatabaseContext;
 global using TechShop.ECommerce.Persistence.Seeding;
-
 
 
 

@@ -2,6 +2,7 @@
 
 public sealed class RemoveFromCartCommandHandler(
     ICartRepository cartRepository,
+    ICurrentUserService currentUserService,
     IUnitOfWork unitOfWork
 ) : IRequestHandler<RemoveFromCartCommand, AddToCartResult>
 {
@@ -9,10 +10,12 @@ public sealed class RemoveFromCartCommandHandler(
         RemoveFromCartCommand request,
         CancellationToken cancellationToken)
     {
+        var customerId = currentUserService.UserId;
+
         var cart = await cartRepository.GetByCustomerIdAsync(
-            request.CustomerId,
+            customerId,
             cancellationToken)
-            ?? throw new NotFoundException(nameof(Cart), request.CustomerId);
+            ?? throw new NotFoundException(nameof(Cart), customerId);
 
         cart.RemoveItem(request.ProductId, request.Quantity);
 
