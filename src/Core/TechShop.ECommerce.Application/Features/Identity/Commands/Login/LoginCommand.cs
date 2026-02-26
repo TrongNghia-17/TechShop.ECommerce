@@ -3,4 +3,4 @@
 public sealed record LoginCommand(
     string Email,
     string Password
-) : IRequest<LoginResponse>;
+) : IRequest<Result<LoginResponse>>;

@@ -134,4 +134,9 @@ public class Product : BaseEntity, ISoftDelete
 
         StockQuantity -= quantity;
     }
+
+    public bool HasEnoughStock(int quantity)
+    {
+        return StockQuantity >= quantity;
+    }
 }

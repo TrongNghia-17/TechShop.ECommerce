@@ -3,4 +3,4 @@
 public sealed record RemoveFromCartCommand(
     Guid ProductId,
     int Quantity
-) : IRequest<AddToCartResult>;
+) : IRequest<Result<AddToCartResult>>;

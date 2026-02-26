@@ -5,30 +5,32 @@ public sealed class AddToCartCommandHandler(
     IProductRepository productRepository,
     ICurrentUserService currentUserService,
     IUnitOfWork unitOfWork
-) : IRequestHandler<AddToCartCommand, AddToCartResult>
+) : IRequestHandler<AddToCartCommand, Result<AddToCartResult>>
 {
-    public async Task<AddToCartResult> Handle(
-        AddToCartCommand request,
-        CancellationToken cancellationToken)
+    public async Task<Result<AddToCartResult>> Handle(
+        AddToCartCommand command,
+        CancellationToken token)
     {
         var customerId = currentUserService.UserId;
 
-        var product = await productRepository.GetByIdAsync(request.ProductId, cancellationToken);
+        var product = await productRepository
+            .GetByIdAsync(command.ProductId, token);
 
         if (product is null)
-            throw new NotFoundException(nameof(product), request.ProductId);
+            return DomainErrors.Product.NotFound(command.ProductId);
 
-        var cart = await cartRepository.GetByCustomerIdAsync(customerId, cancellationToken);
+        var cart = await cartRepository
+            .GetByCustomerIdAsync(customerId, token);
 
         if (cart is null)
         {
             cart = Cart.Create(customerId);
-            await cartRepository.AddAsync(cart, cancellationToken);
+            await cartRepository.AddAsync(cart, token);
         }
 
-        cart.AddItem(request.ProductId, product.Price, request.Quantity);
+        cart.AddItem(command.ProductId, product.Price, command.Quantity);
 
-        await unitOfWork.SaveChangesAsync(cancellationToken);
+        await unitOfWork.SaveChangesAsync(token);
 
         return new AddToCartResult(cart.Id, cart.GetTotal());
     }

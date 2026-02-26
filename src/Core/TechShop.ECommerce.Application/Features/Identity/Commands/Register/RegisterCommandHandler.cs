@@ -2,21 +2,24 @@
 
 public sealed class RegisterCommandHandler(
     IIdentityService identityService)
-    : IRequestHandler<RegisterCommand, RegisterResponse>
+    : IRequestHandler<RegisterCommand, Result<RegisterResponse>>
 {
-    public async Task<RegisterResponse> Handle(
-        RegisterCommand request,
+    public async Task<Result<RegisterResponse>> Handle(
+        RegisterCommand command,
         CancellationToken cancellationToken)
     {
         var (Success, UserId, Errors) = await identityService.RegisterAsync(
-            request.Email,
-            request.UserName,
-            request.FirstName,
-            request.LastName,
-            request.Password);
+            command.Email,
+            command.UserName,
+            command.FirstName,
+            command.LastName,
+            command.Password);
 
         if (!Success)
-            throw new BadRequestException(Errors);
+        {
+            var message = string.Join(", ", Errors);
+            return DomainErrors.Identity.RegisterFailed(message);
+        }
 
         return new RegisterResponse(UserId);
     }

@@ -10,34 +10,34 @@ public static class AuthEndpoints
 
         // POST /api/auth/login
         group.MapPost("/login",
-            async Task<Results<
-                Ok<LoginResponse>,
-                BadRequest>> (
-                [FromBody] LoginCommand command,
-                ISender sender,
-                CancellationToken token) =>
+            async ([FromBody] LoginCommand command,
+                   ISender sender,
+                   CancellationToken token) =>
             {
                 var result = await sender.Send(command, token);
-                return TypedResults.Ok(result);
+                return result.ToApiResult();
             })
             .WithName("Auth_Login")
             .WithSummary("User login")
+            .Produces<LoginResponse>(StatusCodes.Status200OK)
+            .Produces(StatusCodes.Status401Unauthorized)
+            .Produces(StatusCodes.Status400BadRequest)
             .RequireRateLimiting("AuthFixed");
 
         // POST /api/auth/register
         group.MapPost("/register",
-            async Task<Results<
-                Ok<RegisterResponse>,
-                BadRequest>> (
-                [FromBody] RegisterCommand command,
-                ISender sender,
-                CancellationToken token) =>
+            async ([FromBody] RegisterCommand command,
+                   ISender sender,
+                   CancellationToken token) =>
             {
                 var result = await sender.Send(command, token);
-                return TypedResults.Ok(result);
+                return result.ToApiResult();
             })
             .WithName("Auth_Register")
             .WithSummary("User registration")
+            .Produces<RegisterResponse>(StatusCodes.Status200OK)
+            .Produces(StatusCodes.Status400BadRequest)
+            .Produces(StatusCodes.Status409Conflict)
             .RequireRateLimiting("AuthFixed");
 
         return group;

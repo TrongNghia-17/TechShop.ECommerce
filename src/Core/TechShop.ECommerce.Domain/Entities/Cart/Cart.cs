@@ -19,12 +19,6 @@ public class Cart : BaseEntity
 
     public static Cart Create(Guid customerId) => new(customerId);
 
-    public void EnsureNotEmpty()
-    {
-        if (_items.Count == 0)
-            throw new DomainException("Cart is empty.");
-    }
-
     public void AddItem(Guid productId, decimal unitPrice, int quantity)
     {
         if (productId == Guid.Empty)

@@ -1,4 +1,4 @@
-﻿namespace TechShop.ECommerce.Application.Features.Orders.Commands.PlaceOrder;
+﻿namespace TechShop.ECommerce.Application.Features.Orders.Dtos;
 
 public sealed class AddressDtoValidator : AbstractValidator<AddressDto>
 {

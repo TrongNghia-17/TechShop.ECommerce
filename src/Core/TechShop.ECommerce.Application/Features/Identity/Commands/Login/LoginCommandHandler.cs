@@ -3,17 +3,19 @@
 public sealed class LoginCommandHandler(
     IIdentityService identityService,
     IJwtTokenGenerator tokenGenerator)
-    : IRequestHandler<LoginCommand, LoginResponse>
+    : IRequestHandler<LoginCommand, Result<LoginResponse>>
 {
-    public async Task<LoginResponse> Handle(
-        LoginCommand request,
+    public async Task<Result<LoginResponse>> Handle(
+        LoginCommand command,
         CancellationToken cancellationToken)
     {
-        var (Success, UserId, Email, UserName, Roles) = await identityService
-            .LoginAsync(request.Email, request.Password);
+        var (Success, UserId, Email, UserName, Roles) =
+            await identityService.LoginAsync(
+                command.Email,
+                command.Password);
 
         if (!Success)
-            throw new BadRequestException("Invalid credentials.");
+            return DomainErrors.Identity.InvalidCredentials;
 
         var token = await tokenGenerator.GenerateTokenAsync(
             new UserTokenRequest(

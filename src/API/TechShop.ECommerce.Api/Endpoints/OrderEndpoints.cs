@@ -10,19 +10,15 @@ public static class OrderEndpoints
 
         // POST /api/orders
         group.MapPost("/",
-            async Task<Results<
-                Created<Guid>,
-                BadRequest>> (
-                [FromBody] PlaceOrderCommand command,
-                ISender sender,
-                CancellationToken token) =>
+            async ([FromBody] PlaceOrderCommand command, ISender sender, CancellationToken token) =>
             {
-                var orderId = await sender.Send(command, token);
+                var result = await sender.Send(command, token);
 
-                return TypedResults.Created($"/api/orders/{orderId}", orderId);
+                return result.ToCreatedResult(id => $"/api/orders/{id}");
             })
-            .WithName("Order_Create")
-            .WithSummary("Create a new order");
+            .Produces<Guid>(StatusCodes.Status201Created)
+            .Produces(StatusCodes.Status400BadRequest)
+            .Produces(StatusCodes.Status404NotFound);
 
         return group;
     }

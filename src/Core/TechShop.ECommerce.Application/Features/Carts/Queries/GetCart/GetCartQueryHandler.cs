@@ -3,10 +3,10 @@
 public sealed class GetCartQueryHandler(
     ICartRepository cartRepository,
     ICurrentUserService currentUserService
-) : IRequestHandler<GetCartQuery, GetCartResult>
+) : IRequestHandler<GetCartQuery, Result<GetCartResult>>
 {
-    public async Task<GetCartResult> Handle(
-        GetCartQuery request,
+    public async Task<Result<GetCartResult>> Handle(
+        GetCartQuery query,
         CancellationToken cancellationToken)
     {
         var customerId = currentUserService.UserId;
@@ -15,7 +15,12 @@ public sealed class GetCartQueryHandler(
             .GetByCustomerIdAsync(customerId, cancellationToken);
 
         if (cart is null)
-            return new GetCartResult(null, [], 0);
+        {
+            return new GetCartResult(
+                CartId: null,
+                Items: [],
+                Total: 0);
+        }
 
         var items = cart.Items
             .Select(item => new CartItemDto(

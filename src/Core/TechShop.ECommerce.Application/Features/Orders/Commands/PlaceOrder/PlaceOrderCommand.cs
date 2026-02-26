@@ -3,4 +3,4 @@
 public sealed record PlaceOrderCommand(
     AddressDto ShippingAddress,
     string? Notes
-) : IRequest<Guid>;
+) : IRequest<Result<Guid>>;

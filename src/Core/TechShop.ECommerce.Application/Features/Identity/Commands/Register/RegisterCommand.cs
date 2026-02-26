@@ -6,4 +6,4 @@ public sealed record RegisterCommand(
     string FirstName,
     string LastName,
     string Password
-) : IRequest<RegisterResponse>;
+) : IRequest<Result<RegisterResponse>>;

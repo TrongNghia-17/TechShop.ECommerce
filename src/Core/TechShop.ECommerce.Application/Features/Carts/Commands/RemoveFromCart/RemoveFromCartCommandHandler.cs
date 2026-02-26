@@ -4,20 +4,29 @@ public sealed class RemoveFromCartCommandHandler(
     ICartRepository cartRepository,
     ICurrentUserService currentUserService,
     IUnitOfWork unitOfWork
-) : IRequestHandler<RemoveFromCartCommand, AddToCartResult>
+) : IRequestHandler<RemoveFromCartCommand, Result<AddToCartResult>>
 {
-    public async Task<AddToCartResult> Handle(
-        RemoveFromCartCommand request,
+    public async Task<Result<AddToCartResult>> Handle(
+        RemoveFromCartCommand command,
         CancellationToken cancellationToken)
     {
         var customerId = currentUserService.UserId;
 
         var cart = await cartRepository.GetByCustomerIdAsync(
             customerId,
-            cancellationToken)
-            ?? throw new NotFoundException(nameof(Cart), customerId);
+            cancellationToken);
 
-        cart.RemoveItem(request.ProductId, request.Quantity);
+        if (cart is null)
+            return DomainErrors.Cart.NotFound(customerId);
+
+        try
+        {
+            cart.RemoveItem(command.ProductId, command.Quantity);
+        }
+        catch (DomainException ex)
+        {
+            return Error.Validation("Cart.InvalidOperation", ex.Message);
+        }
 
         await unitOfWork.SaveChangesAsync(cancellationToken);
 
