@@ -5,10 +5,6 @@ public sealed class PlaceOrderCommandValidator
 {
     public PlaceOrderCommandValidator()
     {
-        RuleFor(x => x.CustomerId)
-            .NotEmpty()
-            .WithMessage("CustomerId is required.");
-
         RuleFor(x => x.ShippingAddress)
             .SetValidator(new AddressDtoValidator());
 

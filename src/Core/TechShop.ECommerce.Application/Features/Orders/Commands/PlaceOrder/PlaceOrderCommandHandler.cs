@@ -2,6 +2,7 @@
 
 public class PlaceOrderCommandHandler(
     IPublisher publisher,
+    ICurrentUserService currentUserService,
     ICartRepository cartRepository,
     IProductRepository productRepository,
     IOrderRepository orderRepository,
@@ -12,14 +13,16 @@ public class PlaceOrderCommandHandler(
 {
     public async Task<Guid> Handle(PlaceOrderCommand command, CancellationToken token)
     {
-        var cart = await cartRepository.GetByCustomerIdAsync(command.CustomerId, token)
-                   ?? throw new NotFoundException(nameof(Cart), command.CustomerId);
+        var customerId = currentUserService.UserId;
+
+        var cart = await cartRepository.GetByCustomerIdAsync(customerId, token)
+                   ?? throw new NotFoundException(nameof(Cart), customerId);
 
         cart.EnsureNotEmpty();
 
         var address = mapper.Map<Address>(command.ShippingAddress);
 
-        var order = Order.Create(command.CustomerId, address, command.Notes);
+        var order = Order.Create(customerId, address, command.Notes);
 
         await unitOfWork.ExecuteInTransactionAsync(async () =>
         {
@@ -42,7 +45,7 @@ public class PlaceOrderCommandHandler(
         }, token);
 
         await publisher.Publish(
-            new OrderPlacedNotification(order.Id, command.CustomerId),
+            new OrderPlacedNotification(order.Id, customerId),
             token);
 
         logger.LogInformation("Order {OrderId} created successfully", order.Id);
