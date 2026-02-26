@@ -11,6 +11,15 @@ public class ProductRepository(TechShopDatabaseContext context)
             .FirstOrDefaultAsync(p => p.Id == id, cancellationToken: token);
     }
 
+    public async Task<List<Product>> GetByIdAsync(
+        IEnumerable<Guid> ids,
+        CancellationToken token)
+    {
+        return await context.Products
+            .Where(p => ids.Contains(p.Id))
+            .ToListAsync(cancellationToken: token);
+    }
+
     public async Task<IReadOnlyList<ProductDto>> GetAllAsync()
     {
         return await context.Products

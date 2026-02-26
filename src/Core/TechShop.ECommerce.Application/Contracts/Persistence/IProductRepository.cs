@@ -6,6 +6,9 @@ public interface IProductRepository
         Guid id,
         CancellationToken token = default
     );
+    Task<List<Product>> GetByIdAsync(
+        IEnumerable<Guid> ids,
+        CancellationToken token);
     Task<IReadOnlyList<ProductDto>> GetAllAsync();
     Task<PagedResult<ProductDto>> GetPagedAsync(
         int pageNumber,

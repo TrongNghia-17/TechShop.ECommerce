@@ -29,27 +29,31 @@ public class PlaceOrderCommandHandler(
         var address = mapper.Map<Address>(command.ShippingAddress);
         var order = Order.Create(customerId, address, command.Notes);
 
-        var products = new Dictionary<Guid, Product>();
+        var productIds = cart.Items
+            .Select(i => i.ProductId)
+            .Distinct()
+            .ToList();
+
+        var products = await productRepository
+            .GetByIdAsync(productIds, token);
+
+        var productDict = products
+            .ToDictionary(p => p.Id);
 
         foreach (var item in cart.Items)
         {
-            var product = await productRepository
-                .GetByIdAsync(item.ProductId, token);
-
-            if (product is null)
+            if (!productDict.TryGetValue(item.ProductId, out var product))
                 return DomainErrors.Product.NotFound(item.ProductId);
 
             if (!product.HasEnoughStock(item.Quantity))
                 return DomainErrors.Product.InsufficientStock(item.ProductId);
-
-            products[item.ProductId] = product;
         }
 
         await unitOfWork.ExecuteInTransactionAsync(async () =>
         {
             foreach (var item in cart.Items)
             {
-                var product = products[item.ProductId];
+                var product = productDict[item.ProductId];
 
                 product.RemoveStock(item.Quantity);
                 order.AddItem(product.Id, product.Price, item.Quantity);
