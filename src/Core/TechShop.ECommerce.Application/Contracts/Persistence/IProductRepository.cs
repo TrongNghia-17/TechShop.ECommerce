@@ -1,4 +1,6 @@
-﻿namespace TechShop.ECommerce.Application.Contracts.Persistence;
+﻿using TechShop.ECommerce.Application.Common.Paging;
+
+namespace TechShop.ECommerce.Application.Contracts.Persistence;
 
 public interface IProductRepository
 {
@@ -10,11 +12,8 @@ public interface IProductRepository
         IEnumerable<Guid> ids,
         CancellationToken token);
     Task<IReadOnlyList<ProductDto>> GetAllAsync();
-    Task<PagedResult<ProductDto>> GetPagedAsync(
-        int pageNumber,
-        int pageSize,
-        Guid? categoryId,
-        string? sort,
+    Task<PagedResponse<ProductDto>> GetPagedAsync(
+        ProductQueryFilter filter,
         CancellationToken token);
     Task AddAsync(Product product);
 }

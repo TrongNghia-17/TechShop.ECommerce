@@ -2,18 +2,22 @@
 
 public sealed class GetProductsPagedQueryHandler(
     IProductRepository productRepository)
-    : IRequestHandler<GetProductsPagedQuery, PagedResult<ProductDto>>
+    : IRequestHandler<GetProductsPagedQuery, PagedResponse<ProductDto>>
 {
-    public async Task<PagedResult<ProductDto>> Handle(
+    public async Task<PagedResponse<ProductDto>> Handle(
         GetProductsPagedQuery request,
         CancellationToken cancellationToken)
     {
-        return await productRepository.GetPagedAsync(
-            request.PageNumber,
-            request.PageSize,
-            request.CategoryId,
-            request.Sort,
-            cancellationToken);
+        var filter = new ProductQueryFilter
+        {
+            PageNumber = request.PageNumber,
+            PageSize = request.PageSize,
+            CategoryId = request.CategoryId,
+            SortBy = request.SortBy,
+            Search = request.Search
+        };
+
+        return await productRepository.GetPagedAsync(filter, cancellationToken);
     }
 }
 

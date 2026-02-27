@@ -34,8 +34,7 @@ public class ProductConfiguration : IEntityTypeConfiguration<Product>
         builder.HasIndex(p => p.CategoryId)
             .HasFilter("\"IsDeleted\" = false");
 
-        builder.HasIndex(p => new { p.DateCreated, p.Id })
-            .IsDescending(true, true)
+        builder.HasIndex(p => p.Price)
             .HasFilter("\"IsDeleted\" = false");
 
         // Relationships

@@ -1,4 +1,6 @@
-﻿namespace TechShop.ECommerce.Identity.Services;
+﻿using TechShop.ECommerce.Application.Common.Constants;
+
+namespace TechShop.ECommerce.Identity.Services;
 
 public class UserQueryService(
     UserManager<ApplicationUser> userManager)

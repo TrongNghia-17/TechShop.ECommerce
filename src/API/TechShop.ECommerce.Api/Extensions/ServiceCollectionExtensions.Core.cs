@@ -11,7 +11,6 @@ public static partial class ServiceCollectionExtensions
 
         services.AddAuthorization();
 
-        services.AddControllers();
         services.AddHttpContextAccessor();
 
         services.AddProblemDetails();

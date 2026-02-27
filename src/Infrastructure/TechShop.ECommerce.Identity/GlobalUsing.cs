@@ -11,7 +11,6 @@ global using Microsoft.IdentityModel.Tokens;
 global using System.IdentityModel.Tokens.Jwt;
 global using System.Security.Claims;
 global using System.Text;
-global using TechShop.ECommerce.Application.Common.Constants;
 global using TechShop.ECommerce.Application.Contracts.Authentication;
 global using TechShop.ECommerce.Application.Contracts.Identity;
 global using TechShop.ECommerce.Application.Models.Identity;

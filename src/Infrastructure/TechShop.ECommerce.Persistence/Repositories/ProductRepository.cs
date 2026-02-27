@@ -1,4 +1,6 @@
-﻿namespace TechShop.ECommerce.Persistence.Repositories;
+﻿using TechShop.ECommerce.Application.Common.Paging;
+
+namespace TechShop.ECommerce.Persistence.Repositories;
 
 public class ProductRepository(TechShopDatabaseContext context)
     : IProductRepository
@@ -33,27 +35,70 @@ public class ProductRepository(TechShopDatabaseContext context)
             .ToListAsync();
     }
 
-    public Task<PagedResult<ProductDto>> GetPagedAsync(
-        int pageNumber,
-        int pageSize,
-        Guid? categoryId,
-        string? sort,
+    public async Task<PagedResponse<ProductDto>> GetPagedAsync(
+        ProductQueryFilter filter,
         CancellationToken token)
     {
+        var pageNumber = Math.Max(1, filter.PageNumber);
+        var pageSize = Math.Clamp(filter.PageSize, 1, 50);
+
         var query = context.Products
-            .AsNoTracking();
+            .AsNoTracking()
+            .AsQueryable();
 
-        if (categoryId is not null)
-            query = query.Where(p => p.CategoryId == categoryId.Value);
+        // Filter
+        if (filter.CategoryId is not null)
+        {
+            query = query.Where(p => p.CategoryId == filter.CategoryId);
+        }
 
-        var desc = !string.IsNullOrWhiteSpace(sort) && sort.StartsWith("-");
-        query = desc
-            ? query.OrderByDescending(p => p.Price)
-            : query.OrderBy(p => p.Price);
+        // Search
+        if (!string.IsNullOrWhiteSpace(filter.Search))
+        {
+            query = query.Where(p =>
+                EF.Functions.ILike(p.Name, $"%{filter.Search}%"));
+        }
 
-        var dtoQuery = query.Select(p => new ProductDto(p.Id, p.Name, p.Price, p.Category.Name));
+        // Sort (default Name asc)
+        query = ApplySort(query, filter.SortBy);
 
-        return dtoQuery.ToPageResultAsync(pageNumber, pageSize, token, maxPageSize: 100);
+        // Project
+        var dtoQuery = query.Select(p => new ProductDto(
+            p.Id,
+            p.Name,
+            p.Price,
+            p.Category.Name
+        ));
+
+        // Count + Pagination
+        return await dtoQuery.ToPagedResponseAsync(pageNumber, pageSize, token);
+    }
+
+
+    private static IQueryable<Product> ApplySort(
+        IQueryable<Product> query,
+        string? sortBy)
+    {
+        if (string.IsNullOrWhiteSpace(sortBy))
+            return query.OrderBy(p => p.Name);
+
+        var parts = sortBy.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+        var column = parts[0].ToLower();
+        var desc = parts.Length > 1 &&
+                   parts[1].Equals("desc", StringComparison.OrdinalIgnoreCase);
+
+        return column switch
+        {
+            "price" => desc
+                ? query.OrderByDescending(p => p.Price)
+                : query.OrderBy(p => p.Price),
+
+            "name" => desc
+                ? query.OrderByDescending(p => p.Name)
+                : query.OrderBy(p => p.Name),
+
+            _ => query.OrderBy(p => p.Name)
+        };
     }
 
     public async Task AddAsync(Product product)

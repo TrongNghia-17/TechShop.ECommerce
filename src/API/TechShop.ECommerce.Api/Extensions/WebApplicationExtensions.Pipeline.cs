@@ -23,8 +23,7 @@ public static class WebApplicationExtensions
             app.MapScalarApiReference();
         }
 
-        app.MapControllers();
-
+        app.MapProductEndpoints();
         app.MapAuthEndpoints();
         app.MapCartEndpoints();
         app.MapOrderEndpoints();
