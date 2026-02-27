@@ -1,6 +1,4 @@
-﻿using TechShop.ECommerce.Application.Contracts.Authentication;
-
-namespace TechShop.ECommerce.Identity.Authentication;
+﻿namespace TechShop.ECommerce.Identity.Authentication;
 
 public class JwtTokenGenerator(IOptions<JwtSettings> jwtSettings)
     : IJwtTokenGenerator

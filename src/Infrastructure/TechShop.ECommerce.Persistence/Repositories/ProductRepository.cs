@@ -1,6 +1,4 @@
-﻿using TechShop.ECommerce.Application.Common.Paging;
-
-namespace TechShop.ECommerce.Persistence.Repositories;
+﻿namespace TechShop.ECommerce.Persistence.Repositories;
 
 public class ProductRepository(TechShopDatabaseContext context)
     : IProductRepository

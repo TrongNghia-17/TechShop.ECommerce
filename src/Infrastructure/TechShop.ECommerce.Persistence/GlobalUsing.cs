@@ -6,6 +6,7 @@ global using Microsoft.Extensions.DependencyInjection;
 global using NpgsqlTypes;
 global using System.Data.Common;
 global using System.Linq.Expressions;
+global using TechShop.ECommerce.Application.Common.Paging;
 global using TechShop.ECommerce.Application.Contracts.Identity;
 global using TechShop.ECommerce.Application.Contracts.Logging;
 global using TechShop.ECommerce.Application.Contracts.Persistence;

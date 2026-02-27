@@ -1,6 +1,4 @@
-﻿using TechShop.ECommerce.Application.Common.Constants;
-
-namespace TechShop.ECommerce.Identity.Services;
+﻿namespace TechShop.ECommerce.Identity.Services;
 
 public class IdentityService(
     UserManager<ApplicationUser> userManager,

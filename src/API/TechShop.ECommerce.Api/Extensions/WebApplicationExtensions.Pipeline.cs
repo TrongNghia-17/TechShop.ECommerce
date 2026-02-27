@@ -5,6 +5,7 @@ public static class WebApplicationExtensions
     public static WebApplication UseApiPipeline(this WebApplication app)
     {
         app.UseExceptionHandler();
+        app.UseResponseCompression();
         app.UseMiddleware<CorrelationIdMiddleware>();
 
         app.UseSerilogRequestLogging();
