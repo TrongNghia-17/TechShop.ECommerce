@@ -24,25 +24,6 @@ public class ProductConfiguration : IEntityTypeConfiguration<Product>
 
         builder.Property(x => x.Id).ValueGeneratedNever();
 
-        builder.Property<NpgsqlTsVector>("SearchVector")
-            .HasColumnType("tsvector")
-            .HasComputedColumnSql(
-                """
-                to_tsvector(
-                    'simple',
-                    coalesce("Name", '') || ' ' ||
-                    coalesce("Summary", '') || ' ' ||
-                    coalesce("Description", '')
-                )
-                """,
-                stored: true);
-
-        builder.Property(p => p.RowVersion)
-            .IsConcurrencyToken()
-            .HasColumnType("integer")
-            .HasDefaultValue(1)
-            .ValueGeneratedOnAddOrUpdate();
-
         builder.HasQueryFilter("SoftDelete", p => !p.IsDeleted);
 
         // Indexes
@@ -55,10 +36,6 @@ public class ProductConfiguration : IEntityTypeConfiguration<Product>
 
         builder.HasIndex(p => new { p.DateCreated, p.Id })
             .IsDescending(true, true)
-            .HasFilter("\"IsDeleted\" = false");
-
-        builder.HasIndex("SearchVector")
-            .HasMethod("GIN")
             .HasFilter("\"IsDeleted\" = false");
 
         // Relationships

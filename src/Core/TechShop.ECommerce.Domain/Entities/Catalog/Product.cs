@@ -15,8 +15,6 @@ public class Product : BaseEntity, ISoftDelete
     public DateTimeOffset? DateDeleted { get; private set; }
     public Guid? DeletedBy { get; private set; }
 
-    public int RowVersion { get; private set; }
-
     private Product() { }
 
     private Product(

@@ -34,6 +34,9 @@
 
 	<ItemGroup>
 	  <Folder Include="Features\Carts\Commands\RemoveFromCart\" />
+	  <Folder Include="Features\Products\Commands\" />
+	  <Folder Include="Features\Products\Queries\GetAll\" />
+	  <Folder Include="Mocks\Products\" />
 	</ItemGroup>
 
 </Project>
