@@ -1,7 +1,6 @@
 ﻿namespace TechShop.ECommerce.Application.Features.Products.Queries.GetProducts;
 
 public sealed class GetProductsQueryHandler(
-    ICacheVersionService versionService,
     IProductRepository productRepository)
     : IRequestHandler<GetProductsQuery, PagedResponse<ProductDto>>
 {
@@ -9,7 +8,6 @@ public sealed class GetProductsQueryHandler(
         GetProductsQuery request,
         CancellationToken cancellationToken)
     {
-        var version = await versionService.GetProductsVersionAsync(cancellationToken);
 
         var filter = new ProductQueryFilter
         {

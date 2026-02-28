@@ -26,8 +26,7 @@ public sealed record GetProductsQuery(
                 Search = Search
             };
 
-            var version = 1;
-            return CacheKeys.Products.Paged(filter, version);
+            return CacheKeys.Products.PagedBase(filter);
         }
     }
 

@@ -16,6 +16,8 @@ public static class ApplicationServiceRegistration
             cfg.AddOpenBehavior(typeof(CachingBehavior<,>));
         });
 
+        services.AddScoped<ProductCacheVersion>();
+
         return services;
     }
 }

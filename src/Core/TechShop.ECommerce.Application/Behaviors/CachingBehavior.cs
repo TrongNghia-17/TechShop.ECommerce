@@ -2,7 +2,8 @@
 
 public class CachingBehavior<TRequest, TResponse>(
     ILogger<CachingBehavior<TRequest, TResponse>> logger,
-    IDistributedCache cache
+    IDistributedCache cache,
+    ProductCacheVersion productVersion
     )
     : IPipelineBehavior<TRequest, TResponse>
     where TRequest : ICacheable
@@ -11,6 +12,15 @@ public class CachingBehavior<TRequest, TResponse>(
     {
         TResponse response;
         if (request.BypassCache) return await next();
+
+        var cacheKey = request.CacheKey;
+
+        if (cacheKey.Contains(":products:", StringComparison.Ordinal))
+        {
+            var v = await productVersion.GetAsync(cancellationToken);
+            cacheKey = cacheKey.Replace("techshop:", $"techshop:v{v}:", StringComparison.Ordinal);
+        }
+
         async Task<TResponse> GetResponseAndAddToCache()
         {
             response = await next();
@@ -22,22 +32,23 @@ public class CachingBehavior<TRequest, TResponse>(
                     .SetSlidingExpiration(TimeSpan.FromMinutes(slidingExpiration))
                     .SetAbsoluteExpiration(TimeSpan.FromMinutes(absoluteExpiration));
 
-                var serializedData = Encoding.Default.GetBytes(JsonSerializer.Serialize(response));
-                await cache.SetAsync(request.CacheKey, serializedData, options, cancellationToken);
+                var serializedData = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(response));
+                await cache.SetAsync(cacheKey, serializedData, options, cancellationToken);
             }
             return response;
         }
-        var cachedResponse = await cache.GetAsync(request.CacheKey, cancellationToken);
+
+        var cachedResponse = await cache.GetAsync(cacheKey, cancellationToken);
         if (cachedResponse != null)
         {
-            response = JsonSerializer.Deserialize<TResponse>(Encoding.Default.GetString(cachedResponse))!;
-            logger.LogInformation("fetched from cache with key : {CacheKey}", request.CacheKey);
-            cache.Refresh(request.CacheKey);
+            response = JsonSerializer.Deserialize<TResponse>(Encoding.UTF8.GetString(cachedResponse))!;
+            logger.LogInformation("fetched from cache with key : {CacheKey}", cacheKey);
+            await cache.RefreshAsync(cacheKey, cancellationToken);
         }
         else
         {
             response = await GetResponseAndAddToCache();
-            logger.LogInformation("added to cache with key : {CacheKey}", request.CacheKey);
+            logger.LogInformation("added to cache with key : {CacheKey}", cacheKey);
         }
         return response;
     }
