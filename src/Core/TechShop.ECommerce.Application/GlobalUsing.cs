@@ -8,10 +8,13 @@ global using System.ComponentModel.DataAnnotations;
 global using System.Diagnostics;
 global using System.Linq.Expressions;
 global using System.Reflection;
+global using System.Text;
 global using TechShop.ECommerce.Application.Behaviors;
 global using TechShop.ECommerce.Application.Common;
+global using TechShop.ECommerce.Application.Common.Caching;
 global using TechShop.ECommerce.Application.Common.Paging;
 global using TechShop.ECommerce.Application.Contracts.Authentication;
+global using TechShop.ECommerce.Application.Contracts.Caching;
 global using TechShop.ECommerce.Application.Contracts.Email;
 global using TechShop.ECommerce.Application.Contracts.Identity;
 global using TechShop.ECommerce.Application.Contracts.Logging;
@@ -30,6 +33,8 @@ global using TechShop.ECommerce.Domain.Entities.Orders;
 global using TechShop.ECommerce.Domain.Errors;
 global using TechShop.ECommerce.Domain.Exceptions;
 global using TechShop.ECommerce.Domain.ValueObjects;
+
+
 
 
 

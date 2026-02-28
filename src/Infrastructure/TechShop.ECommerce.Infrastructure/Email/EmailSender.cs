@@ -1,4 +1,4 @@
-﻿namespace TechShop.ECommerce.Infrastructure.EmailService;
+﻿namespace TechShop.ECommerce.Infrastructure.Email;
 
 public class EmailSender(
     IOptions<EmailSettings> options,
