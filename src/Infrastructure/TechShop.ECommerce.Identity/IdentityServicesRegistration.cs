@@ -22,7 +22,7 @@ public static class IdentityServicesRegistration
         services.AddScoped<IIdentitySeeder, UserSeeder>();
 
         services.AddOptions<JwtSettings>()
-            .Bind(configuration.GetSection("JwtSettings"))
+            .BindConfiguration("JwtSettings")
             .ValidateDataAnnotations()
             .ValidateOnStart();
 

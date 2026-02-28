@@ -1,12 +1,12 @@
-﻿namespace TechShop.ECommerce.Application.Features.Products.Queries.GetProductsPaged;
+﻿namespace TechShop.ECommerce.Application.Features.Products.Queries.GetProducts;
 
-public sealed class GetProductsPagedQueryHandler(
+public sealed class GetProductsQueryHandler(
     IProductRepository productRepository,
     ICacheService cache)
-    : IRequestHandler<GetProductsPagedQuery, PagedResponse<ProductDto>>
+    : IRequestHandler<GetProductsQuery, PagedResponse<ProductDto>>
 {
     public async Task<PagedResponse<ProductDto>> Handle(
-        GetProductsPagedQuery request,
+        GetProductsQuery request,
         CancellationToken cancellationToken)
     {
         var filter = new ProductQueryFilter

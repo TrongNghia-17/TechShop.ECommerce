@@ -1,6 +1,6 @@
-﻿namespace TechShop.ECommerce.Application.Features.Products.Queries.GetProductsPaged;
+﻿namespace TechShop.ECommerce.Application.Features.Products.Queries.GetProducts;
 
-public sealed record GetProductsPagedQuery(
+public sealed record GetProductsQuery(
     int PageNumber = 1,
     int PageSize = 10,
     Guid? CategoryId = null,

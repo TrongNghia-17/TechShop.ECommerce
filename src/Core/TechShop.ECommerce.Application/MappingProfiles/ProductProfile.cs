@@ -1,8 +1,8 @@
 ﻿namespace TechShop.ECommerce.Application.MappingProfiles;
 
-public class ProductProfiles : Profile
+public class ProductProfile : Profile
 {
-    public ProductProfiles()
+    public ProductProfile()
     {
         CreateMap<Product, ProductDetailsDto>();
     }

@@ -24,7 +24,6 @@ global using TechShop.ECommerce.Application.Features.Identity.Commands.Register;
 global using TechShop.ECommerce.Application.Features.Orders.Commands.PlaceOrder;
 global using TechShop.ECommerce.Application.Features.Products.Dtos;
 global using TechShop.ECommerce.Application.Features.Products.Queries.GetDetails;
-global using TechShop.ECommerce.Application.Features.Products.Queries.GetProductsPaged;
 global using TechShop.ECommerce.Domain.Errors;
 global using TechShop.ECommerce.Identity;
 global using TechShop.ECommerce.Identity.DbContext;

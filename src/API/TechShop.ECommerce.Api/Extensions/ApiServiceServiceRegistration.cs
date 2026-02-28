@@ -2,7 +2,7 @@
 
 public static partial class ServiceCollectionExtensions
 {
-    public static IServiceCollection AddApiCore(this IServiceCollection services, IConfiguration config)
+    public static IServiceCollection AddApiServices(this IServiceCollection services, IConfiguration config)
     {
         services.AddApplicationServices();
         services.AddInfrastructureServices(config);
@@ -27,6 +27,14 @@ public static partial class ServiceCollectionExtensions
         services.Configure<BrotliCompressionProviderOptions>(options =>
         {
             options.Level = CompressionLevel.Optimal;
+        });
+
+        services.AddCors(options =>
+        {
+            options.AddPolicy("all", p => p
+                .AllowAnyOrigin()
+                .AllowAnyHeader()
+                .AllowAnyMethod());
         });
 
         return services;

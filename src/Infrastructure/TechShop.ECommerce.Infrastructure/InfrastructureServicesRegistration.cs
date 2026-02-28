@@ -6,8 +6,7 @@ public static class InfrastructureServicesRegistration
     {
         services.AddOptions<EmailSettings>()
             .BindConfiguration("EmailSettings")
-            .Validate(s => !string.IsNullOrWhiteSpace(s.ApiKey), "Email ApiKey is required")
-            .Validate(s => !string.IsNullOrWhiteSpace(s.FromAddress), "FromAddress is required")
+            .ValidateDataAnnotations()
             .ValidateOnStart();
 
         services.AddStackExchangeRedisCache(options =>

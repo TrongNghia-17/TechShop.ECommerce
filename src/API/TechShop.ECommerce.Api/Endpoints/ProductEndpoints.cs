@@ -1,4 +1,6 @@
-﻿namespace TechShop.ECommerce.Api.Endpoints;
+﻿using TechShop.ECommerce.Application.Features.Products.Queries.GetProducts;
+
+namespace TechShop.ECommerce.Api.Endpoints;
 
 public static class ProductEndpoints
 {
@@ -9,7 +11,7 @@ public static class ProductEndpoints
 
         // GET /api/products
         group.MapGet("/",
-            async ([AsParameters] GetProductsPagedQuery query,
+            async ([AsParameters] GetProductsQuery query,
                    ISender sender,
                    CancellationToken token) =>
             {
@@ -34,7 +36,8 @@ public static class ProductEndpoints
             .WithName("Products_GetById")
             .WithSummary("Gets product details by id")
             .Produces<ProductDetailsDto>(StatusCodes.Status200OK)
-            .Produces(StatusCodes.Status404NotFound);
+            .Produces(StatusCodes.Status404NotFound)
+            .CacheOutput("ProductDetail");
 
         return group;
     }

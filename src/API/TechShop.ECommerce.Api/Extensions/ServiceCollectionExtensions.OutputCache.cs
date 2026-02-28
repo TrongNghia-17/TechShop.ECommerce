@@ -7,9 +7,23 @@ public static partial class ServiceCollectionExtensions
         services.AddOutputCache(options =>
         {
             options.AddPolicy("ProductsList", policy =>
-                policy.Expire(TimeSpan.FromMinutes(2))
+                policy.Cache()
+                      .Expire(TimeSpan.FromMinutes(2))
+                      .SetLocking(true)
                       .Tag("products")
-                      .SetVaryByQuery("pageNumber", "pageSize", "categoryId", "sort"));
+                      .SetVaryByQuery(
+                          "pageNumber",
+                          "pageSize",
+                          "categoryId",
+                          "sortBy",
+                          "search"
+                      ));
+
+            options.AddPolicy("ProductDetail", policy =>
+                policy.Cache()
+                      .Expire(TimeSpan.FromMinutes(5))
+                      .SetLocking(true)
+                      .SetVaryByRouteValue("id"));
         });
 
         return services;

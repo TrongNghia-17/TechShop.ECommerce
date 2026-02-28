@@ -1,9 +1,9 @@
-﻿namespace TechShop.ECommerce.Application.Features.Products.Queries.GetProductsPaged;
+﻿namespace TechShop.ECommerce.Application.Features.Products.Queries.GetProducts;
 
-public sealed class GetProductsPagedQueryValidator
-    : AbstractValidator<GetProductsPagedQuery>
+public sealed class GetProductsQueryValidator
+    : AbstractValidator<GetProductsQuery>
 {
-    public GetProductsPagedQueryValidator()
+    public GetProductsQueryValidator()
     {
         RuleFor(x => x.PageNumber)
             .GreaterThanOrEqualTo(1)
