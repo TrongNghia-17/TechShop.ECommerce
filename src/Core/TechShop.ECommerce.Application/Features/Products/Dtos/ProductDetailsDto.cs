@@ -1,4 +1,4 @@
-﻿namespace TechShop.ECommerce.Application.Features.Products.Queries.GetDetails;
+﻿namespace TechShop.ECommerce.Application.Features.Products.Dtos;
 
 public sealed record ProductDetailsDto(
     Guid Id,
@@ -7,7 +7,6 @@ public sealed record ProductDetailsDto(
     string? Description,
     decimal Price,
     Guid CategoryId,
-    int RowVersion,
     DateTimeOffset DateCreated,
     DateTimeOffset? DateModified
 );

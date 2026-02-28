@@ -3,25 +3,44 @@
 public sealed class GetProductDetailsQueryHandler(
     IMapper mapper,
     IProductRepository productRepository,
+    ICacheService cache,
     IAppLogger<GetProductDetailsQueryHandler> logger)
-    : IRequestHandler<GetProductDetailsQuery, ProductDetailsDto>
+    : IRequestHandler<GetProductDetailsQuery, Result<ProductDetailsDto>>
 {
-    public async Task<ProductDetailsDto> Handle(
-        GetProductDetailsQuery request,
+    public async Task<Result<ProductDetailsDto>> Handle(
+        GetProductDetailsQuery command,
         CancellationToken cancellationToken)
     {
-        logger.LogInformation(
-            "Retrieving product details for product id {ProductId}",
-            request.Id);
+        var cacheKey = CacheKeys.Products.ById(command.Id);
 
-        var product = await productRepository.GetByIdAsync(request.Id, cancellationToken)
-            ?? throw new NotFoundException(nameof(Product), request.Id);
+        var cached = await cache.GetAsync<ProductDetailsDto>(cacheKey);
+
+        if (cached is not null)
+        {
+            logger.LogInformation(
+                "Cache hit for product {ProductId}",
+                command.Id);
+
+            return cached;
+        }
+
+        logger.LogInformation(
+            "Cache miss. Retrieving product {ProductId} from DB",
+            command.Id);
+
+        var product = await productRepository
+            .GetByIdAsync(command.Id, cancellationToken);
+
+        if (product is null)
+            return DomainErrors.Product.NotFound(command.Id);
 
         var data = mapper.Map<ProductDetailsDto>(product);
 
-        logger.LogInformation(
-            "Product details for product id {ProductId} retrieved successfully",
-            request.Id);
+        await cache.SetAsync(
+            cacheKey,
+            data,
+            absoluteExpiration: TimeSpan.FromMinutes(10),
+            slidingExpiration: TimeSpan.FromMinutes(3));
 
         return data;
     }
