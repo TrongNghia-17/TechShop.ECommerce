@@ -26,6 +26,7 @@ public static class InfrastructureServicesRegistration
         services.AddScoped<IEmailSender, EmailSender>();
         services.AddScoped(typeof(IAppLogger<>), typeof(LoggerAdapter<>));
         services.AddScoped<ICacheService, RedisCacheService>();
+        services.AddScoped<ICacheVersionService, CacheVersionService>();
 
         return services;
     }
