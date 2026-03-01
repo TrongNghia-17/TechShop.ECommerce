@@ -19,8 +19,4 @@
     <ProjectReference Include="..\TechShop.ECommerce.Domain\TechShop.ECommerce.Domain.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Features\Products\Commands\" />
-  </ItemGroup>
-
 </Project>

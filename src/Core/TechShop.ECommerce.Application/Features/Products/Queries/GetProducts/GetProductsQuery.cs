@@ -6,7 +6,7 @@ public sealed record GetProductsQuery(
     Guid? CategoryId = null,
     string? SortBy = null,
     string? Search = null
-) : IRequest<PagedResponse<ProductDto>>, ICacheable
+) : IRequest<Result<PagedResponse<ProductDto>>>, ICacheable
 {
     public bool BypassCache =>
         PageNumber > 3 ||

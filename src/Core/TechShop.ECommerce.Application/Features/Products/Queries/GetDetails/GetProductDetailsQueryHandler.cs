@@ -2,18 +2,13 @@
 
 public sealed class GetProductDetailsQueryHandler(
     IMapper mapper,
-    IProductRepository productRepository,
-    IAppLogger<GetProductDetailsQueryHandler> logger)
+    IProductRepository productRepository)
     : IRequestHandler<GetProductDetailsQuery, Result<ProductDetailsDto>>
 {
     public async Task<Result<ProductDetailsDto>> Handle(
         GetProductDetailsQuery command,
         CancellationToken cancellationToken)
     {
-        logger.LogInformation(
-            "Retrieving product {ProductId} from DB",
-            command.Id);
-
         var product = await productRepository
             .GetByIdAsync(command.Id, cancellationToken);
 

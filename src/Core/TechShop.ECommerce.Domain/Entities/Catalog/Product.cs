@@ -74,19 +74,6 @@ public class Product : BaseEntity, ISoftDelete
     /// - Once a product has been ordered, its category cannot be changed
     ///   to ensure data consistency for historical orders.
     /// </summary>
-    public void ChangeCategory(Guid newCategoryId, bool hasOrders)
-    {
-        if (CategoryId == newCategoryId)
-            return;
-
-        // A product that already has orders must not change its category,
-        // because orders depend on the original product classification.
-        if (hasOrders)
-            throw new DomainException(
-                "Cannot change category of a product that has orders");
-
-        CategoryId = newCategoryId;
-    }
 
     public void MarkAsDeleted(Guid? userId)
     {
@@ -112,14 +99,6 @@ public class Product : BaseEntity, ISoftDelete
         }
 
         StockQuantity = quantity;
-    }
-
-    public void AddStock(int quantity)
-    {
-        if (quantity <= 0)
-            throw new DomainException("Quantity to add must be greater than zero.");
-
-        StockQuantity += quantity;
     }
 
     public void RemoveStock(int quantity)
