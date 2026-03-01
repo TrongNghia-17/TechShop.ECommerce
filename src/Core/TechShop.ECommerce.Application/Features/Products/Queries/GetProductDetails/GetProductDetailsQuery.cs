@@ -1,13 +1,11 @@
-﻿namespace TechShop.ECommerce.Application.Features.Products.Queries.GetDetails;
+﻿namespace TechShop.ECommerce.Application.Features.Products.Queries.GetProductDetails;
 
 public sealed record GetProductDetailsQuery(Guid Id)
-    : IRequest<Result<ProductDetailsDto>>, ICacheable
+    : IRequest<ProductDetailsDto>, ICacheable
 {
     public bool BypassCache => false;
-
     public string CacheKey => CacheKeys.Products.ById(Id);
-
-    public int SlidingExpirationInMinutes => 3;
-
     public int AbsoluteExpirationInMinutes => 10;
+
+    public IEnumerable<string> Tags => [CacheTags.Products];
 }

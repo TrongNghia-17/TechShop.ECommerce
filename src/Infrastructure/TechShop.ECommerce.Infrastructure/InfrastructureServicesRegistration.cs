@@ -15,17 +15,15 @@ public static class InfrastructureServicesRegistration
 
             options.ConfigurationOptions = new StackExchange.Redis.ConfigurationOptions()
             {
-                EndPoints = { options.Configuration },
-                AbortOnConnectFail = false,
-                ConnectRetry = 3,
-                ConnectTimeout = 5000,
-                SyncTimeout = 5000
+                EndPoints = { options.Configuration }
             };
         });
 
+        services.AddHybridCache();
+
         services.AddScoped<IEmailSender, EmailSender>();
         services.AddScoped(typeof(IAppLogger<>), typeof(LoggerAdapter<>));
-        services.AddScoped<ICacheService, RedisCacheService>();
+        services.AddScoped<IAppCache, AppHybridCache>();
 
         return services;
     }

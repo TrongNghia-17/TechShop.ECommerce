@@ -2,9 +2,9 @@
 
 public sealed class GetProductsQueryHandler(
     IProductRepository productRepository)
-    : IRequestHandler<GetProductsQuery, Result<PagedResponse<ProductDto>>>
+    : IRequestHandler<GetProductsQuery, PagedResponse<ProductDto>>
 {
-    public async Task<Result<PagedResponse<ProductDto>>> Handle(
+    public async Task<PagedResponse<ProductDto>> Handle(
         GetProductsQuery request,
         CancellationToken cancellationToken)
     {
@@ -18,9 +18,7 @@ public sealed class GetProductsQueryHandler(
             Search = request.Search
         };
 
-        var data = await productRepository.GetPagedAsync(filter, cancellationToken);
-
-        return Result<PagedResponse<ProductDto>>.Success(data);
+        return await productRepository.GetPagedAsync(filter, cancellationToken);
     }
 }
 

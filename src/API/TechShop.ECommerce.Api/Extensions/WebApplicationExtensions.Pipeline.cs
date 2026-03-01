@@ -16,7 +16,6 @@ public static class WebApplicationExtensions
         app.UseAuthorization();
 
         app.UseRateLimiter();
-        app.UseOutputCache();
 
         if (app.Environment.IsDevelopment())
         {

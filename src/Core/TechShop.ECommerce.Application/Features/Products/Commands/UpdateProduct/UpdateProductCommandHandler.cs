@@ -2,7 +2,7 @@
 
 public sealed class UpdateProductCommandHandler(
     IProductRepository productRepository,
-    ProductCacheVersion productVersion,
+    IAppCache cache,
     IUnitOfWork unitOfWork)
     : IRequestHandler<UpdateProductCommand, Result>
 {
@@ -22,7 +22,7 @@ public sealed class UpdateProductCommandHandler(
 
         await unitOfWork.SaveChangesAsync(cancellationToken);
 
-        await productVersion.BumpAsync(cancellationToken);
+        await cache.RemoveByTagAsync(CacheTags.Products, cancellationToken);
 
         return Result.Success();
     }

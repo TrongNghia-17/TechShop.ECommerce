@@ -11,7 +11,6 @@ global using TechShop.ECommerce.Application.Contracts.Identity;
 global using TechShop.ECommerce.Application.Contracts.Logging;
 global using TechShop.ECommerce.Application.Contracts.Persistence;
 global using TechShop.ECommerce.Application.Exceptions;
-global using TechShop.ECommerce.Application.Features.Products.Dtos;
 global using TechShop.ECommerce.Domain.Abstractions;
 global using TechShop.ECommerce.Domain.Entities.Cart;
 global using TechShop.ECommerce.Domain.Entities.Catalog;

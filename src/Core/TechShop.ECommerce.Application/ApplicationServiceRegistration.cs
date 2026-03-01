@@ -1,4 +1,6 @@
-﻿namespace TechShop.ECommerce.Application;
+﻿using TechShop.ECommerce.Application.Features.Products.Queries.GetProductDetails;
+
+namespace TechShop.ECommerce.Application;
 
 public static class ApplicationServiceRegistration
 {
@@ -15,8 +17,6 @@ public static class ApplicationServiceRegistration
             cfg.AddOpenBehavior(typeof(LoggingBehavior<,>));
             cfg.AddOpenBehavior(typeof(CachingBehavior<,>));
         });
-
-        services.AddScoped<ProductCacheVersion>();
 
         return services;
     }

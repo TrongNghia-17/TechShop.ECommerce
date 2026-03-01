@@ -1,4 +1,4 @@
-﻿namespace TechShop.ECommerce.Application.Features.Products.Queries.GetDetails;
+﻿namespace TechShop.ECommerce.Application.Features.Products.Queries.GetProductDetails;
 
 public sealed class GetProductDetailsQueryValidator
     : AbstractValidator<GetProductDetailsQuery>

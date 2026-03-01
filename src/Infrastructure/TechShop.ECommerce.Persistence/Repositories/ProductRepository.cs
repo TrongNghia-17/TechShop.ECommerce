@@ -1,4 +1,6 @@
-﻿namespace TechShop.ECommerce.Persistence.Repositories;
+﻿using TechShop.ECommerce.Application.Features.Products.Queries.GetProducts;
+
+namespace TechShop.ECommerce.Persistence.Repositories;
 
 public class ProductRepository(TechShopDatabaseContext context)
     : IProductRepository

@@ -1,4 +1,5 @@
 ﻿global using Microsoft.Extensions.Caching.Distributed;
+global using Microsoft.Extensions.Caching.Hybrid;
 global using Microsoft.Extensions.Configuration;
 global using Microsoft.Extensions.DependencyInjection;
 global using Microsoft.Extensions.Logging;
@@ -7,7 +8,6 @@ global using SendGrid;
 global using SendGrid.Helpers.Mail;
 global using System.Text;
 global using System.Text.Json;
-global using TechShop.ECommerce.Application.Common.Caching;
 global using TechShop.ECommerce.Application.Contracts.Caching;
 global using TechShop.ECommerce.Application.Contracts.Email;
 global using TechShop.ECommerce.Application.Contracts.Logging;

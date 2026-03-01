@@ -1,4 +1,5 @@
 ﻿using TechShop.ECommerce.Application.Common.Paging;
+using TechShop.ECommerce.Application.Features.Products.Queries.GetProducts;
 
 namespace TechShop.ECommerce.Application.Contracts.Persistence;
 

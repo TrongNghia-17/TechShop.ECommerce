@@ -6,32 +6,4 @@ public sealed record GetProductsQuery(
     Guid? CategoryId = null,
     string? SortBy = null,
     string? Search = null
-) : IRequest<Result<PagedResponse<ProductDto>>>, ICacheable
-{
-    public bool BypassCache =>
-        PageNumber > 3 ||
-        !string.IsNullOrWhiteSpace(Search) ||
-        CategoryId is not null;
-
-    public string CacheKey
-    {
-        get
-        {
-            var filter = new ProductQueryFilter
-            {
-                PageNumber = PageNumber,
-                PageSize = PageSize,
-                CategoryId = CategoryId,
-                SortBy = SortBy,
-                Search = Search
-            };
-
-            return CacheKeys.Products.PagedBase(filter);
-        }
-    }
-
-    public int SlidingExpirationInMinutes => 2;
-
-    public int AbsoluteExpirationInMinutes => 5;
-}
-
+) : IRequest<PagedResponse<ProductDto>>;
