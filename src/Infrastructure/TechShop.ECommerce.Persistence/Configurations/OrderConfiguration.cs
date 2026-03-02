@@ -4,10 +4,17 @@ public class OrderConfiguration : IEntityTypeConfiguration<Order>
 {
     public void Configure(EntityTypeBuilder<Order> builder)
     {
-        // Table name
+        // 1. TABLE CONFIGURATION
+
         builder.ToTable("Orders");
 
-        // Properties
+        builder.HasKey(o => o.Id);
+
+        builder.Property(o => o.Id)
+            .ValueGeneratedNever();
+
+        // 2. CORE PROPERTIES
+
         builder.Property(o => o.CustomerId)
             .IsRequired()
             .HasMaxLength(450);
@@ -15,17 +22,16 @@ public class OrderConfiguration : IEntityTypeConfiguration<Order>
         builder.Property(o => o.OrderDate)
             .IsRequired();
 
+        builder.Property(o => o.Notes)
+            .HasMaxLength(1000);
+
         builder.Property(o => o.Status)
             .IsRequired()
             .HasConversion<string>()
             .HasMaxLength(50);
 
-        builder.Property(o => o.Notes)
-            .HasMaxLength(1000);
+        // 3. INDEXES
 
-        builder.Property(x => x.Id).ValueGeneratedNever();
-
-        // Indexes
         builder.HasIndex(o => o.CustomerId);
 
         builder.HasIndex(o => o.OrderDate);
@@ -34,7 +40,8 @@ public class OrderConfiguration : IEntityTypeConfiguration<Order>
 
         builder.HasIndex(o => new { o.CustomerId, o.OrderDate });
 
-        // Relationships
+        // 4. RELATIONSHIPS
+
         builder.HasMany(o => o.OrderItems)
             .WithOne()
             .HasForeignKey(oi => oi.OrderId)

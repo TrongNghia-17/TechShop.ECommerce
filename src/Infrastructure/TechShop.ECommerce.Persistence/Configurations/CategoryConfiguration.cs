@@ -4,10 +4,16 @@ public class CategoryConfiguration : IEntityTypeConfiguration<Category>
 {
     public void Configure(EntityTypeBuilder<Category> builder)
     {
-        // Table name
+        // 1. TABLE CONFIGURATION
         builder.ToTable("Categories");
 
-        // Properties
+        builder.HasKey(c => c.Id);
+
+        builder.Property(c => c.Id)
+            .ValueGeneratedNever();
+
+        // 2. CORE PROPERTIES
+
         builder.Property(c => c.Name)
             .IsRequired()
             .HasMaxLength(200);
@@ -15,12 +21,8 @@ public class CategoryConfiguration : IEntityTypeConfiguration<Category>
         builder.Property(c => c.Description)
             .HasMaxLength(1000);
 
-        builder.Property(x => x.Id).ValueGeneratedNever();
-
-        // Indexes
+        // 3. INDEXES
         builder.HasIndex(c => c.Name)
             .IsUnique();
-
-        // Relationships
     }
 }

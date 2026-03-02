@@ -4,19 +4,24 @@ public class CartItemConfiguration : IEntityTypeConfiguration<CartItem>
 {
     public void Configure(EntityTypeBuilder<CartItem> builder)
     {
+        // 1. TABLE CONFIGURATION
+
         builder.ToTable("CartItems");
 
-        builder.HasKey(x => x.Id);
+        builder.HasKey(c => c.Id);
 
-        builder.Property(x => x.ProductId)
+        builder.Property(c => c.Id)
+            .ValueGeneratedNever();
+
+        // 2. CORE PROPERTIES
+
+        builder.Property(c => c.ProductId)
             .IsRequired();
 
-        builder.Property(x => x.Id).ValueGeneratedNever();
-
-        builder.Property(x => x.UnitPrice)
+        builder.Property(c => c.UnitPrice)
             .HasColumnType("decimal(18,2)");
 
-        builder.Property(x => x.Quantity)
+        builder.Property(c => c.Quantity)
             .IsRequired();
     }
 }

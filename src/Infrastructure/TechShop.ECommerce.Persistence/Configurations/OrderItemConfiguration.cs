@@ -4,24 +4,30 @@ public class OrderItemConfiguration : IEntityTypeConfiguration<OrderItem>
 {
     public void Configure(EntityTypeBuilder<OrderItem> builder)
     {
-        // Table name
+        // 1. TABLE CONFIGURATION
+
         builder.ToTable("OrderItems");
 
-        // Composite unique constraint
         builder.HasKey(oi => new { oi.OrderId, oi.ProductId });
-        builder.HasIndex(oi => oi.ProductId);
 
-        // Properties
+        builder.Property(oi => oi.Id)
+            .ValueGeneratedNever();
+
+        // 2. CORE PROPERTIES
+
         builder.Property(oi => oi.Quantity)
-            .IsRequired();
+           .IsRequired();
 
         builder.Property(oi => oi.UnitPrice)
             .HasPrecision(18, 2)
             .IsRequired();
 
-        builder.Property(x => x.Id).ValueGeneratedNever();
+        // 3. INDEXES
 
-        // Relationships
+        builder.HasIndex(oi => oi.ProductId);
+
+        // 4. RELATIONSHIPS
+
         builder.HasOne<Order>()
             .WithMany(o => o.OrderItems)
             .HasForeignKey(oi => oi.OrderId)

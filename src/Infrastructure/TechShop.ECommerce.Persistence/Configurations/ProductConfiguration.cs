@@ -4,10 +4,17 @@ public class ProductConfiguration : IEntityTypeConfiguration<Product>
 {
     public void Configure(EntityTypeBuilder<Product> builder)
     {
-        // Table name
+        // 1. TABLE CONFIGURATION
+
         builder.ToTable("Products");
 
-        // Properties
+        builder.HasKey(p => p.Id);
+
+        builder.Property(p => p.Id)
+            .ValueGeneratedNever();
+
+        // 2. CORE PROPERTIES
+
         builder.Property(p => p.Name)
             .IsRequired()
             .HasMaxLength(200);
@@ -22,11 +29,8 @@ public class ProductConfiguration : IEntityTypeConfiguration<Product>
             .HasPrecision(18, 2)
             .IsRequired();
 
-        builder.Property(x => x.Id).ValueGeneratedNever();
+        // 3. INDEXES
 
-        builder.HasQueryFilter("SoftDelete", p => !p.IsDeleted);
-
-        // Indexes
         builder.HasIndex(p => p.Name)
             .IsUnique()
             .HasFilter("\"IsDeleted\" = false");
@@ -37,15 +41,15 @@ public class ProductConfiguration : IEntityTypeConfiguration<Product>
         builder.HasIndex(p => p.Price)
             .HasFilter("\"IsDeleted\" = false");
 
-        // Relationships
+        // 4.QUERY FILTERS
+
+        builder.HasQueryFilter("SoftDelete", p => !p.IsDeleted);
+
+        // 5. RELATIONSHIPS
+
         builder.HasOne(p => p.Category)
             .WithMany(c => c.Products)
             .HasForeignKey(p => p.CategoryId)
-            .OnDelete(DeleteBehavior.Restrict);
-
-        builder.HasMany<OrderItem>()
-            .WithOne()
-            .HasForeignKey(oi => oi.ProductId)
             .OnDelete(DeleteBehavior.Restrict);
     }
 }

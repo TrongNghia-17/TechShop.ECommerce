@@ -3,8 +3,6 @@
 public class CartItem : BaseEntity
 {
     public Guid CartId { get; private set; }
-    public Cart Cart { get; private set; } = null!;
-
     public Guid ProductId { get; private set; }
     public decimal UnitPrice { get; private set; }
     public int Quantity { get; private set; }

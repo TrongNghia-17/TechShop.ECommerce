@@ -40,7 +40,7 @@ public class Product : BaseEntity, ISoftDelete
         Guid categoryId,
         string? summary = null,
         string? description = null)
-        => new(name, price, stockQuantity, categoryId, summary, description);
+    => new(name, price, stockQuantity, categoryId, summary, description);
     public void Rename(string name)
     {
         if (string.IsNullOrWhiteSpace(name))

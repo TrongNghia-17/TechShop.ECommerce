@@ -27,8 +27,11 @@ public class Order : BaseEntity
         TotalAmount = 0;
     }
 
-    public static Order Create(Guid customerId, Address address, string? notes)
-        => new(customerId, address, notes);
+    public static Order Create(
+        Guid customerId,
+        Address address,
+        string? notes)
+    => new(customerId, address, notes);
 
     public void AddItem(Guid productId, decimal unitPrice, int quantity)
     {
@@ -87,11 +90,4 @@ public class Order : BaseEntity
     }
 }
 
-public enum OrderStatus
-{
-    Pending = 0,
-    Confirmed = 1,
-    Shipped = 2,
-    Completed = 3,
-    Cancelled = 4
-}
+
