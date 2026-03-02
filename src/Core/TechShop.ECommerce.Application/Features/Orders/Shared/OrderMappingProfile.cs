@@ -1,8 +1,8 @@
-﻿namespace TechShop.ECommerce.Application.MappingProfiles;
+﻿namespace TechShop.ECommerce.Application.Features.Orders.Shared;
 
-public sealed class OrderProfile : Profile
+public sealed class OrderMappingProfile : Profile
 {
-    public OrderProfile()
+    public OrderMappingProfile()
     {
         CreateMap<AddressDto, Address>()
             .ConstructUsing(src => new Address(

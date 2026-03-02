@@ -1,6 +1,6 @@
-﻿namespace TechShop.ECommerce.Application.Features.Orders.Events.OrderPlaced;
+﻿namespace TechShop.ECommerce.Application.Features.Orders.PlaceOrder;
 
-public class SendOrderConfirmationEmailHandler(
+public class SendEmailHandler(
     IEmailSender emailSender,
     IUserQueryService userService
 ) : INotificationHandler<OrderPlacedNotification>

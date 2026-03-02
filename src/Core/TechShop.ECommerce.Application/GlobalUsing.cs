@@ -20,16 +20,13 @@ global using TechShop.ECommerce.Application.Contracts.Logging;
 global using TechShop.ECommerce.Application.Contracts.Persistence;
 global using TechShop.ECommerce.Application.Exceptions;
 global using TechShop.ECommerce.Application.Features.Carts.Dtos;
-global using TechShop.ECommerce.Application.Features.Orders.Dtos;
-global using TechShop.ECommerce.Application.Features.Orders.Events.OrderPlaced;
-global using TechShop.ECommerce.Application.Models.Email;
-global using TechShop.ECommerce.Application.Models.Identity;
 global using TechShop.ECommerce.Domain.Entities.Cart;
 global using TechShop.ECommerce.Domain.Entities.Catalog;
 global using TechShop.ECommerce.Domain.Entities.Orders;
 global using TechShop.ECommerce.Domain.Errors;
 global using TechShop.ECommerce.Domain.Exceptions;
 global using TechShop.ECommerce.Domain.ValueObjects;
+
 
 
 

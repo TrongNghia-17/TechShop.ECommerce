@@ -1,6 +1,6 @@
-﻿namespace TechShop.ECommerce.Application.Features.Orders.Commands.PlaceOrder;
+﻿namespace TechShop.ECommerce.Application.Features.Orders.PlaceOrder;
 
-public class PlaceOrderCommandHandler(
+public class Handler(
     IPublisher publisher,
     ICurrentUserService currentUserService,
     ICartRepository cartRepository,
@@ -8,11 +8,11 @@ public class PlaceOrderCommandHandler(
     IOrderRepository orderRepository,
     IUnitOfWork unitOfWork,
     IMapper mapper,
-    IAppLogger<PlaceOrderCommandHandler> logger)
-    : IRequestHandler<PlaceOrderCommand, Result<Guid>>
+    IAppLogger<Handler> logger)
+    : IRequestHandler<Command, Result<Guid>>
 {
     public async Task<Result<Guid>> Handle(
-    PlaceOrderCommand command,
+    Command command,
     CancellationToken token)
     {
         var customerId = currentUserService.UserId;

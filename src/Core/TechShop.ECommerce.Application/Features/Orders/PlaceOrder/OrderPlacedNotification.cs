@@ -1,4 +1,4 @@
-﻿namespace TechShop.ECommerce.Application.Features.Orders.Events.OrderPlaced;
+﻿namespace TechShop.ECommerce.Application.Features.Orders.PlaceOrder;
 
 public record OrderPlacedNotification(
     Guid OrderId,

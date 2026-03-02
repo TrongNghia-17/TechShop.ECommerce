@@ -14,7 +14,6 @@ global using System.Text;
 global using TechShop.ECommerce.Application.Common.Constants;
 global using TechShop.ECommerce.Application.Contracts.Authentication;
 global using TechShop.ECommerce.Application.Contracts.Identity;
-global using TechShop.ECommerce.Application.Models.Identity;
 global using TechShop.ECommerce.Identity.Authentication;
 global using TechShop.ECommerce.Identity.DbContext;
 global using TechShop.ECommerce.Identity.Models;
