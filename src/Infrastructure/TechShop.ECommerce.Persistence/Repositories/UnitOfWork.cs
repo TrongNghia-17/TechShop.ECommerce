@@ -36,7 +36,6 @@ public sealed class UnitOfWork(TechShopDatabaseContext context) : IUnitOfWork
             try
             {
                 await action();
-                await context.SaveChangesAsync(token);
                 await transaction.CommitAsync(token);
             }
             catch

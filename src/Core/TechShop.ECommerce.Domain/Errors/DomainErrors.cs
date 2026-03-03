@@ -28,6 +28,11 @@ public static class DomainErrors
             Error.Validation(
                 "Order.EmptyCart",
                 "Cannot place order with an empty cart.");
+
+        public static Error NotFound(Guid orderId) =>
+            Error.NotFound(
+                "order.NotFound",
+                $"Order {orderId} was not found.");
     }
 
 
@@ -42,5 +47,13 @@ public static class DomainErrors
             Error.Validation(
                 "Identity.RegisterFailed",
                 message);
+    }
+
+    public static class Payment
+    {
+        public static Error NotFound(string sessionId) =>
+            Error.NotFound(
+                "payment.NotFound",
+                $"Payment for session {sessionId} was not found.");
     }
 }

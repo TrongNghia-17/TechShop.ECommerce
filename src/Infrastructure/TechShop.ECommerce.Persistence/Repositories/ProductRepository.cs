@@ -1,6 +1,6 @@
 ﻿namespace TechShop.ECommerce.Persistence.Repositories;
 
-public class ProductRepository(TechShopDatabaseContext context)
+public sealed class ProductRepository(TechShopDatabaseContext context)
     : IProductRepository
 {
     public async Task<Product?> GetByIdAsync(

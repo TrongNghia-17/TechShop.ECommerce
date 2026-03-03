@@ -42,12 +42,9 @@ public static class ProductEndpoints
                 Guid id,
                 UpdateProductCommand command,
                 ISender sender,
-                IOutputCacheStore cacheStore,
                 CancellationToken token) =>
             {
                 var result = await sender.Send(command, token);
-                await cacheStore.EvictByTagAsync("products", token);
-
                 return result.ToApiResult();
             })
         .WithName("Products_Update")

@@ -1,17 +1,21 @@
-﻿namespace TechShop.ECommerce.Application.Features.Orders.PlaceOrder;
+﻿using TechShop.ECommerce.Application.Contracts.PaymentGateway;
+using TechShop.ECommerce.Domain.Entities.Payments;
+
+namespace TechShop.ECommerce.Application.Features.Orders.PlaceOrder;
 
 public class Handler(
-    IPublisher publisher,
     ICurrentUserService currentUserService,
+    IPaymentService paymentService,
     ICartRepository cartRepository,
     IProductRepository productRepository,
     IOrderRepository orderRepository,
+    IPaymentRepository paymentRepository,
     IUnitOfWork unitOfWork,
     IMapper mapper,
     IAppLogger<Handler> logger)
-    : IRequestHandler<Command, Result<Guid>>
+    : IRequestHandler<Command, Result<Response>>
 {
-    public async Task<Result<Guid>> Handle(
+    public async Task<Result<Response>> Handle(
     Command command,
     CancellationToken token)
     {
@@ -59,22 +63,30 @@ public class Handler(
                 order.AddItem(product.Id, product.Price, item.Quantity);
             }
 
-            order.Confirm();
-
             await orderRepository.AddAsync(order, token);
-
             cart.Clear();
 
         }, token);
 
-        await publisher.Publish(
-            new OrderPlacedNotification(order.Id, customerId),
+        var session = await paymentService.CreateCheckoutSessionAsync(
+            order.Id,
+            order.TotalAmount,
             token);
 
-        logger.LogInformation(
-            "Order {OrderId} created successfully",
-            order.Id);
+        var payment = Payment.Create(
+            order.Id,
+            session.SessionId,
+            order.TotalAmount,
+            session.Currency);
 
-        return order.Id;
+        await paymentRepository.AddAsync(payment, token);
+        await unitOfWork.SaveChangesAsync(token);
+
+        logger.LogInformation(
+            "Order {OrderId} created successfully for customer {CustomerId}",
+            order.Id,
+            customerId);
+
+        return new Response(order.Id, session.Url);
     }
 }

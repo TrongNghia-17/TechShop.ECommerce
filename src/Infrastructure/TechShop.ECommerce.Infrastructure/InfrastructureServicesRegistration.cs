@@ -1,4 +1,7 @@
-﻿namespace TechShop.ECommerce.Infrastructure;
+﻿using TechShop.ECommerce.Application.Contracts.PaymentGateway;
+using TechShop.ECommerce.Infrastructure.PaymentGateway;
+
+namespace TechShop.ECommerce.Infrastructure;
 
 public static class InfrastructureServicesRegistration
 {
@@ -6,6 +9,11 @@ public static class InfrastructureServicesRegistration
     {
         services.AddOptions<EmailSettings>()
             .BindConfiguration("EmailSettings")
+            .ValidateDataAnnotations()
+            .ValidateOnStart();
+
+        services.AddOptions<StripeSettings>()
+            .BindConfiguration("StripeSettings")
             .ValidateDataAnnotations()
             .ValidateOnStart();
 
@@ -24,6 +32,7 @@ public static class InfrastructureServicesRegistration
         services.AddScoped<IEmailSender, EmailSender>();
         services.AddScoped(typeof(IAppLogger<>), typeof(LoggerAdapter<>));
         services.AddScoped<IAppCache, AppHybridCache>();
+        services.AddScoped<IPaymentService, StripePaymentService>();
 
         return services;
     }
