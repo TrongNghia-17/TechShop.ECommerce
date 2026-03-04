@@ -46,11 +46,18 @@ public static class StripeWebhookEndpoints
             if (session is null)
                 return Results.BadRequest();
 
+            if (!session.Metadata.TryGetValue("orderId", out var orderIdString))
+            {
+                return Results.BadRequest();
+            }
+
+            var orderId = Guid.Parse(orderIdString);
+
             var result = await sender.Send(
                 new Command(
                     stripeEvent.Type,
                     session.Id,
-                    Guid.Parse(session.Metadata["orderId"])),
+                    orderId),
                 token);
 
             return result.ToApiResult();

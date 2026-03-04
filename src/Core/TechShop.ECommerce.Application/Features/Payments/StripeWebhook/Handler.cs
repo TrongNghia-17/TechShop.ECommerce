@@ -5,6 +5,7 @@ namespace TechShop.ECommerce.Application.Features.Payments.StripeWebhook;
 public sealed class Handler(
     IPaymentRepository paymentRepository,
     IOrderRepository orderRepository,
+    IProductRepository productRepository,
     IUnitOfWork unitOfWork,
     ILogger<Handler> logger)
     : IRequestHandler<Command, Result>
@@ -45,13 +46,24 @@ public sealed class Handler(
                 DomainErrors.Order.NotFound(command.OrderId));
         }
 
+        foreach (var item in order.OrderItems)
+        {
+            var product = await productRepository
+                .GetByIdAsync(item.ProductId, token);
+
+            if (!product!.HasEnoughStock(item.Quantity))
+                return DomainErrors.Product.InsufficientStock(item.ProductId);
+
+            product.RemoveStock(item.Quantity);
+        }
+
         order.Confirm();
 
         await unitOfWork.SaveChangesAsync(token);
 
         logger.LogInformation(
-            message: "Payment succeeded for Order {OrderId}",
-            args: command.OrderId);
+            "Order {OrderId} confirmed and stock deducted",
+            order.Id);
 
         return Result.Success();
     }

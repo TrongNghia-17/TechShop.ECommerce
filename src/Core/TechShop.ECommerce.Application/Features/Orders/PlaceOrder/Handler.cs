@@ -51,22 +51,9 @@ public class Handler(
 
             if (!product.HasEnoughStock(item.Quantity))
                 return DomainErrors.Product.InsufficientStock(item.ProductId);
+
+            order.AddItem(product.Id, product.Price, item.Quantity);
         }
-
-        await unitOfWork.ExecuteInTransactionAsync(async () =>
-        {
-            foreach (var item in cart.Items)
-            {
-                var product = productDict[item.ProductId];
-
-                product.RemoveStock(item.Quantity);
-                order.AddItem(product.Id, product.Price, item.Quantity);
-            }
-
-            await orderRepository.AddAsync(order, token);
-            cart.Clear();
-
-        }, token);
 
         var session = await paymentService.CreateCheckoutSessionAsync(
             order.Id,
@@ -79,7 +66,13 @@ public class Handler(
             order.TotalAmount,
             session.Currency);
 
-        await paymentRepository.AddAsync(payment, token);
+        await unitOfWork.ExecuteInTransactionAsync(async () =>
+        {
+            await paymentRepository.AddAsync(payment, token);
+            await orderRepository.AddAsync(order, token);
+            cart.Clear();
+        }, token);
+
         await unitOfWork.SaveChangesAsync(token);
 
         logger.LogInformation(
