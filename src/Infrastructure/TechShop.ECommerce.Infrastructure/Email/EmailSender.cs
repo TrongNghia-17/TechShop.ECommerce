@@ -1,6 +1,7 @@
 ﻿namespace TechShop.ECommerce.Infrastructure.Email;
 
 public class EmailSender(
+    SendGridClient client,
     IOptions<EmailSettings> options,
     ILogger<EmailSender> logger)
     : IEmailSender
@@ -9,8 +10,6 @@ public class EmailSender(
 
     public async Task<bool> SendEmail(EmailMessage email)
     {
-        var client = new SendGridClient(_settings.ApiKey);
-
         var from = new EmailAddress(_settings.FromAddress, _settings.FromName);
         var to = new EmailAddress(email.To);
 

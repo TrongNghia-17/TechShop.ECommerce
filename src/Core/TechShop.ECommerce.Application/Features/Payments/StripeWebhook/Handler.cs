@@ -1,4 +1,5 @@
-﻿using TechShop.ECommerce.Domain.Entities.Payments;
+﻿using TechShop.ECommerce.Application.Features.Orders.PlaceOrder;
+using TechShop.ECommerce.Domain.Entities.Payments;
 
 namespace TechShop.ECommerce.Application.Features.Payments.StripeWebhook;
 
@@ -7,6 +8,7 @@ public sealed class Handler(
     IOrderRepository orderRepository,
     IProductRepository productRepository,
     IUnitOfWork unitOfWork,
+    IPublisher publisher,
     ILogger<Handler> logger)
     : IRequestHandler<Command, Result>
 {
@@ -29,7 +31,13 @@ public sealed class Handler(
         }
 
         if (payment.Status == PaymentStatus.Succeeded)
+        {
+            logger.LogInformation(
+                "Duplicate webhook ignored for session {SessionId}",
+                command.SessionId);
+
             return Result.Success();
+        }
 
         payment.MarkSucceeded();
 
@@ -60,6 +68,10 @@ public sealed class Handler(
         order.Confirm();
 
         await unitOfWork.SaveChangesAsync(token);
+
+        await publisher.Publish(
+            new OrderPlacedNotification(order.Id, order.CustomerId),
+            token);
 
         logger.LogInformation(
             "Order {OrderId} confirmed and stock deducted",

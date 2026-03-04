@@ -12,6 +12,12 @@ public static class InfrastructureServicesRegistration
             .ValidateDataAnnotations()
             .ValidateOnStart();
 
+        services.AddSingleton<SendGridClient>(serviceProvider =>
+        {
+            var settings = serviceProvider.GetRequiredService<IOptions<EmailSettings>>().Value;
+            return new SendGridClient(settings.ApiKey);
+        });
+
         services.AddOptions<StripeSettings>()
             .BindConfiguration("StripeSettings")
             .ValidateDataAnnotations()
