@@ -31,7 +31,7 @@ public class Handler(
             return DomainErrors.Order.EmptyCart;
 
         var address = mapper.Map<Address>(command.ShippingAddress);
-        var order = Order.Create(customerId, address, command.Notes);
+        var order = Order.Create(customerId, "Test", address, command.Notes);
 
         var productIds = cart.Items
             .Select(i => i.ProductId)
@@ -52,7 +52,7 @@ public class Handler(
             if (!product.HasEnoughStock(item.Quantity))
                 return DomainErrors.Product.InsufficientStock(item.ProductId);
 
-            order.AddItem(product.Id, product.Price, item.Quantity);
+            order.AddItem(product.Id, product.Name, product.Price, item.Quantity);
         }
 
         var session = await paymentService.CreateCheckoutSessionAsync(

@@ -8,12 +8,19 @@ public class OrderItemConfiguration : IEntityTypeConfiguration<OrderItem>
 
         builder.ToTable("OrderItems");
 
-        builder.HasKey(oi => new { oi.OrderId, oi.ProductId });
+        builder.HasKey(oi => oi.Id);
 
         builder.Property(oi => oi.Id)
             .ValueGeneratedNever();
 
         // 2. CORE PROPERTIES
+
+        builder.Property(oi => oi.ProductId)
+            .IsRequired();
+
+        builder.Property(oi => oi.ProductName)
+            .IsRequired()
+            .HasMaxLength(250);
 
         builder.Property(oi => oi.Quantity)
            .IsRequired();
@@ -24,6 +31,8 @@ public class OrderItemConfiguration : IEntityTypeConfiguration<OrderItem>
 
         // 3. INDEXES
 
+        builder.HasIndex(oi => oi.OrderId);
+
         builder.HasIndex(oi => oi.ProductId);
 
         // 4. RELATIONSHIPS
@@ -32,10 +41,5 @@ public class OrderItemConfiguration : IEntityTypeConfiguration<OrderItem>
             .WithMany(o => o.OrderItems)
             .HasForeignKey(oi => oi.OrderId)
             .OnDelete(DeleteBehavior.Cascade);
-
-        builder.HasOne<Product>()
-            .WithMany()
-            .HasForeignKey(oi => oi.ProductId)
-            .OnDelete(DeleteBehavior.Restrict);
     }
 }

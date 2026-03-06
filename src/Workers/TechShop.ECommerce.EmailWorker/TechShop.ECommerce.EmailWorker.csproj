@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk.Worker">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>dotnet-TechShop.ECommerce.EmailWorker-c96ad2f8-84d1-45eb-8c19-b0fbf3c881e8</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Hangfire.AspNetCore" Version="1.8.23" />
+    <PackageReference Include="Hangfire.PostgreSql" Version="1.21.1" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="10.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Core\TechShop.ECommerce.Application\TechShop.ECommerce.Application.csproj" />
+    <ProjectReference Include="..\..\Infrastructure\TechShop.ECommerce.Identity\TechShop.ECommerce.Identity.csproj" />
+    <ProjectReference Include="..\..\Infrastructure\TechShop.ECommerce.Infrastructure\TechShop.ECommerce.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\Infrastructure\TechShop.ECommerce.Persistence\TechShop.ECommerce.Persistence.csproj" />
+  </ItemGroup>
+</Project>

@@ -1,6 +1,8 @@
-﻿namespace TechShop.ECommerce.Persistence.Repositories;
+﻿using TechShop.ECommerce.Persistence.DatabaseContext;
 
-public sealed class PaymentRepository(TechShopDatabaseContext context) : IPaymentRepository
+namespace TechShop.ECommerce.Persistence.Repositories;
+
+public sealed class PaymentRepository(TechShopDbContext context) : IPaymentRepository
 {
     public async Task AddAsync(Payment payment, CancellationToken token)
     {

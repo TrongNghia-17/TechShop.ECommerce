@@ -8,13 +8,14 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using NpgsqlTypes;
 using TechShop.ECommerce.Persistence.DatabaseContext;
 
+
 #nullable disable
 
 namespace TechShop.ECommerce.Persistence.Migrations
 {
-    [DbContext(typeof(TechShopDatabaseContext))]
-    [Migration("20260215014610_AddCartAndCartItemTable")]
-    partial class AddCartAndCartItemTable
+    [DbContext(typeof(TechShopDbContext))]
+    [Migration("20260213034214_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,72 +26,6 @@ namespace TechShop.ECommerce.Persistence.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
-
-            modelBuilder.Entity("TechShop.ECommerce.Domain.Entities.Cart.Cart", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid?>("CreatedBy")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("CustomerId")
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTimeOffset>("DateCreated")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTimeOffset?>("DateModified")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<Guid?>("ModifiedBy")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CustomerId")
-                        .IsUnique();
-
-                    b.ToTable("Carts", (string)null);
-                });
-
-            modelBuilder.Entity("TechShop.ECommerce.Domain.Entities.Cart.CartItem", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("CartId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid?>("CreatedBy")
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTimeOffset>("DateCreated")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTimeOffset?>("DateModified")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<Guid?>("ModifiedBy")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("ProductId")
-                        .HasColumnType("uuid");
-
-                    b.Property<int>("Quantity")
-                        .HasColumnType("integer");
-
-                    b.Property<decimal>("UnitPrice")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CartId");
-
-                    b.ToTable("CartItems", (string)null);
-                });
 
             modelBuilder.Entity("TechShop.ECommerce.Domain.Entities.Catalog.Category", b =>
                 {
@@ -296,15 +231,6 @@ namespace TechShop.ECommerce.Persistence.Migrations
                     b.ToTable("OrderItems", (string)null);
                 });
 
-            modelBuilder.Entity("TechShop.ECommerce.Domain.Entities.Cart.CartItem", b =>
-                {
-                    b.HasOne("TechShop.ECommerce.Domain.Entities.Cart.Cart", null)
-                        .WithMany("Items")
-                        .HasForeignKey("CartId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("TechShop.ECommerce.Domain.Entities.Catalog.Product", b =>
                 {
                     b.HasOne("TechShop.ECommerce.Domain.Entities.Catalog.Category", "Category")
@@ -371,11 +297,6 @@ namespace TechShop.ECommerce.Persistence.Migrations
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("TechShop.ECommerce.Domain.Entities.Cart.Cart", b =>
-                {
-                    b.Navigation("Items");
                 });
 
             modelBuilder.Entity("TechShop.ECommerce.Domain.Entities.Catalog.Category", b =>

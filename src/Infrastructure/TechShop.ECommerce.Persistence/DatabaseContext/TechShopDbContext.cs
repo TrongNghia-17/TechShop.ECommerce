@@ -2,8 +2,8 @@
 
 namespace TechShop.ECommerce.Persistence.DatabaseContext;
 
-public class TechShopDatabaseContext(
-    DbContextOptions<TechShopDatabaseContext> options)
+public class TechShopDbContext(
+    DbContextOptions<TechShopDbContext> options)
     : DbContext(options)
 {
     public DbSet<Category> Categories => Set<Category>();
@@ -17,7 +17,7 @@ public class TechShopDatabaseContext(
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.ApplyConfigurationsFromAssembly(typeof(TechShopDatabaseContext).Assembly);
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(TechShopDbContext).Assembly);
 
         base.OnModelCreating(modelBuilder);
     }

@@ -7,19 +7,19 @@ namespace TechShop.ECommerce.Persistence.IntegrationTests;
 
 public class TechShopDatabaseContextTests
 {
-    private readonly TechShopDatabaseContext _techShopDatabaseContext;
+    private readonly TechShopDbContext _techShopDatabaseContext;
     private readonly Guid _userId;
     private readonly Mock<ICurrentUserService> _userServiceMock;
 
     public TechShopDatabaseContextTests()
     {
-        var dbOptions = new DbContextOptionsBuilder<TechShopDatabaseContext>()
+        var dbOptions = new DbContextOptionsBuilder<TechShopDbContext>()
                 .UseInMemoryDatabase(Guid.NewGuid().ToString()).Options;
         _userId = Guid.NewGuid();
         _userServiceMock = new Mock<ICurrentUserService>();
         _userServiceMock.Setup(m => m.UserId).Returns(_userId);
 
-        _techShopDatabaseContext = new TechShopDatabaseContext(dbOptions);
+        _techShopDatabaseContext = new TechShopDbContext(dbOptions);
     }
 
     [Fact]

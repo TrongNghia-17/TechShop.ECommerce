@@ -7,7 +7,9 @@ public static class IdentityServicesRegistration
         IConfiguration configuration)
     {
         services.AddDbContext<TechShopIdentityDbContext>(options =>
-           options.UseNpgsql(configuration.GetConnectionString("PostgreSQL")));
+           options.UseNpgsql(configuration.GetConnectionString("DefaultConnection"),
+           npgsqlOptions =>
+                npgsqlOptions.MigrationsAssembly("TechShop.ECommerce.Migrations")));
 
         services.AddIdentity<ApplicationUser, IdentityRole<Guid>>()
             .AddEntityFrameworkStores<TechShopIdentityDbContext>()

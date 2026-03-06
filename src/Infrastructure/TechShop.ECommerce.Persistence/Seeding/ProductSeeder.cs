@@ -1,6 +1,8 @@
-﻿namespace TechShop.ECommerce.Persistence.Seeding;
+﻿using TechShop.ECommerce.Persistence.DatabaseContext;
 
-public sealed class ProductSeeder(TechShopDatabaseContext context) : IDataSeeder
+namespace TechShop.ECommerce.Persistence.Seeding;
+
+public sealed class ProductSeeder(TechShopDbContext context) : IDataSeeder
 {
     public async Task SeedAsync(CancellationToken cancellationToken = default)
     {

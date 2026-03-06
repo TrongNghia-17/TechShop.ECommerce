@@ -1,6 +1,8 @@
-﻿namespace TechShop.ECommerce.Persistence.Repositories;
+﻿using TechShop.ECommerce.Persistence.DatabaseContext;
 
-public sealed class UnitOfWork(TechShopDatabaseContext context) : IUnitOfWork
+namespace TechShop.ECommerce.Persistence.Repositories;
+
+public sealed class UnitOfWork(TechShopDbContext context) : IUnitOfWork
 {
     public async Task<int> SaveChangesAsync(CancellationToken token = default)
     {

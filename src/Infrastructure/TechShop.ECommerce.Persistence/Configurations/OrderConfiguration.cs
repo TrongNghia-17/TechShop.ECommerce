@@ -16,8 +16,11 @@ public class OrderConfiguration : IEntityTypeConfiguration<Order>
         // 2. CORE PROPERTIES
 
         builder.Property(o => o.CustomerId)
+            .IsRequired();
+
+        builder.Property(o => o.CustomerEmail)
             .IsRequired()
-            .HasMaxLength(450);
+            .HasMaxLength(256);
 
         builder.Property(o => o.OrderDate)
             .IsRequired();
@@ -29,6 +32,9 @@ public class OrderConfiguration : IEntityTypeConfiguration<Order>
             .IsRequired()
             .HasConversion<string>()
             .HasMaxLength(50);
+
+        builder.Property(o => o.TotalAmount)
+            .HasPrecision(18, 2);
 
         // 3. INDEXES
 

@@ -30,6 +30,7 @@
 		<ProjectReference Include="..\..\Infrastructure\TechShop.ECommerce.Identity\TechShop.ECommerce.Identity.csproj" />
 		<ProjectReference Include="..\..\Infrastructure\TechShop.ECommerce.Infrastructure\TechShop.ECommerce.Infrastructure.csproj" />
 		<ProjectReference Include="..\..\Infrastructure\TechShop.ECommerce.Persistence\TechShop.ECommerce.Persistence.csproj" />
+		<ProjectReference Include="..\..\Tool\TechShop.ECommerce.Migrations\TechShop.ECommerce.Migrations.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>

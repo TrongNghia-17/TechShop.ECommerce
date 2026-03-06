@@ -2,18 +2,22 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using TechShop.ECommerce.Persistence.DatabaseContext;
+
 
 #nullable disable
 
 namespace TechShop.ECommerce.Persistence.Migrations
 {
-    [DbContext(typeof(TechShopDatabaseContext))]
-    partial class TechShopDatabaseContextModelSnapshot : ModelSnapshot
+    [DbContext(typeof(TechShopDbContext))]
+    [Migration("20260227053341_AddProductPriceIndex")]
+    partial class AddProductPriceIndex
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -184,46 +188,6 @@ namespace TechShop.ECommerce.Persistence.Migrations
                     b.ToTable("Products", (string)null);
                 });
 
-            modelBuilder.Entity("TechShop.ECommerce.Domain.Entities.Inventory.StockReservation", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid?>("CreatedBy")
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTimeOffset>("DateCreated")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTimeOffset?>("DateModified")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTimeOffset>("ExpiresAtUtc")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<Guid?>("ModifiedBy")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("OrderId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("ProductId")
-                        .HasColumnType("uuid");
-
-                    b.Property<int>("Quantity")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ExpiresAtUtc");
-
-                    b.HasIndex("OrderId");
-
-                    b.HasIndex("ProductId");
-
-                    b.ToTable("StockReservations", (string)null);
-                });
-
             modelBuilder.Entity("TechShop.ECommerce.Domain.Entities.Orders.Order", b =>
                 {
                     b.Property<Guid>("Id")
@@ -310,61 +274,15 @@ namespace TechShop.ECommerce.Persistence.Migrations
                     b.ToTable("OrderItems", (string)null);
                 });
 
-            modelBuilder.Entity("TechShop.ECommerce.Domain.Entities.Payments.Payment", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uuid");
-
-                    b.Property<decimal>("Amount")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<Guid?>("CreatedBy")
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("Currency")
-                        .IsRequired()
-                        .HasMaxLength(10)
-                        .HasColumnType("character varying(10)");
-
-                    b.Property<DateTimeOffset>("DateCreated")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTimeOffset?>("DateModified")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<Guid?>("ModifiedBy")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("OrderId")
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
-
-                    b.Property<string>("StripePaymentIntentId")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("OrderId");
-
-                    b.HasIndex("StripePaymentIntentId")
-                        .IsUnique();
-
-                    b.ToTable("Payments", (string)null);
-                });
-
             modelBuilder.Entity("TechShop.ECommerce.Domain.Entities.Cart.CartItem", b =>
                 {
-                    b.HasOne("TechShop.ECommerce.Domain.Entities.Cart.Cart", null)
+                    b.HasOne("TechShop.ECommerce.Domain.Entities.Cart.Cart", "Cart")
                         .WithMany("Items")
                         .HasForeignKey("CartId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Cart");
                 });
 
             modelBuilder.Entity("TechShop.ECommerce.Domain.Entities.Catalog.Product", b =>
@@ -376,21 +294,6 @@ namespace TechShop.ECommerce.Persistence.Migrations
                         .IsRequired();
 
                     b.Navigation("Category");
-                });
-
-            modelBuilder.Entity("TechShop.ECommerce.Domain.Entities.Inventory.StockReservation", b =>
-                {
-                    b.HasOne("TechShop.ECommerce.Domain.Entities.Orders.Order", null)
-                        .WithMany()
-                        .HasForeignKey("OrderId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("TechShop.ECommerce.Domain.Entities.Catalog.Product", null)
-                        .WithMany()
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("TechShop.ECommerce.Domain.Entities.Orders.Order", b =>
@@ -447,15 +350,6 @@ namespace TechShop.ECommerce.Persistence.Migrations
                         .WithMany()
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("TechShop.ECommerce.Domain.Entities.Payments.Payment", b =>
-                {
-                    b.HasOne("TechShop.ECommerce.Domain.Entities.Orders.Order", null)
-                        .WithMany()
-                        .HasForeignKey("OrderId")
-                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 

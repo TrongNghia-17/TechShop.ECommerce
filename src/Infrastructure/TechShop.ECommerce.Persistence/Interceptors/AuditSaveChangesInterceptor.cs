@@ -21,7 +21,7 @@ public sealed class AuditSaveChangesInterceptor(
         return base.SavingChangesAsync(eventData, result, cancellationToken);
     }
 
-    private void ApplyAudit(DbContext? context)
+    private void ApplyAudit(Microsoft.EntityFrameworkCore.DbContext? context)
     {
         if (context is null) return;
 

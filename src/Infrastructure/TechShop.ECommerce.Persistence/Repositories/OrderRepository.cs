@@ -1,6 +1,8 @@
-﻿namespace TechShop.ECommerce.Persistence.Repositories;
+﻿using TechShop.ECommerce.Persistence.DatabaseContext;
 
-public sealed class OrderRepository(TechShopDatabaseContext context) : IOrderRepository
+namespace TechShop.ECommerce.Persistence.Repositories;
+
+public sealed class OrderRepository(TechShopDbContext context) : IOrderRepository
 {
     public async Task AddAsync(Order order, CancellationToken token = default)
     {

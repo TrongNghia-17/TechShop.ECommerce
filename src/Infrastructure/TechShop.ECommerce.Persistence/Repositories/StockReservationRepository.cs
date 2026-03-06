@@ -1,8 +1,9 @@
 ﻿using TechShop.ECommerce.Domain.Entities.Inventory;
+using TechShop.ECommerce.Persistence.DatabaseContext;
 
 namespace TechShop.ECommerce.Persistence.Repositories;
 
-public class StockReservationRepository(TechShopDatabaseContext context) : IStockReservationRepository
+public class StockReservationRepository(TechShopDbContext context) : IStockReservationRepository
 {
     public async Task AddAsync(
         StockReservation reservation,

@@ -21,7 +21,7 @@ public sealed class SoftDeleteSaveChangesInterceptor(
         return base.SavingChangesAsync(eventData, result, cancellationToken);
     }
 
-    private void ApplySoftDelete(DbContext? context)
+    private void ApplySoftDelete(Microsoft.EntityFrameworkCore.DbContext? context)
     {
         if (context is null) return;
 

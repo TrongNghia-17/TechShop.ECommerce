@@ -5,15 +5,17 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
+using NpgsqlTypes;
 using TechShop.ECommerce.Persistence.DatabaseContext;
+
 
 #nullable disable
 
 namespace TechShop.ECommerce.Persistence.Migrations
 {
-    [DbContext(typeof(TechShopDatabaseContext))]
-    [Migration("20260227014746_RemoveFullTextAndConcurrencyFromProduct")]
-    partial class RemoveFullTextAndConcurrencyFromProduct
+    [DbContext(typeof(TechShopDbContext))]
+    [Migration("20260215014610_AddCartAndCartItemTable")]
+    partial class AddCartAndCartItemTable
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -28,6 +30,7 @@ namespace TechShop.ECommerce.Persistence.Migrations
             modelBuilder.Entity("TechShop.ECommerce.Domain.Entities.Cart.Cart", b =>
                 {
                     b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
                     b.Property<Guid?>("CreatedBy")
@@ -56,6 +59,7 @@ namespace TechShop.ECommerce.Persistence.Migrations
             modelBuilder.Entity("TechShop.ECommerce.Domain.Entities.Cart.CartItem", b =>
                 {
                     b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
                     b.Property<Guid>("CartId")
@@ -92,6 +96,7 @@ namespace TechShop.ECommerce.Persistence.Migrations
             modelBuilder.Entity("TechShop.ECommerce.Domain.Entities.Catalog.Category", b =>
                 {
                     b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
                     b.Property<Guid?>("CreatedBy")
@@ -126,6 +131,7 @@ namespace TechShop.ECommerce.Persistence.Migrations
             modelBuilder.Entity("TechShop.ECommerce.Domain.Entities.Catalog.Product", b =>
                 {
                     b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
                     b.Property<Guid>("CategoryId")
@@ -165,6 +171,17 @@ namespace TechShop.ECommerce.Persistence.Migrations
                         .HasPrecision(18, 2)
                         .HasColumnType("numeric(18,2)");
 
+                    b.Property<int>("RowVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("integer")
+                        .HasDefaultValue(1);
+
+                    b.Property<NpgsqlTsVector>("SearchVector")
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("tsvector")
+                        .HasComputedColumnSql("to_tsvector(\r\n    'simple',\r\n    coalesce(\"Name\", '') || ' ' ||\r\n    coalesce(\"Summary\", '') || ' ' ||\r\n    coalesce(\"Description\", '')\r\n)", true);
+
                     b.Property<int>("StockQuantity")
                         .HasColumnType("integer");
 
@@ -181,6 +198,11 @@ namespace TechShop.ECommerce.Persistence.Migrations
                         .IsUnique()
                         .HasFilter("\"IsDeleted\" = false");
 
+                    b.HasIndex("SearchVector")
+                        .HasFilter("\"IsDeleted\" = false");
+
+                    NpgsqlIndexBuilderExtensions.HasMethod(b.HasIndex("SearchVector"), "GIN");
+
                     b.HasIndex("DateCreated", "Id")
                         .IsDescending()
                         .HasFilter("\"IsDeleted\" = false");
@@ -191,6 +213,7 @@ namespace TechShop.ECommerce.Persistence.Migrations
             modelBuilder.Entity("TechShop.ECommerce.Domain.Entities.Orders.Order", b =>
                 {
                     b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
                     b.Property<Guid?>("CreatedBy")
@@ -276,13 +299,11 @@ namespace TechShop.ECommerce.Persistence.Migrations
 
             modelBuilder.Entity("TechShop.ECommerce.Domain.Entities.Cart.CartItem", b =>
                 {
-                    b.HasOne("TechShop.ECommerce.Domain.Entities.Cart.Cart", "Cart")
+                    b.HasOne("TechShop.ECommerce.Domain.Entities.Cart.Cart", null)
                         .WithMany("Items")
                         .HasForeignKey("CartId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Cart");
                 });
 
             modelBuilder.Entity("TechShop.ECommerce.Domain.Entities.Catalog.Product", b =>

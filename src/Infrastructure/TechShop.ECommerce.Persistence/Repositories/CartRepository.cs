@@ -1,6 +1,8 @@
-﻿namespace TechShop.ECommerce.Persistence.Repositories;
+﻿using TechShop.ECommerce.Persistence.DatabaseContext;
 
-public sealed class CartRepository(TechShopDatabaseContext context)
+namespace TechShop.ECommerce.Persistence.Repositories;
+
+public sealed class CartRepository(TechShopDbContext context)
     : ICartRepository
 {
     public async Task<Cart?> GetByCustomerIdAsync(

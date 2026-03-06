@@ -10,10 +10,12 @@ public static class PersistenceServiceRegistration
         services.AddScoped<AuditSaveChangesInterceptor>();
         services.AddScoped<SoftDeleteSaveChangesInterceptor>();
 
-        services.AddDbContext<TechShopDatabaseContext>((serviceProvider, options) =>
+        services.AddDbContext<TechShopDbContext>((serviceProvider, options) =>
         {
             options.UseNpgsql(
-                configuration.GetConnectionString("PostgreSQL"));
+                configuration.GetConnectionString("DefaultConnection"),
+                npgsqlOptions =>
+                    npgsqlOptions.MigrationsAssembly("TechShop.ECommerce.Migrations"));
 
             options.AddInterceptors(
                 serviceProvider.GetRequiredService<AuditSaveChangesInterceptor>(),
