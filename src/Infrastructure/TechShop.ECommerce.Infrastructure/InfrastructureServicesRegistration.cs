@@ -1,4 +1,6 @@
-﻿using TechShop.ECommerce.Application.Contracts.PaymentGateway;
+﻿using TechShop.ECommerce.Application.BackgroundJobs.Emails;
+using TechShop.ECommerce.Application.Contracts.PaymentGateway;
+using TechShop.ECommerce.Infrastructure.BackgroundJobs.Emails;
 using TechShop.ECommerce.Infrastructure.PaymentGateway;
 
 namespace TechShop.ECommerce.Infrastructure;
@@ -36,9 +38,15 @@ public static class InfrastructureServicesRegistration
         services.AddHybridCache();
 
         services.AddScoped<IEmailSender, EmailSender>();
+
         services.AddScoped(typeof(IAppLogger<>), typeof(LoggerAdapter<>));
+
         services.AddScoped<IAppCache, AppHybridCache>();
+
         services.AddScoped<IPaymentService, StripePaymentService>();
+
+        services.AddScoped<IEmailJobs, HangfireEmailJobs>();
+        services.AddScoped<IHangfireEmailJobExecutor, HangfireEmailJobExecutor>();
 
         return services;
     }

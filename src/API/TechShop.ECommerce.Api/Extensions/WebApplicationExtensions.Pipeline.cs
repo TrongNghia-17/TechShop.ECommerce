@@ -1,4 +1,6 @@
-﻿namespace TechShop.ECommerce.Api.Extensions;
+﻿using Hangfire;
+
+namespace TechShop.ECommerce.Api.Extensions;
 
 public static class WebApplicationExtensions
 {
@@ -14,6 +16,11 @@ public static class WebApplicationExtensions
 
         app.UseAuthentication();
         app.UseAuthorization();
+
+        if (app.Environment.IsDevelopment())
+        {
+            app.UseHangfireDashboard("/hangfire");
+        }
 
         app.UseRateLimiter();
 

@@ -8,7 +8,7 @@ public class EmailSender(
 {
     private readonly EmailSettings _settings = options.Value;
 
-    public async Task<bool> SendEmail(EmailMessage email)
+    public async Task<bool> SendEmailAsync(EmailMessage email)
     {
         var from = new EmailAddress(_settings.FromAddress, _settings.FromName);
         var to = new EmailAddress(email.To);

@@ -6,7 +6,8 @@ public static class SendOrderConfirmedEmail
 
     public sealed class Handler(
         IEmailSender emailSender,
-        IOrderRepository orderRepository
+        IOrderRepository orderRepository,
+        ILogger<Handler> logger
     ) : IRequestHandler<Command>
     {
         public async Task Handle(
@@ -16,13 +17,21 @@ public static class SendOrderConfirmedEmail
             var order = await orderRepository
                 .GetByIdAsync(request.OrderId, cancellationToken);
 
-            //if (order is null)
+            if (order is null)
+            {
+                logger.LogWarning(
+                    "Order {OrderId} not found when sending confirmation email.",
+                    request.OrderId);
 
-            //    await emailSender.SendEmailAsync(
-            //    order.CustomerEmail,
-            //    $"Order {order.Id} confirmed",
-            //    "Thank you for your purchase!",
-            //    token);
+                return;
+            }
+
+            await emailSender.SendEmailAsync(
+                new EmailMessage(
+                    order.CustomerEmail,
+                    $"Order {order.Id} confirmed",
+                    "Thank you for your purchase!"
+                ));
         }
     }
 }

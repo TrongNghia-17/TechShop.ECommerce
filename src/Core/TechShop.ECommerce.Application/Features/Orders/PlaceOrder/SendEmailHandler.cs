@@ -1,19 +1,17 @@
-﻿namespace TechShop.ECommerce.Application.Features.Orders.PlaceOrder;
+﻿using TechShop.ECommerce.Application.BackgroundJobs.Emails;
+
+namespace TechShop.ECommerce.Application.Features.Orders.PlaceOrder;
 
 public class SendEmailHandler(
-    IEmailSender emailSender,
-    IUserQueryService userService
+    IEmailJobs emailJobs
 ) : INotificationHandler<OrderPlacedNotification>
 {
-    public async Task Handle(OrderPlacedNotification notification, CancellationToken token)
+    public async Task Handle(
+        OrderPlacedNotification notification,
+        CancellationToken token)
     {
-        var user = await userService.GetCustomer(notification.CustomerId);
-
-        await emailSender.SendEmail(new EmailMessage
-        (
-            To: user.Email,
-            Subject: $"Order {notification.OrderId} confirmed",
-            Body: "Thanks for your purchase!"
-        ));
+        await emailJobs.EnqueueOrderConfirmedEmail(
+            notification.OrderId,
+            token);
     }
 }
