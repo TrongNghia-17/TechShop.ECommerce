@@ -2,7 +2,7 @@
 
 namespace TechShop.ECommerce.Application.Features.Orders.PlaceOrder;
 
-public class SendEmailHandler(
+public class OrderPlacedNotificationHandler(
     IEmailJobs emailJobs
 ) : INotificationHandler<OrderPlacedNotification>
 {

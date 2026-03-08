@@ -2,7 +2,7 @@
 
 namespace TechShop.ECommerce.Application.Features.Orders.PlaceOrder;
 
-public sealed record Command(
+public sealed record PlaceOrderCommand(
     AddressDto ShippingAddress,
     string? Notes
-) : IRequest<Result<Response>>;
+) : IRequest<Result<PlaceOrderResponse>>;

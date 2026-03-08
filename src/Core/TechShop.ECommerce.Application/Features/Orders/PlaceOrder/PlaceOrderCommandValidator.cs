@@ -2,10 +2,10 @@
 
 namespace TechShop.ECommerce.Application.Features.Orders.PlaceOrder;
 
-public sealed class Validator
-    : AbstractValidator<Command>
+public sealed class PlaceOrderCommandValidator
+    : AbstractValidator<PlaceOrderCommand>
 {
-    public Validator()
+    public PlaceOrderCommandValidator()
     {
         RuleFor(x => x.ShippingAddress)
             .SetValidator(new AddressDtoValidator());

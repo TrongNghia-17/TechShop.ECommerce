@@ -16,4 +16,16 @@ public class CurrentUserService(
                 : Guid.Empty;
         }
     }
+
+    public string Email
+    {
+        get
+        {
+            var user = contextAccessor.HttpContext?.User;
+
+            return user?.FindFirstValue(ClaimTypes.Email)
+                ?? user?.FindFirstValue("email")
+                ?? string.Empty;
+        }
+    }
 }

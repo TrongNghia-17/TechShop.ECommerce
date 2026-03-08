@@ -1,5 +1,5 @@
 ﻿namespace TechShop.ECommerce.Application.Features.Orders.PlaceOrder;
 
-public sealed record Response(
+public sealed record PlaceOrderResponse(
     Guid OrderId,
     string CheckoutUrl);

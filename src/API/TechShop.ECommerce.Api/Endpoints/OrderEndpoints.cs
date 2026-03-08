@@ -12,7 +12,7 @@ public static class OrderEndpoints
 
         // POST /api/orders
         group.MapPost("/",
-            async ([FromBody] Command command, ISender sender, CancellationToken token) =>
+            async ([FromBody] PlaceOrderCommand command, ISender sender, CancellationToken token) =>
             {
                 var result = await sender.Send(command, token);
 

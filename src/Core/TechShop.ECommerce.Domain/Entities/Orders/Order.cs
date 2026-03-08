@@ -9,7 +9,7 @@ public class Order : BaseEntity
     public DateTimeOffset OrderDate { get; private set; }
     public OrderStatus Status { get; private set; }
     public string? Notes { get; private set; }
-    public Address? ShippingAddress { get; private set; }
+    public Address ShippingAddress { get; private set; } = default!;
     public decimal TotalAmount { get; private set; }
 
     private Order() { }
@@ -17,7 +17,7 @@ public class Order : BaseEntity
     private Order(
         Guid customerId,
         string customerEmail,
-        Address address,
+        Address shippingAddress,
         string? notes)
     {
         if (customerId == Guid.Empty)
@@ -26,26 +26,26 @@ public class Order : BaseEntity
         if (string.IsNullOrWhiteSpace(customerEmail))
             throw new DomainException("CustomerEmail is required.");
 
-        if (address is null)
-            throw new DomainException("Shipping address is required.");
+        if (shippingAddress is null)
+            throw new DomainException("ShippingAddress is required.");
 
         CustomerId = customerId;
         CustomerEmail = customerEmail;
-
-        ShippingAddress = address;
+        ShippingAddress = shippingAddress;
         Notes = notes;
-
         Status = OrderStatus.Pending;
         OrderDate = DateTimeOffset.UtcNow;
-        TotalAmount = 0;
+        TotalAmount = 0m;
     }
 
     public static Order Create(
-        Guid customerId,
-        string customerEmail,
-        Address address,
-        string? notes)
-    => new(customerId, customerEmail, address, notes);
+       Guid customerId,
+       string customerEmail,
+       Address shippingAddress,
+       string? notes)
+    {
+        return new Order(customerId, customerEmail, shippingAddress, notes);
+    }
 
     public void AddItem(
         Guid productId,
@@ -53,8 +53,7 @@ public class Order : BaseEntity
         decimal unitPrice,
         int quantity)
     {
-        if (Status != OrderStatus.Pending)
-            throw new DomainException("Items can only be added to a pending order.");
+        EnsurePendingStatus();
 
         if (productId == Guid.Empty)
             throw new DomainException("ProductId is required.");
@@ -68,49 +67,40 @@ public class Order : BaseEntity
         if (quantity <= 0)
             throw new DomainException("Quantity must be greater than zero.");
 
-        var existingItem = _orderItems.FirstOrDefault(i => i.ProductId == productId);
+        var existingItem = _orderItems.FirstOrDefault(item => item.ProductId == productId);
 
-        if (existingItem != null)
+        if (existingItem is not null)
         {
             existingItem.IncreaseQuantity(quantity);
         }
         else
         {
-            var newItem = new OrderItem(
+            _orderItems.Add(new OrderItem(
                 Id,
                 productId,
                 productName,
                 unitPrice,
-                quantity);
-
-            _orderItems.Add(newItem);
+                quantity));
         }
 
-        CalculateTotal();
+        RecalculateTotal();
     }
 
     public void RemoveItem(Guid productId)
     {
-        if (Status != OrderStatus.Pending)
-            throw new DomainException("Can only remove items from a Pending order.");
+        EnsurePendingStatus();
 
-        var item = _orderItems.FirstOrDefault(i => i.ProductId == productId)
+        var item = _orderItems.FirstOrDefault(item => item.ProductId == productId)
             ?? throw new DomainException("Product not found in order.");
 
         _orderItems.Remove(item);
 
-        CalculateTotal();
-    }
-
-    private void CalculateTotal()
-    {
-        TotalAmount = _orderItems.Sum(i => i.UnitPrice * i.Quantity);
+        RecalculateTotal();
     }
 
     public void Confirm()
     {
-        if (Status != OrderStatus.Pending)
-            throw new DomainException("Order already processed.");
+        EnsurePendingStatus();
 
         if (_orderItems.Count == 0)
             throw new DomainException("Order must contain at least one item.");
@@ -119,6 +109,17 @@ public class Order : BaseEntity
             throw new DomainException("TotalAmount must be greater than zero.");
 
         Status = OrderStatus.Confirmed;
+    }
+
+    private void EnsurePendingStatus()
+    {
+        if (Status != OrderStatus.Pending)
+            throw new DomainException("Order is no longer in pending status.");
+    }
+
+    private void RecalculateTotal()
+    {
+        TotalAmount = _orderItems.Sum(item => item.UnitPrice * item.Quantity);
     }
 }
 
