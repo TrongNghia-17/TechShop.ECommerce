@@ -54,7 +54,7 @@ public static class StripeWebhookEndpoints
             var orderId = Guid.Parse(orderIdString);
 
             var result = await sender.Send(
-                new Command(
+                new StripeWebhookCommand(
                     stripeEvent.Type,
                     session.Id,
                     orderId),

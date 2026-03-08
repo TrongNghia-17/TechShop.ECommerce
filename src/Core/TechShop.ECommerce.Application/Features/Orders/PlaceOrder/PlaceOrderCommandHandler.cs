@@ -48,7 +48,7 @@ public class PlaceOrderCommandHandler(
 
         var payment = CreatePayment(order, checkoutSession);
 
-        await PersistAsync(order, payment, cart, token);
+        await PersistOrderAsync(order, payment, cart, token);
 
         logger.LogInformation(
             "Order {OrderId} created successfully for customer {CustomerId}",
@@ -92,12 +92,12 @@ public class PlaceOrderCommandHandler(
        CancellationToken token)
     {
         var productIds = cart.Items
-            .Select(x => x.ProductId)
+            .Select(cartItem => cartItem.ProductId)
             .Distinct()
             .ToList();
 
         var products = await productRepository.GetByIdAsync(productIds, token);
-        var productDictionary = products.ToDictionary(x => x.Id);
+        var productDictionary = products.ToDictionary(product => product.Id);
 
         foreach (var item in cart.Items)
         {
@@ -151,7 +151,7 @@ public class PlaceOrderCommandHandler(
             checkoutSession.Currency);
     }
 
-    private async Task PersistAsync(
+    private async Task PersistOrderAsync(
         Order order,
         Payment payment,
         Cart cart,
