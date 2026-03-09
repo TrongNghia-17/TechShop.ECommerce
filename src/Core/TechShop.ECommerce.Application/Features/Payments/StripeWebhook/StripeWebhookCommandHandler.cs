@@ -1,4 +1,6 @@
-﻿namespace TechShop.ECommerce.Application.Features.Payments.StripeWebhook;
+﻿using TechShop.ECommerce.Application.Features.Orders.Notifications;
+
+namespace TechShop.ECommerce.Application.Features.Payments.StripeWebhook;
 
 public sealed class StripeWebhookCommandHandler(
     IPaymentRepository paymentRepository,
@@ -119,7 +121,7 @@ public sealed class StripeWebhookCommandHandler(
         CancellationToken token)
     {
         await publisher.Publish(
-            new OrderPlacedNotification(order.Id, order.CustomerId),
+            new OrderConfirmedNotification(order.Id, order.CustomerId),
             token);
     }
 }

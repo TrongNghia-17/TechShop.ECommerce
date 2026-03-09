@@ -2,5 +2,5 @@
 
 public interface IEmailJobs
 {
-    Task EnqueueOrderConfirmedEmail(Guid orderId, CancellationToken token);
+    Task EnqueueOrderConfirmedEmail(Guid orderId, CancellationToken cancellationToken = default);
 }

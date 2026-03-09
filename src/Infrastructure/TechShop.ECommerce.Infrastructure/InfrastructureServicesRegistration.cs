@@ -1,6 +1,8 @@
 ﻿using TechShop.ECommerce.Application.BackgroundJobs.Emails;
+using TechShop.ECommerce.Application.Common.Emails;
 using TechShop.ECommerce.Application.Contracts.PaymentGateway;
 using TechShop.ECommerce.Infrastructure.BackgroundJobs.Emails;
+using TechShop.ECommerce.Infrastructure.Emails;
 using TechShop.ECommerce.Infrastructure.PaymentGateway;
 
 namespace TechShop.ECommerce.Infrastructure;

@@ -1,4 +1,4 @@
-﻿namespace TechShop.ECommerce.Application.Contracts.Email;
+﻿namespace TechShop.ECommerce.Application.Common.Emails;
 
 public class EmailSettings
 {

@@ -4,13 +4,13 @@ using TechShop.ECommerce.Application.BackgroundJobs.Emails;
 namespace TechShop.ECommerce.Infrastructure.BackgroundJobs.Emails;
 
 public sealed class HangfireEmailJobs(
-    IBackgroundJobClient backgroundJobs)
+    IBackgroundJobClient jobClient)
     : IEmailJobs
 {
-    public Task EnqueueOrderConfirmedEmail(Guid orderId, CancellationToken token)
+    public Task EnqueueOrderConfirmedEmail(Guid orderId)
     {
-        backgroundJobs.Enqueue<IHangfireEmailJobExecutor>(
-            x => x.SendOrderConfirmedEmail(orderId));
+        jobClient.Enqueue<IHangfireEmailJobExecutor>(
+            executor => executor.SendOrderConfirmedEmail(orderId));
 
         return Task.CompletedTask;
     }
