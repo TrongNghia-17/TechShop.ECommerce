@@ -16,7 +16,6 @@ global using TechShop.ECommerce.Application.Common.Errors;
 global using TechShop.ECommerce.Application.Common.Paging;
 global using TechShop.ECommerce.Application.Contracts.Authentication;
 global using TechShop.ECommerce.Application.Contracts.Caching;
-global using TechShop.ECommerce.Application.Contracts.Email;
 global using TechShop.ECommerce.Application.Contracts.Identity;
 global using TechShop.ECommerce.Application.Contracts.Logging;
 global using TechShop.ECommerce.Application.Contracts.PaymentGateway;

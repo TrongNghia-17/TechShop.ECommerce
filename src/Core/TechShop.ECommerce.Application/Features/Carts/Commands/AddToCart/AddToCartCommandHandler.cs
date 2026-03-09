@@ -17,7 +17,7 @@ public sealed class AddToCartCommandHandler(
             .GetByIdAsync(command.ProductId, token);
 
         if (product is null)
-            return DomainErrors.Product.NotFound(command.ProductId);
+            return ProductErrors.NotFound(command.ProductId);
 
         var cart = await cartRepository
             .GetByCustomerIdAsync(customerId, token);

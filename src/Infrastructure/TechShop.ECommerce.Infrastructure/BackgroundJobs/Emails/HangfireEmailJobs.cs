@@ -1,13 +1,12 @@
-﻿using Hangfire;
-using TechShop.ECommerce.Application.BackgroundJobs.Emails;
-
-namespace TechShop.ECommerce.Infrastructure.BackgroundJobs.Emails;
+﻿namespace TechShop.ECommerce.Infrastructure.BackgroundJobs.Emails;
 
 public sealed class HangfireEmailJobs(
     IBackgroundJobClient jobClient)
     : IEmailJobs
 {
-    public Task EnqueueOrderConfirmedEmail(Guid orderId)
+    public Task EnqueueOrderConfirmedEmail(
+        Guid orderId,
+        CancellationToken cancellationToken = default)
     {
         jobClient.Enqueue<IHangfireEmailJobExecutor>(
             executor => executor.SendOrderConfirmedEmail(orderId));

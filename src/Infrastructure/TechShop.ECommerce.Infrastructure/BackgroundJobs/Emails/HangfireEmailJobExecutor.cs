@@ -1,7 +1,4 @@
-﻿using MediatR;
-using TechShop.ECommerce.Application.Features.Emails.SendOrderConfirmedEmail;
-
-namespace TechShop.ECommerce.Infrastructure.BackgroundJobs.Emails;
+﻿namespace TechShop.ECommerce.Infrastructure.BackgroundJobs.Emails;
 
 public sealed class HangfireEmailJobExecutor(
     ISender sender)
@@ -9,6 +6,6 @@ public sealed class HangfireEmailJobExecutor(
 {
     public async Task SendOrderConfirmedEmail(Guid orderId)
     {
-        await sender.Send(new SendOrderConfirmedEmail.Command(orderId));
+        await sender.Send(new SendOrderConfirmedEmailCommand(orderId));
     }
 }

@@ -17,7 +17,7 @@ public sealed class RemoveFromCartCommandHandler(
             cancellationToken);
 
         if (cart is null)
-            return DomainErrors.Cart.NotFound(customerId);
+            return CartErrors.NotFound(customerId);
 
         try
         {

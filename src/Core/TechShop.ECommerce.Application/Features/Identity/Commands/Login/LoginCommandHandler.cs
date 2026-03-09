@@ -15,7 +15,7 @@ public sealed class LoginCommandHandler(
                 command.Password);
 
         if (!Success)
-            return DomainErrors.Identity.InvalidCredentials;
+            return IdentityErrors.InvalidCredentials;
 
         var token = await tokenGenerator.GenerateTokenAsync(
             new UserTokenRequest(

@@ -14,7 +14,7 @@ public sealed class UpdateProductCommandHandler(
             .GetByIdAsync(command.Id, cancellationToken);
 
         if (product is null)
-            return DomainErrors.Product.NotFound(command.Id);
+            return ProductErrors.NotFound(command.Id);
 
         product.Rename(command.Name);
         product.ChangePrice(command.Price);

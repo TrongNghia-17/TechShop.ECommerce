@@ -18,7 +18,7 @@ public sealed class RegisterCommandHandler(
         if (!Success)
         {
             var message = string.Join(", ", Errors);
-            return DomainErrors.Identity.RegisterFailed(message);
+            return IdentityErrors.RegisterFailed(message);
         }
 
         return new RegisterResponse(UserId);
