@@ -2,7 +2,8 @@
 
 public static partial class ServiceCollectionExtensions
 {
-    public static IServiceCollection AddRateLimitingPolicies(this IServiceCollection services)
+    public static IServiceCollection AddApiRateLimiting(
+        this IServiceCollection services)
     {
         services.AddRateLimiter(options =>
         {

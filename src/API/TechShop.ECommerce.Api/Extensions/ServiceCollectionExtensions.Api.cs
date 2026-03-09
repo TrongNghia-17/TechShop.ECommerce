@@ -1,18 +1,15 @@
-﻿using Hangfire;
-using Hangfire.PostgreSql;
-
-namespace TechShop.ECommerce.Api.Extensions;
+﻿namespace TechShop.ECommerce.Api.Extensions;
 
 public static partial class ServiceCollectionExtensions
 {
     public static IServiceCollection AddApiServices(
         this IServiceCollection services,
-        IConfiguration config)
+        IConfiguration configuration)
     {
         services.AddApplicationServices();
-        services.AddInfrastructureServices(config);
-        services.AddPersistenceServices(config);
-        services.AddIdentityServices(config);
+        services.AddInfrastructureServices(configuration);
+        services.AddPersistenceServices(configuration);
+        services.AddIdentityServices(configuration);
 
         services.AddAuthorization();
 
@@ -46,7 +43,7 @@ public static partial class ServiceCollectionExtensions
         {
             hangfireConfig.UsePostgreSqlStorage(options =>
                 options.UseNpgsqlConnection(
-                    config.GetConnectionString("DefaultConnection")));
+                    configuration.GetConnectionString("DefaultConnection")));
         });
 
         return services;

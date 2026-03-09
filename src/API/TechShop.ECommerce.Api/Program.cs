@@ -13,7 +13,7 @@ builder.Configuration
 
 builder.Services
     .AddApiServices(builder.Configuration)
-    .AddRateLimitingPolicies();
+    .AddApiRateLimiting();
 
 var app = builder.Build();
 

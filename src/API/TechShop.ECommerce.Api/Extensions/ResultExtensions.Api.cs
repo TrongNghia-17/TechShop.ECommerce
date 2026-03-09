@@ -1,6 +1,6 @@
 ﻿namespace TechShop.ECommerce.Api.Extensions;
 
-public static class ResultApiExtensions
+public static class ResultExtensions
 {
     public static IResult ToApiResult<T>(this Result<T> result)
     {

@@ -1,6 +1,4 @@
-﻿using Hangfire;
-
-namespace TechShop.ECommerce.Api.Extensions;
+﻿namespace TechShop.ECommerce.Api.Extensions;
 
 public static class WebApplicationExtensions
 {

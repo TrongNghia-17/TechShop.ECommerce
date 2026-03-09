@@ -1,7 +1,8 @@
-﻿global using MediatR;
+﻿global using Hangfire;
+global using Hangfire.PostgreSql;
+global using MediatR;
 global using Microsoft.AspNetCore.Diagnostics;
 global using Microsoft.AspNetCore.Mvc;
-global using Microsoft.AspNetCore.OutputCaching;
 global using Microsoft.AspNetCore.ResponseCompression;
 global using Microsoft.EntityFrameworkCore;
 global using Scalar.AspNetCore;
@@ -27,12 +28,8 @@ global using TechShop.ECommerce.Application.Features.Products.Queries.GetProduct
 global using TechShop.ECommerce.Application.Features.Products.Queries.GetProducts;
 global using TechShop.ECommerce.Domain.Errors;
 global using TechShop.ECommerce.Identity;
-global using TechShop.ECommerce.Identity.DbContext;
-global using TechShop.ECommerce.Identity.Seeding;
 global using TechShop.ECommerce.Infrastructure;
 global using TechShop.ECommerce.Persistence;
-global using TechShop.ECommerce.Persistence.DatabaseContext;
-global using TechShop.ECommerce.Persistence.Seeding;
 
 
 
