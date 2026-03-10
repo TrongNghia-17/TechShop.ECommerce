@@ -9,7 +9,7 @@ public class PlaceOrderCommandHandler(
     IPaymentRepository paymentRepository,
     IUnitOfWork unitOfWork,
     IMapper mapper,
-    IAppLogger<PlaceOrderCommandHandler> logger)
+    ILogger<PlaceOrderCommandHandler> logger)
     : IRequestHandler<PlaceOrderCommand, Result<PlaceOrderResponse>>
 {
     public async Task<Result<PlaceOrderResponse>> Handle(

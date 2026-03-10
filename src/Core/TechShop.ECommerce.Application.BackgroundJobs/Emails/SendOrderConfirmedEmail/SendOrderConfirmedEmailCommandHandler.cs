@@ -1,6 +1,9 @@
-﻿using TechShop.ECommerce.Application.Common.Emails;
+﻿using MediatR;
+using Microsoft.Extensions.Logging;
+using TechShop.ECommerce.Application.Common.Emails;
+using TechShop.ECommerce.Application.Contracts.Persistence;
 
-namespace TechShop.ECommerce.Application.Features.Emails.SendOrderConfirmedEmail;
+namespace TechShop.ECommerce.Application.BackgroundJobs.Emails.SendOrderConfirmedEmail;
 
 public sealed class SendOrderConfirmedEmailCommandHandler(
     IEmailSender emailSender,
@@ -11,9 +14,9 @@ public sealed class SendOrderConfirmedEmailCommandHandler(
 {
     public async Task Handle(
         SendOrderConfirmedEmailCommand command,
-        CancellationToken token)
+        CancellationToken cancellationToken)
     {
-        var order = await orderRepository.GetByIdAsync(command.OrderId, token);
+        var order = await orderRepository.GetByIdAsync(command.OrderId, cancellationToken);
 
         if (order is null)
         {
@@ -26,6 +29,6 @@ public sealed class SendOrderConfirmedEmailCommandHandler(
 
         var message = emailBuilder.Build(order);
 
-        await emailSender.SendEmailAsync(message, token);
+        await emailSender.SendEmailAsync(message, cancellationToken);
     }
 }

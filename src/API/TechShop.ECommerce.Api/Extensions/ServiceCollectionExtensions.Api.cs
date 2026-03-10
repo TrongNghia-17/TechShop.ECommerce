@@ -7,9 +7,16 @@ public static partial class ServiceCollectionExtensions
         IConfiguration configuration)
     {
         services.AddApplicationServices();
-        services.AddInfrastructureServices(configuration);
         services.AddPersistenceServices(configuration);
-        services.AddIdentityServices(configuration);
+
+        services.AddCachingInfrastructureServices(configuration);
+        services.AddEmailInfrastructureServices(configuration);
+        services.AddPaymentInfrastructureServices(configuration);
+        services.AddBackgroundJobInfrastructureServices();
+
+        services.AddIdentityCoreServices(configuration);
+        services.AddHttpCurrentUser();
+        services.AddJwtAuthenticationServices(configuration);
 
         services.AddAuthorization();
 

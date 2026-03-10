@@ -4,13 +4,6 @@
 
 builder.Host.AddSerilog();
 
-builder.Configuration
-    .SetBasePath(Directory.GetCurrentDirectory())
-    .AddJsonFile("../CommonConfig/appsettings.shared.json", optional: false)
-    .AddJsonFile("appsettings.json", optional: true)
-    .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true)
-    .AddEnvironmentVariables();
-
 builder.Services
     .AddApiServices(builder.Configuration)
     .AddApiRateLimiting();

@@ -11,7 +11,7 @@ using TechShop.ECommerce.Persistence.Seeding;
 var builder = Host.CreateApplicationBuilder(args);
 
 builder.Services.AddPersistenceServices(builder.Configuration);
-builder.Services.AddIdentityServices(builder.Configuration);
+builder.Services.AddIdentityCoreServices(builder.Configuration);
 
 var app = builder.Build();
 

@@ -19,6 +19,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<ProjectReference Include="..\..\Core\TechShop.ECommerce.Application.BackgroundJobs\TechShop.ECommerce.Application.BackgroundJobs.csproj" />
 		<ProjectReference Include="..\..\Core\TechShop.ECommerce.Application\TechShop.ECommerce.Application.csproj" />
 	</ItemGroup>
 

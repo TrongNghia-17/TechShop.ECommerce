@@ -7,10 +7,8 @@
   <Folder Name="/src/API/">
     <Project Path="src/API/TechShop.ECommerce.Api/TechShop.ECommerce.Api.csproj" />
   </Folder>
-  <Folder Name="/src/CommonConfig/">
-    <File Path="appsettings.shared.json" />
-  </Folder>
   <Folder Name="/src/Core/">
+    <Project Path="src/Core/TechShop.ECommerce.Application.BackgroundJobs/TechShop.ECommerce.Application.BackgroundJobs.csproj" Id="5b75e196-3374-4ea8-a54f-9882e4b68784" />
     <Project Path="src/Core/TechShop.ECommerce.Application/TechShop.ECommerce.Application.csproj" />
     <Project Path="src/Core/TechShop.ECommerce.Domain/TechShop.ECommerce.Domain.csproj" />
   </Folder>

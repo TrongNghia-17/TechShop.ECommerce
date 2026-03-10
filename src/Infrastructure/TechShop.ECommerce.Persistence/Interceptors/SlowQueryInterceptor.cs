@@ -1,7 +1,9 @@
-﻿namespace TechShop.ECommerce.Persistence.Interceptors;
+﻿using Microsoft.Extensions.Logging;
+
+namespace TechShop.ECommerce.Persistence.Interceptors;
 
 public sealed class SlowQueryInterceptor(
-    IAppLogger<SlowQueryInterceptor> logger)
+    ILogger<SlowQueryInterceptor> logger)
     : DbCommandInterceptor
 {
     private readonly TimeSpan _threshold = TimeSpan.FromMilliseconds(500);

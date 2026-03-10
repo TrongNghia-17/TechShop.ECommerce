@@ -35,5 +35,10 @@ public sealed class EmailSender(
 
             throw new InvalidOperationException("SendGrid failed to send email.");
         }
+
+        logger.LogInformation(
+            "Email sent successfully to {To} with subject {Subject}",
+            message.To,
+            message.Subject);
     }
 }

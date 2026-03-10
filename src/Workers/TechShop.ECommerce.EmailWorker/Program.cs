@@ -1,20 +1,23 @@
 using Hangfire;
 using Hangfire.PostgreSql;
-using TechShop.ECommerce.Application;
+using TechShop.ECommerce.Application.BackgroundJobs;
+using TechShop.ECommerce.Application.Contracts.Identity;
+using TechShop.ECommerce.Identity;
 using TechShop.ECommerce.Infrastructure;
+using TechShop.ECommerce.Infrastructure.Identity;
 using TechShop.ECommerce.Persistence;
 
 var builder = Host.CreateApplicationBuilder(args);
 
-builder.Configuration
-    .SetBasePath(Directory.GetCurrentDirectory())
-    .AddJsonFile("../CommonConfig/appsettings.shared.json", optional: false)
-    .AddJsonFile("appsettings.json", optional: true)
-    .AddEnvironmentVariables();
-
-builder.Services.AddApplicationServices();
-builder.Services.AddInfrastructureServices(builder.Configuration);
+builder.Services.AddBackgroundJobApplicationServices();
 builder.Services.AddPersistenceServices(builder.Configuration);
+
+builder.Services.AddCachingInfrastructureServices(builder.Configuration);
+builder.Services.AddEmailInfrastructureServices(builder.Configuration);
+builder.Services.AddBackgroundJobInfrastructureServices();
+
+builder.Services.AddIdentityCoreServices(builder.Configuration);
+builder.Services.AddScoped<ICurrentUserService, BackgroundCurrentUserService>();
 
 builder.Services.AddHangfire(config =>
 {
@@ -23,7 +26,10 @@ builder.Services.AddHangfire(config =>
             builder.Configuration.GetConnectionString("DefaultConnection")));
 });
 
-builder.Services.AddHangfireServer();
+builder.Services.AddHangfireServer(options =>
+{
+    options.WorkerCount = builder.Configuration.GetValue("Hangfire:WorkerCount", 5);
+});
 
 var host = builder.Build();
 await host.RunAsync();
