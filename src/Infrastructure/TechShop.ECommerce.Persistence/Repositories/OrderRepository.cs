@@ -1,6 +1,4 @@
-﻿using TechShop.ECommerce.Persistence.DatabaseContext;
-
-namespace TechShop.ECommerce.Persistence.Repositories;
+﻿namespace TechShop.ECommerce.Persistence.Repositories;
 
 public sealed class OrderRepository(TechShopDbContext context) : IOrderRepository
 {
@@ -14,5 +12,16 @@ public sealed class OrderRepository(TechShopDbContext context) : IOrderRepositor
         return await context.Orders
             .Include(o => o.OrderItems)
             .FirstOrDefaultAsync(o => o.Id == id, token);
+    }
+
+    public async Task<List<Order>> GetPendingOrdersCreatedBeforeAsync(
+        DateTimeOffset cutoffUtc,
+        CancellationToken cancellationToken)
+    {
+        return await context.Orders
+            .Where(order =>
+                order.Status == OrderStatus.PendingPayment &&
+                order.OrderDate <= cutoffUtc)
+            .ToListAsync(cancellationToken);
     }
 }

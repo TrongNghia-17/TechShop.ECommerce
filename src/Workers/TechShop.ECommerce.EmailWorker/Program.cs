@@ -5,6 +5,7 @@ using TechShop.ECommerce.Application.BackgroundJobs;
 using TechShop.ECommerce.Application.Contracts.Identity;
 using TechShop.ECommerce.Identity;
 using TechShop.ECommerce.Infrastructure;
+using TechShop.ECommerce.Infrastructure.BackgroundJobs.Orders;
 using TechShop.ECommerce.Infrastructure.Identity;
 using TechShop.ECommerce.Persistence;
 
@@ -38,4 +39,15 @@ builder.Services.AddHangfireServer(options =>
 });
 
 var host = builder.Build();
+
+using (var scope = host.Services.CreateScope())
+{
+    var recurringJobManager = scope.ServiceProvider.GetRequiredService<IRecurringJobManager>();
+
+    recurringJobManager.AddOrUpdate<IHangfireOrderMaintenanceJobExecutor>(
+        "expire-pending-orders",
+        executor => executor.ExpirePendingOrders(),
+        "*/5 * * * *");
+}
+
 await host.RunAsync();

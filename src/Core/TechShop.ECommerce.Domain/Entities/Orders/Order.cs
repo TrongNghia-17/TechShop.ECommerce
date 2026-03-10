@@ -33,7 +33,7 @@ public class Order : BaseEntity
         CustomerEmail = customerEmail;
         ShippingAddress = shippingAddress;
         Notes = notes;
-        Status = OrderStatus.Pending;
+        Status = OrderStatus.PendingPayment;
         OrderDate = DateTimeOffset.UtcNow;
         TotalAmount = 0m;
     }
@@ -53,7 +53,7 @@ public class Order : BaseEntity
         decimal unitPrice,
         int quantity)
     {
-        EnsurePendingStatus();
+        EnsurePendingPaymentStatus();
 
         if (productId == Guid.Empty)
             throw new DomainException("ProductId is required.");
@@ -88,7 +88,7 @@ public class Order : BaseEntity
 
     public void RemoveItem(Guid productId)
     {
-        EnsurePendingStatus();
+        EnsurePendingPaymentStatus();
 
         var item = _orderItems.FirstOrDefault(item => item.ProductId == productId)
             ?? throw new DomainException("Product not found in order.");
@@ -100,7 +100,7 @@ public class Order : BaseEntity
 
     public void Confirm()
     {
-        EnsurePendingStatus();
+        EnsurePendingPaymentStatus();
 
         if (_orderItems.Count == 0)
             throw new DomainException("Order must contain at least one item.");
@@ -111,10 +111,17 @@ public class Order : BaseEntity
         Status = OrderStatus.Confirmed;
     }
 
-    private void EnsurePendingStatus()
+    public void Expire()
     {
-        if (Status != OrderStatus.Pending)
-            throw new DomainException("Order is no longer in pending status.");
+        EnsurePendingPaymentStatus();
+
+        Status = OrderStatus.Expired;
+    }
+
+    private void EnsurePendingPaymentStatus()
+    {
+        if (Status != OrderStatus.PendingPayment)
+            throw new DomainException("Order is no longer waiting for payment.");
     }
 
     private void RecalculateTotal()
