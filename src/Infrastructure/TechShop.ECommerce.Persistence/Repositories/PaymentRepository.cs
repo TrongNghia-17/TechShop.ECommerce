@@ -1,6 +1,4 @@
-﻿using TechShop.ECommerce.Persistence.DatabaseContext;
-
-namespace TechShop.ECommerce.Persistence.Repositories;
+﻿namespace TechShop.ECommerce.Persistence.Repositories;
 
 public sealed class PaymentRepository(TechShopDbContext context) : IPaymentRepository
 {
@@ -13,5 +11,19 @@ public sealed class PaymentRepository(TechShopDbContext context) : IPaymentRepos
     {
         return await context.Payments
             .FirstOrDefaultAsync(p => p.StripePaymentIntentId == sessionId, token);
+    }
+
+    public async Task<List<Payment>> GetPendingByOrderIdsAsync(
+        IReadOnlyCollection<Guid> orderIds,
+        CancellationToken cancellationToken)
+    {
+        if (orderIds.Count == 0)
+            return [];
+
+        return await context.Payments
+            .Where(payment =>
+                orderIds.Contains(payment.OrderId) &&
+                payment.Status == PaymentStatus.Pending)
+            .ToListAsync(cancellationToken);
     }
 }

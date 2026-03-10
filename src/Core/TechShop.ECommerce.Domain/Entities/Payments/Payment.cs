@@ -55,4 +55,15 @@ public class Payment : BaseEntity
 
         Status = PaymentStatus.Failed;
     }
+
+    public void Expire()
+    {
+        if (Status == PaymentStatus.Expired)
+            return;
+
+        if (Status != PaymentStatus.Pending)
+            throw new DomainException("Only pending payment can be expired.");
+
+        Status = PaymentStatus.Expired;
+    }
 }

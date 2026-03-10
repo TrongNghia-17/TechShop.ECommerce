@@ -6,6 +6,7 @@ namespace TechShop.ECommerce.Application.BackgroundJobs.Orders.ExpirePendingOrde
 
 public sealed class ExpirePendingOrdersCommandHandler(
     IOrderRepository orderRepository,
+    IPaymentRepository paymentRepository,
     IUnitOfWork unitOfWork,
     ILogger<ExpirePendingOrdersCommandHandler> logger)
     : IRequestHandler<ExpirePendingOrdersCommand, int>
@@ -22,19 +23,39 @@ public sealed class ExpirePendingOrdersCommandHandler(
             cutoffUtc,
             cancellationToken);
 
+        if (orders.Count == 0)
+        {
+            logger.LogInformation(
+                "No pending orders older than {ExpireAfterMinutes} minutes were found",
+                ExpireAfterMinutes);
+
+            return 0;
+        }
+
         foreach (var order in orders)
         {
             order.Expire();
         }
 
-        if (orders.Count > 0)
+        var orderIds = orders
+            .Select(order => order.Id)
+            .ToList();
+
+        var payments = await paymentRepository.GetPendingByOrderIdsAsync(
+            orderIds,
+            cancellationToken);
+
+        foreach (var payment in payments)
         {
-            await unitOfWork.SaveChangesAsync(cancellationToken);
+            payment.Expire();
         }
 
+        await unitOfWork.SaveChangesAsync(cancellationToken);
+
         logger.LogInformation(
-            "Expired {Count} pending orders older than {ExpireAfterMinutes} minutes",
+            "Expired {OrderCount} pending orders and {PaymentCount} pending payments older than {ExpireAfterMinutes} minutes",
             orders.Count,
+            payments.Count,
             ExpireAfterMinutes);
 
         return orders.Count;
