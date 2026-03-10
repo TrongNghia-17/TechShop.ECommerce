@@ -1,5 +1,6 @@
 using Hangfire;
 using Hangfire.PostgreSql;
+using Serilog;
 using TechShop.ECommerce.Application.BackgroundJobs;
 using TechShop.ECommerce.Application.Contracts.Identity;
 using TechShop.ECommerce.Identity;
@@ -8,6 +9,11 @@ using TechShop.ECommerce.Infrastructure.Identity;
 using TechShop.ECommerce.Persistence;
 
 var builder = Host.CreateApplicationBuilder(args);
+
+builder.Services.AddSerilog((services, loggerConfiguration) => loggerConfiguration
+    .ReadFrom.Configuration(builder.Configuration)
+    .ReadFrom.Services(services)
+    .Enrich.FromLogContext());
 
 builder.Services.AddBackgroundJobApplicationServices();
 builder.Services.AddPersistenceServices(builder.Configuration);

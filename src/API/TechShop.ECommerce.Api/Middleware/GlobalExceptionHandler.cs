@@ -18,6 +18,14 @@ public sealed class GlobalExceptionHandler(
             _ => StatusCodes.Status500InternalServerError
         };
 
+        var title = exception switch
+        {
+            BadRequestException => exception.Message,
+            NotFoundException => exception.Message,
+            ConcurrencyException => exception.Message,
+            _ => "An unexpected error occurred."
+        };
+
         logger.LogError(exception, "Unhandled exception");
 
         context.Response.StatusCode = statusCode;
@@ -29,7 +37,7 @@ public sealed class GlobalExceptionHandler(
                 ProblemDetails = new ProblemDetails
                 {
                     Status = statusCode,
-                    Title = exception.Message
+                    Title = title
                 }
             });
     }
