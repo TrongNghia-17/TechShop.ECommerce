@@ -1,25 +1,36 @@
-﻿using TechShop.ECommerce.Application.Contracts.Jobs;
+﻿using MediatR;
+using Microsoft.Extensions.Logging;
+using TechShop.ECommerce.Application.Common;
+using TechShop.ECommerce.Application.Contracts.Jobs;
+using TechShop.ECommerce.Application.Contracts.Persistence;
 using TechShop.ECommerce.Application.Features.Orders.Notifications;
+using TechShop.ECommerce.Domain.Entities.Orders;
+using TechShop.ECommerce.Domain.Entities.Payments;
+using TechShop.ECommerce.Domain.Errors;
+using TechShop.ECommerce.Domain.Exceptions;
 
-namespace TechShop.ECommerce.Application.Features.Payments.StripeWebhook;
+namespace TechShop.ECommerce.Application.BackgroundJobs.Payments.ProcessCheckoutSessionCompleted;
 
-public sealed class StripeWebhookCommandHandler(
+public sealed class ProcessCheckoutSessionCompletedCommandHandler(
     IPaymentRepository paymentRepository,
     IOrderRepository orderRepository,
     IProductRepository productRepository,
     IUnitOfWork unitOfWork,
     IPaymentJobs paymentJobs,
     IPublisher publisher,
-    ILogger<StripeWebhookCommandHandler> logger)
-    : IRequestHandler<StripeWebhookCommand, Result>
+    ILogger<ProcessCheckoutSessionCompletedCommandHandler> logger)
+    : IRequestHandler<ProcessCheckoutSessionCompletedCommand, Result>
 {
+    private enum StockProcessingResult
+    {
+        ReadyToConfirm = 0,
+        CancelledAfterPayment = 1
+    }
+
     public async Task<Result> Handle(
-        StripeWebhookCommand command,
+        ProcessCheckoutSessionCompletedCommand command,
         CancellationToken cancellationToken)
     {
-        if (!IsCheckoutSessionCompleted(command))
-            return Result.Success();
-
         var paymentResult = await GetPaymentAsync(command.SessionId, cancellationToken);
         if (paymentResult.IsFailure)
             return paymentResult.Error;
@@ -49,18 +60,13 @@ public sealed class StripeWebhookCommandHandler(
 
         await unitOfWork.SaveChangesAsync(cancellationToken);
 
-        await PublishOrderPlacedNotificationAsync(order, cancellationToken);
+        await PublishOrderConfirmedNotificationAsync(order, cancellationToken);
 
         logger.LogInformation(
             "Order {OrderId} confirmed and stock deducted",
             order.Id);
 
         return Result.Success();
-    }
-
-    private static bool IsCheckoutSessionCompleted(StripeWebhookCommand command)
-    {
-        return command.EventType == "checkout.session.completed";
     }
 
     private bool IsAlreadyProcessed(
@@ -72,7 +78,7 @@ public sealed class StripeWebhookCommandHandler(
             or PaymentStatus.Refunded)
         {
             logger.LogInformation(
-                "Duplicate or already processed webhook ignored for session {SessionId}",
+                "Duplicate or already processed checkout completion ignored for session {SessionId}",
                 sessionId);
 
             return true;
@@ -85,7 +91,9 @@ public sealed class StripeWebhookCommandHandler(
         string sessionId,
         CancellationToken cancellationToken)
     {
-        var payment = await paymentRepository.GetBySessionIdAsync(sessionId, cancellationToken);
+        var payment = await paymentRepository.GetBySessionIdAsync(
+            sessionId,
+            cancellationToken);
 
         if (payment is null)
         {
@@ -100,15 +108,17 @@ public sealed class StripeWebhookCommandHandler(
     }
 
     private async Task<Result<Order>> GetOrderAsync(
-       Guid orderId,
-       CancellationToken cancellationToken)
+        Guid orderId,
+        CancellationToken cancellationToken)
     {
-        var order = await orderRepository.GetByIdAsync(orderId, cancellationToken);
+        var order = await orderRepository.GetByIdAsync(
+            orderId,
+            cancellationToken);
 
         if (order is null)
         {
             logger.LogError(
-                "Order {OrderId} not found while handling Stripe webhook",
+                "Order {OrderId} not found while processing checkout completion",
                 orderId);
 
             return OrderErrors.NotFound(orderId);
@@ -118,9 +128,9 @@ public sealed class StripeWebhookCommandHandler(
     }
 
     private async Task<StockProcessingResult> TryValidateAndDeductStockAsync(
-       Order order,
-       Payment payment,
-       CancellationToken cancellationToken)
+        Order order,
+        Payment payment,
+        CancellationToken cancellationToken)
     {
         foreach (var orderItem in order.OrderItems)
         {
@@ -147,13 +157,7 @@ public sealed class StripeWebhookCommandHandler(
         return StockProcessingResult.ReadyToConfirm;
     }
 
-    private enum StockProcessingResult
-    {
-        ReadyToConfirm = 0,
-        CancelledAfterPayment = 1
-    }
-
-    private async Task<Result> HandleOutOfStockAfterSuccessfulPaymentAsync(
+    private async Task HandleOutOfStockAfterSuccessfulPaymentAsync(
         Order order,
         Payment payment,
         CancellationToken cancellationToken)
@@ -172,11 +176,9 @@ public sealed class StripeWebhookCommandHandler(
             "Order {OrderId} cancelled due to insufficient stock after successful payment. Payment {PaymentId} marked as refund pending.",
             order.Id,
             payment.Id);
-
-        return Result.Success();
     }
 
-    private async Task PublishOrderPlacedNotificationAsync(
+    private async Task PublishOrderConfirmedNotificationAsync(
         Order order,
         CancellationToken cancellationToken)
     {

@@ -15,6 +15,9 @@ public static partial class ServiceCollectionExtensions
         services.AddScoped<IPaymentJobs, HangfirePaymentJobs>();
         services.AddScoped<IHangfirePaymentJobExecutor, HangfirePaymentJobExecutor>();
 
+        services.AddScoped<IStripeWebhookJobs, HangfireStripeWebhookJobs>();
+        services.AddScoped<IHangfireStripeWebhookJobExecutor, HangfireStripeWebhookJobExecutor>();
+
         services.AddScoped<IHangfireOrderMaintenanceJobExecutor, HangfireOrderMaintenanceJobExecutor>();
 
         return services;
