@@ -13,6 +13,9 @@ public sealed class AddToCartCommandHandler(
     {
         var customerId = currentUserService.UserId;
 
+        if (customerId == Guid.Empty)
+            return IdentityErrors.Unauthorized;
+
         var product = await productRepository
             .GetByIdAsync(command.ProductId, token);
 
@@ -27,6 +30,14 @@ public sealed class AddToCartCommandHandler(
             cart = Cart.Create(customerId);
             await cartRepository.AddAsync(cart, token);
         }
+
+        var existingCartItem = cart.Items
+            .FirstOrDefault(item => item.ProductId == command.ProductId);
+
+        var requestedQuantity = (existingCartItem?.Quantity ?? 0) + command.Quantity;
+
+        if (!product.HasEnoughStock(requestedQuantity))
+            return ProductErrors.InsufficientStock(command.ProductId);
 
         cart.AddItem(command.ProductId, product.Price, command.Quantity);
 
