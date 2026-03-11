@@ -10,7 +10,7 @@ public sealed class PaymentRepository(TechShopDbContext context) : IPaymentRepos
     public async Task<Payment?> GetBySessionIdAsync(string sessionId, CancellationToken token)
     {
         return await context.Payments
-            .FirstOrDefaultAsync(p => p.StripePaymentIntentId == sessionId, token);
+            .FirstOrDefaultAsync(p => p.StripeCheckoutSessionId == sessionId, token);
     }
 
     public async Task<List<Payment>> GetPendingByOrderIdsAsync(

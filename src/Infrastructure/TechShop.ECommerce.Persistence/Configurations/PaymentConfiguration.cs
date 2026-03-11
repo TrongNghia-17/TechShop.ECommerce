@@ -18,7 +18,7 @@ public class PaymentConfiguration : IEntityTypeConfiguration<Payment>
         builder.Property(p => p.OrderId)
             .IsRequired();
 
-        builder.Property(p => p.StripePaymentIntentId)
+        builder.Property(p => p.StripeCheckoutSessionId)
             .IsRequired()
             .HasMaxLength(200);
 
@@ -39,7 +39,7 @@ public class PaymentConfiguration : IEntityTypeConfiguration<Payment>
 
         builder.HasIndex(p => p.OrderId);
 
-        builder.HasIndex(p => p.StripePaymentIntentId)
+        builder.HasIndex(p => p.StripeCheckoutSessionId)
             .IsUnique();
 
         // 4. RELATIONSHIPS

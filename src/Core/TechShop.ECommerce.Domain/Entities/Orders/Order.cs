@@ -111,6 +111,24 @@ public class Order : BaseEntity
         Status = OrderStatus.Confirmed;
     }
 
+    public void Cancel(string? reason = null)
+    {
+        if (Status == OrderStatus.Cancelled)
+            return;
+
+        if (Status != OrderStatus.PendingPayment)
+            throw new DomainException("Only orders waiting for payment can be cancelled.");
+
+        Status = OrderStatus.Cancelled;
+
+        if (!string.IsNullOrWhiteSpace(reason))
+        {
+            Notes = string.IsNullOrWhiteSpace(Notes)
+                ? reason
+                : $"{Notes} | {reason}";
+        }
+    }
+
     public void Expire()
     {
         EnsurePendingPaymentStatus();

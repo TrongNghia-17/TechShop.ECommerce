@@ -2,18 +2,21 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using TechShop.ECommerce.Persistence.DatabaseContext;
 
 #nullable disable
 
-namespace TechShop.ECommerce.Persistence.Migrations
+namespace TechShop.ECommerce.Migrations.AppDb.Migrations
 {
     [DbContext(typeof(TechShopDbContext))]
-    partial class TechShopDatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20260311022631_RenameStripeCheckoutSessionId")]
+    partial class RenameStripeCheckoutSessionId
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
