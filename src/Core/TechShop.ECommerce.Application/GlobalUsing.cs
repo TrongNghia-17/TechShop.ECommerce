@@ -8,7 +8,6 @@ global using System.ComponentModel.DataAnnotations;
 global using System.Diagnostics;
 global using System.Linq.Expressions;
 global using System.Reflection;
-global using TechShop.ECommerce.Application.BackgroundJobs.Emails;
 global using TechShop.ECommerce.Application.Behaviors;
 global using TechShop.ECommerce.Application.Common;
 global using TechShop.ECommerce.Application.Common.Caching;

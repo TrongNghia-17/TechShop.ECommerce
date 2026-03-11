@@ -2,15 +2,27 @@
 
 public sealed class PaymentRepository(TechShopDbContext context) : IPaymentRepository
 {
-    public async Task AddAsync(Payment payment, CancellationToken token)
+    public async Task AddAsync(
+        Payment payment,
+        CancellationToken token)
     {
         await context.Payments.AddAsync(payment, token);
     }
 
-    public async Task<Payment?> GetBySessionIdAsync(string sessionId, CancellationToken token)
+    public async Task<Payment?> GetBySessionIdAsync(
+        string sessionId,
+        CancellationToken token)
     {
         return await context.Payments
             .FirstOrDefaultAsync(p => p.StripeCheckoutSessionId == sessionId, token);
+    }
+
+    public async Task<Payment?> GetByIdAsync(
+        Guid paymentId,
+        CancellationToken cancellationToken)
+    {
+        return await context.Payments
+            .FirstOrDefaultAsync(payment => payment.Id == paymentId, cancellationToken);
     }
 
     public async Task<List<Payment>> GetPendingByOrderIdsAsync(

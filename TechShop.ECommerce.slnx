@@ -21,7 +21,7 @@
     <Project Path="src/Tool/TechShop.ECommerce.Migrations/TechShop.ECommerce.Migrations.csproj" Id="60849d4a-0e86-4b03-b054-e33208233eb8" />
   </Folder>
   <Folder Name="/src/Workers/">
-    <Project Path="src/Workers/TechShop.ECommerce.EmailWorker/TechShop.ECommerce.BackgroundWorker.csproj" Id="11a76c93-14f6-4a31-96d2-a07aaa3211b3" />
+    <Project Path="src/Workers/TechShop.ECommerce.BackgroundWorker/TechShop.ECommerce.BackgroundWorker.csproj" />
   </Folder>
   <Folder Name="/test/">
     <Project Path="test/TechShop.ECommerce.Application.UnitTests/TechShop.ECommerce.Application.UnitTests.csproj" Id="b240a741-ebf4-4fff-8539-8e3bceca2559" />

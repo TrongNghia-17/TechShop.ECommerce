@@ -8,6 +8,10 @@ public interface IPaymentRepository
         string sessionId,
         CancellationToken cancellationToken);
 
+    Task<Payment?> GetByIdAsync(
+        Guid paymentId,
+        CancellationToken cancellationToken);
+
     Task<List<Payment>> GetPendingByOrderIdsAsync(
         IReadOnlyCollection<Guid> orderIds,
         CancellationToken cancellationToken);

@@ -12,7 +12,7 @@ global using TechShop.ECommerce.Application.Common.Emails;
 global using TechShop.ECommerce.Application.Contracts.Caching;
 global using TechShop.ECommerce.Application.Contracts.PaymentGateway;
 global using TechShop.ECommerce.Domain.Entities.Orders;
-global using TechShop.ECommerce.Infrastructure.BackgroundJobs.Emails;
+global using TechShop.ECommerce.Infrastructure.Jobs.Emails;
 global using TechShop.ECommerce.Infrastructure.Caching;
 global using TechShop.ECommerce.Infrastructure.Emails;
 global using TechShop.ECommerce.Infrastructure.PaymentGateway;

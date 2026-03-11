@@ -1,4 +1,6 @@
-﻿namespace TechShop.ECommerce.Application.Features.Orders.Notifications;
+﻿using TechShop.ECommerce.Application.Contracts.Jobs;
+
+namespace TechShop.ECommerce.Application.Features.Orders.Notifications;
 
 public sealed class OrderConfirmedNotificationHandler(
     IEmailJobs emailJobs

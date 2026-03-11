@@ -1,6 +1,6 @@
 ﻿using TechShop.ECommerce.Application.BackgroundJobs.Emails.SendOrderConfirmedEmail;
 
-namespace TechShop.ECommerce.Infrastructure.BackgroundJobs.Emails;
+namespace TechShop.ECommerce.Infrastructure.Jobs.Emails;
 
 public sealed class HangfireEmailJobExecutor(
     ISender sender,

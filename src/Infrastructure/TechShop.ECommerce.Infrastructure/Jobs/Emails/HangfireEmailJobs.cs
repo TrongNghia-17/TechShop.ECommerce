@@ -1,4 +1,6 @@
-﻿namespace TechShop.ECommerce.Infrastructure.BackgroundJobs.Emails;
+﻿using TechShop.ECommerce.Application.Contracts.Jobs;
+
+namespace TechShop.ECommerce.Infrastructure.Jobs.Emails;
 
 public sealed class HangfireEmailJobs(
     IBackgroundJobClient jobClient)

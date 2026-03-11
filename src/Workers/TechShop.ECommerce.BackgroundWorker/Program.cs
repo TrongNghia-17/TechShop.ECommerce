@@ -5,7 +5,7 @@ using TechShop.ECommerce.Application.BackgroundJobs;
 using TechShop.ECommerce.Application.Contracts.Identity;
 using TechShop.ECommerce.Identity;
 using TechShop.ECommerce.Infrastructure;
-using TechShop.ECommerce.Infrastructure.BackgroundJobs.Orders;
+using TechShop.ECommerce.Infrastructure.Jobs.Orders;
 using TechShop.ECommerce.Infrastructure.Identity;
 using TechShop.ECommerce.Persistence;
 

@@ -1,4 +1,4 @@
-﻿namespace TechShop.ECommerce.Infrastructure.BackgroundJobs.Emails;
+﻿namespace TechShop.ECommerce.Infrastructure.Jobs.Emails;
 
 public interface IHangfireEmailJobExecutor
 {
