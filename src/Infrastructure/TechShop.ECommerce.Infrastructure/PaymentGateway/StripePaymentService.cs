@@ -6,9 +6,9 @@ namespace TechShop.ECommerce.Infrastructure.PaymentGateway;
 
 public sealed class StripePaymentService : IPaymentService
 {
-    private readonly StripeSettings _settings;
+    private readonly StripeOptions _settings;
 
-    public StripePaymentService(IOptions<StripeSettings> options)
+    public StripePaymentService(IOptions<StripeOptions> options)
     {
         _settings = options.Value;
         StripeConfiguration.ApiKey = _settings.SecretKey;

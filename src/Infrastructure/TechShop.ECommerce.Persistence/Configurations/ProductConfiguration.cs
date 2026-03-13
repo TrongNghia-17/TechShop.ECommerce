@@ -29,6 +29,9 @@ public class ProductConfiguration : IEntityTypeConfiguration<Product>
             .HasPrecision(18, 2)
             .IsRequired();
 
+        builder.Property(p => p.MainImageBlobName)
+           .HasMaxLength(500);
+
         // 3. INDEXES
 
         builder.HasIndex(p => p.Name)

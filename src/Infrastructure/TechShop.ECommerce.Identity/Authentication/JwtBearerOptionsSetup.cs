@@ -1,9 +1,9 @@
 ﻿namespace TechShop.ECommerce.Identity.Authentication;
 
-public class JwtBearerOptionsSetup(IOptions<JwtSettings> options)
+public class JwtBearerOptionsSetup(IOptions<JwtOptions> options)
         : IConfigureNamedOptions<JwtBearerOptions>
 {
-    private readonly JwtSettings _jwtSettings = options.Value;
+    private readonly JwtOptions _jwtSettings = options.Value;
 
     public void Configure(string? name, JwtBearerOptions options)
     {

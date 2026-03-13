@@ -1,6 +1,6 @@
 ﻿namespace TechShop.ECommerce.Application.Contracts.PaymentGateway;
 
-public sealed class StripeSettings
+public sealed class StripeOptions
 {
     [Required]
     public string SecretKey { get; init; } = default!;

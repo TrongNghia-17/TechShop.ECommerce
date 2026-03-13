@@ -8,7 +8,7 @@ public static partial class ServiceCollectionExtensions
     {
         services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
 
-        services.AddOptions<JwtSettings>()
+        services.AddOptions<JwtOptions>()
             .BindConfiguration("JwtSettings")
             .ValidateDataAnnotations()
             .ValidateOnStart();

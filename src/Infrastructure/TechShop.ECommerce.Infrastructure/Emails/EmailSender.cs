@@ -2,11 +2,11 @@
 
 public sealed class EmailSender(
     SendGridClient client,
-    IOptions<EmailSettings> options,
+    IOptions<EmailOptions> options,
     ILogger<EmailSender> logger)
     : IEmailSender
 {
-    private readonly EmailSettings _settings = options.Value;
+    private readonly EmailOptions _settings = options.Value;
 
     public async Task SendEmailAsync(
         EmailMessage message,

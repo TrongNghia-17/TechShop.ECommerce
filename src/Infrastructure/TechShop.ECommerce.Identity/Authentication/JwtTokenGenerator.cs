@@ -1,9 +1,9 @@
 ﻿namespace TechShop.ECommerce.Identity.Authentication;
 
-public class JwtTokenGenerator(IOptions<JwtSettings> jwtSettings)
+public class JwtTokenGenerator(IOptions<JwtOptions> jwtSettings)
     : IJwtTokenGenerator
 {
-    private readonly JwtSettings _jwtSettings = jwtSettings.Value;
+    private readonly JwtOptions _jwtSettings = jwtSettings.Value;
 
     public Task<string> GenerateTokenAsync(UserTokenRequest request)
     {

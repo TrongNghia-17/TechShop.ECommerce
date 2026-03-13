@@ -9,6 +9,7 @@ public static partial class ServiceCollectionExtensions
         services.AddCachingInfrastructureServices(configuration);
         services.AddEmailInfrastructureServices(configuration);
         services.AddPaymentInfrastructureServices(configuration);
+        services.AddStorageServices(configuration);
         services.AddBackgroundJobInfrastructureServices();
 
         return services;

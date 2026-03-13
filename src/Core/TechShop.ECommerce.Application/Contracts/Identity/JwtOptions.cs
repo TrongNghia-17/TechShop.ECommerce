@@ -1,6 +1,6 @@
 ﻿namespace TechShop.ECommerce.Application.Contracts.Identity;
 
-public class JwtSettings
+public class JwtOptions
 {
     [Required]
     public string Key { get; set; } = default!;

@@ -1,6 +1,4 @@
-﻿using TechShop.ECommerce.Domain.Entities.Inventory;
-
-namespace TechShop.ECommerce.Persistence.DatabaseContext;
+﻿namespace TechShop.ECommerce.Persistence.DatabaseContext;
 
 public class TechShopDbContext(
     DbContextOptions<TechShopDbContext> options)
@@ -13,7 +11,6 @@ public class TechShopDbContext(
     public DbSet<Cart> Carts => Set<Cart>();
     public DbSet<CartItem> CartItems => Set<CartItem>();
     public DbSet<Payment> Payments => Set<Payment>();
-    public DbSet<StockReservation> StockReservations => Set<StockReservation>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

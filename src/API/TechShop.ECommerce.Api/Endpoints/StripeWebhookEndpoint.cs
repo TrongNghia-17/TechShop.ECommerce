@@ -16,7 +16,7 @@ public static class StripeWebhookEndpoints
 
         group.MapPost("/stripe", async (
             HttpRequest request,
-            IOptions<StripeSettings> options,
+            IOptions<StripeOptions> options,
             IStripeWebhookJobs stripeWebhookJobs,
             CancellationToken token) =>
         {

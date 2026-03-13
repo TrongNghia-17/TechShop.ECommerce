@@ -6,14 +6,14 @@ public static partial class ServiceCollectionExtensions
         this IServiceCollection services,
         IConfiguration configuration)
     {
-        services.AddOptions<EmailSettings>()
+        services.AddOptions<EmailOptions>()
             .BindConfiguration("EmailSettings")
             .ValidateDataAnnotations()
             .ValidateOnStart();
 
         services.AddSingleton(serviceProvider =>
         {
-            var settings = serviceProvider.GetRequiredService<IOptions<EmailSettings>>().Value;
+            var settings = serviceProvider.GetRequiredService<IOptions<EmailOptions>>().Value;
             return new SendGridClient(settings.ApiKey);
         });
 

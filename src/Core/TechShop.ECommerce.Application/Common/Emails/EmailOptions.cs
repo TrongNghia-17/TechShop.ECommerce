@@ -1,6 +1,6 @@
 ﻿namespace TechShop.ECommerce.Application.Common.Emails;
 
-public class EmailSettings
+public class EmailOptions
 {
     [Required]
     public string ApiKey { get; set; } = default!;

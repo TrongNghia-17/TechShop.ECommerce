@@ -7,7 +7,7 @@ public static partial class ServiceCollectionExtensions
         this IServiceCollection services,
         IConfiguration configuration)
     {
-        services.AddOptions<StripeSettings>()
+        services.AddOptions<StripeOptions>()
             .BindConfiguration("StripeSettings")
             .ValidateDataAnnotations()
             .ValidateOnStart();

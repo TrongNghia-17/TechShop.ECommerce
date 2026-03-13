@@ -2,14 +2,16 @@
 
 public class Product : BaseEntity, ISoftDelete
 {
-    public string Name { get; private set; } = null!;
+    public string Name { get; private set; } = default!;
     public string? Summary { get; private set; }
     public string? Description { get; private set; }
     public decimal Price { get; private set; }
     public int StockQuantity { get; private set; }
 
     public Guid CategoryId { get; private set; }
-    public Category Category { get; private set; } = null!;
+    public Category Category { get; private set; } = default!;
+
+    public string? MainImageBlobName { get; private set; }
 
     public bool IsDeleted { get; private set; }
     public DateTimeOffset? DateDeleted { get; private set; }
@@ -29,10 +31,14 @@ public class Product : BaseEntity, ISoftDelete
         ChangePrice(price);
         SetInitialStock(stockQuantity);
 
+        if (categoryId == Guid.Empty)
+            throw new DomainException("Category is required.");
+
         CategoryId = categoryId;
         Summary = summary;
         Description = description;
     }
+
     public static Product Create(
         string name,
         decimal price,
@@ -40,7 +46,8 @@ public class Product : BaseEntity, ISoftDelete
         Guid categoryId,
         string? summary = null,
         string? description = null)
-    => new(name, price, stockQuantity, categoryId, summary, description);
+        => new(name, price, stockQuantity, categoryId, summary, description);
+
     public void Rename(string name)
     {
         if (string.IsNullOrWhiteSpace(name))
@@ -49,11 +56,6 @@ public class Product : BaseEntity, ISoftDelete
         Name = name.Trim();
     }
 
-    /// <summary>
-    /// Changes the product price.
-    /// Business rule:
-    /// - Product price must always be greater than zero.
-    /// </summary>
     public void ChangePrice(decimal newPrice)
     {
         if (newPrice <= 0)
@@ -68,12 +70,18 @@ public class Product : BaseEntity, ISoftDelete
         Description = description;
     }
 
-    /// <summary>
-    /// Changes the category of the product.
-    /// Business rule:
-    /// - Once a product has been ordered, its category cannot be changed
-    ///   to ensure data consistency for historical orders.
-    /// </summary>
+    public void UpdateMainImage(string blobName)
+    {
+        if (string.IsNullOrWhiteSpace(blobName))
+            throw new DomainException("Main image blob name is required.");
+
+        MainImageBlobName = blobName.Trim();
+    }
+
+    public void RemoveMainImage()
+    {
+        MainImageBlobName = null;
+    }
 
     public void MarkAsDeleted(Guid? userId)
     {
@@ -107,7 +115,8 @@ public class Product : BaseEntity, ISoftDelete
             throw new DomainException("Quantity to remove must be greater than zero.");
 
         if (StockQuantity < quantity)
-            throw new DomainException($"Not enough stock for product '{Name}'. Available: {StockQuantity}, Requested: {quantity}");
+            throw new DomainException(
+                $"Not enough stock for product '{Name}'. Available: {StockQuantity}, Requested: {quantity}");
 
         StockQuantity -= quantity;
     }
