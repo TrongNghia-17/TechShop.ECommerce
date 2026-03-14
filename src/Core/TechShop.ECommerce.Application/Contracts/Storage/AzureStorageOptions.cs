@@ -2,9 +2,11 @@
 
 public sealed class AzureStorageOptions
 {
-    [Required]
-    public string ConnectionString { get; set; } = default!;
+    public const string SectionName = "AzureStorage";
 
     [Required]
-    public string ContainerName { get; set; } = default!;
+    public string ConnectionString { get; init; } = default!;
+
+    [Required]
+    public string ProductImagesContainerName { get; init; } = default!;
 }

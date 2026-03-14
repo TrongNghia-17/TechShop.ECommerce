@@ -8,11 +8,7 @@ public static partial class ServiceCollectionExtensions
     {
         services.AddApplicationServices();
         services.AddPersistenceServices(configuration);
-
-        services.AddCachingInfrastructureServices(configuration);
-        services.AddEmailInfrastructureServices(configuration);
-        services.AddPaymentInfrastructureServices(configuration);
-        services.AddBackgroundJobInfrastructureServices();
+        services.AddInfrastructureServices(configuration);
 
         services.AddIdentityCoreServices(configuration);
         services.AddHttpCurrentUser();
