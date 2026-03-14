@@ -1,5 +1,8 @@
 ﻿using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Formats.Jpeg;
+using SixLabors.ImageSharp.Processing;
 using TechShop.ECommerce.Application.Contracts.Storage;
 
 namespace TechShop.ECommerce.Infrastructure.Storage;
@@ -9,51 +12,49 @@ public sealed class AzureBlobFileStorage(
     IOptions<AzureStorageOptions> options)
     : IFileStorage
 {
+    private const int MaxWidth = 800;
+    private const int MaxHeight = 800;
+    private const int JpegQuality = 85;
+    private const string OutputContentType = "image/jpeg";
+    private const string OutputFileExtension = ".jpg";
+
     private readonly BlobServiceClient _blobServiceClient = blobServiceClient;
     private readonly AzureStorageOptions _options = options.Value;
 
     public async Task<string> UploadProductImageAsync(
         Guid productId,
-        Stream stream,
-        string contentType,
-        string fileExtension,
+        Stream inputImageStream,
         CancellationToken cancellationToken = default)
     {
-        ArgumentNullException.ThrowIfNull(stream);
+        ArgumentNullException.ThrowIfNull(inputImageStream);
 
         if (productId == Guid.Empty)
             throw new ArgumentException("Product id is required.", nameof(productId));
 
-        if (string.IsNullOrWhiteSpace(contentType))
-            throw new ArgumentException("Content type is required.", nameof(contentType));
+        var blobName = BuildProductImageBlobName(productId, OutputFileExtension);
 
-        if (string.IsNullOrWhiteSpace(fileExtension))
-            throw new ArgumentException("File extension is required.", nameof(fileExtension));
-
-        var blobName = BuildProductImageBlobName(productId, fileExtension);
+        await using var processedImageStream = await ResizeAndConvertToJpegAsync(
+            inputImageStream,
+            cancellationToken);
 
         var containerClient = _blobServiceClient.GetBlobContainerClient(
             _options.ProductImagesContainerName);
 
         await containerClient.CreateIfNotExistsAsync(
-            publicAccessType: PublicAccessType.Blob,
             cancellationToken: cancellationToken);
 
         var blobClient = containerClient.GetBlobClient(blobName);
-
-        if (stream.CanSeek)
-            stream.Position = 0;
 
         var uploadOptions = new BlobUploadOptions
         {
             HttpHeaders = new BlobHttpHeaders
             {
-                ContentType = contentType
+                ContentType = OutputContentType
             }
         };
 
         await blobClient.UploadAsync(
-            stream,
+            processedImageStream,
             uploadOptions,
             cancellationToken);
 
@@ -90,13 +91,47 @@ public sealed class AzureBlobFileStorage(
         return blobClient.Uri.AbsoluteUri;
     }
 
-    private static string BuildProductImageBlobName(Guid productId, string fileExtension)
+    private static string BuildProductImageBlobName(
+        Guid productId,
+        string outputFileExtension)
     {
-        var extension = fileExtension.Trim().ToLowerInvariant();
+        var normalizedExtension = outputFileExtension.Trim().ToLowerInvariant();
 
-        if (!extension.StartsWith('.'))
-            extension = "." + extension;
+        if (!normalizedExtension.StartsWith('.'))
+            normalizedExtension = "." + normalizedExtension;
 
-        return $"products/{productId}/{Guid.NewGuid():N}{extension}";
+        return $"products/{productId}/{Guid.NewGuid():N}{normalizedExtension}";
+    }
+
+    private static async Task<MemoryStream> ResizeAndConvertToJpegAsync(
+        Stream inputImageStream,
+        CancellationToken cancellationToken)
+    {
+        if (inputImageStream.CanSeek)
+            inputImageStream.Position = 0;
+
+        using var image = await Image.LoadAsync(
+            inputImageStream,
+            cancellationToken);
+
+        image.Mutate(static x => x.Resize(new ResizeOptions
+        {
+            Size = new Size(MaxWidth, MaxHeight),
+            Mode = ResizeMode.Max
+        }));
+
+        var outputStream = new MemoryStream();
+
+        await image.SaveAsJpegAsync(
+            outputStream,
+            new JpegEncoder
+            {
+                Quality = JpegQuality
+            },
+            cancellationToken);
+
+        outputStream.Position = 0;
+
+        return outputStream;
     }
 }

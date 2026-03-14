@@ -4,9 +4,7 @@ public interface IFileStorage
 {
     Task<string> UploadProductImageAsync(
         Guid productId,
-        Stream stream,
-        string contentType,
-        string fileExtension,
+        Stream inputImageStream,
         CancellationToken cancellationToken = default);
 
     Task DeleteAsync(

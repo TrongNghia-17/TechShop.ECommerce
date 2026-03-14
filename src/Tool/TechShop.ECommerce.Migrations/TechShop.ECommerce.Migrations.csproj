@@ -8,6 +8,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="16.1.1" />
+    <PackageReference Include="xunit" Version="2.9.2" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\Infrastructure\TechShop.ECommerce.Identity\TechShop.ECommerce.Identity.csproj" />
     <ProjectReference Include="..\..\Infrastructure\TechShop.ECommerce.Persistence\TechShop.ECommerce.Persistence.csproj" />
   </ItemGroup>

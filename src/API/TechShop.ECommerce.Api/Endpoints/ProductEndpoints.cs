@@ -86,8 +86,8 @@ public static class ProductEndpoints
             Uploads a main image for the specified product using multipart/form-data.
 
             The request must include a file field named 'file'.
-            Supported validation rules are handled in the application layer.
-            If the product already has a main image, the old blob will be replaced.
+            The image is validated, resized, compressed, and then uploaded to Azure Blob Storage.
+            If the product already has a main image, the old blob is deleted before saving the new one.
             """)
         .Accepts<IFormFile>("multipart/form-data")
         .Produces(StatusCodes.Status200OK)

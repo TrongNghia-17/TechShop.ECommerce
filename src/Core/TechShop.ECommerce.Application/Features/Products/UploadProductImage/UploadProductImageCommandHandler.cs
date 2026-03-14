@@ -19,8 +19,6 @@ public sealed class UploadProductImageCommandHandler(
         if (product is null)
             return ProductErrors.NotFound(command.ProductId);
 
-        var fileExtension = Path.GetExtension(command.FileName);
-
         if (!string.IsNullOrWhiteSpace(product.MainImageBlobName))
         {
             await fileStorage.DeleteAsync(
@@ -31,8 +29,6 @@ public sealed class UploadProductImageCommandHandler(
         var uploadedBlobName = await fileStorage.UploadProductImageAsync(
             command.ProductId,
             command.FileStream,
-            command.ContentType,
-            fileExtension,
             cancellationToken);
 
         product.UpdateMainImage(uploadedBlobName);
