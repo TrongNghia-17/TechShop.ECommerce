@@ -18,7 +18,7 @@ public sealed class HandleRefundRequiredCommandHandler(
             command.PaymentId,
             cancellationToken);
 
-        var order = await orderRepository.GetByIdAsync(
+        var order = await orderRepository.GetByIdWithItemsAsync(
             command.OrderId,
             cancellationToken);
 

@@ -1,4 +1,5 @@
-﻿using TechShop.ECommerce.Application.Features.Orders.PlaceOrder;
+﻿using TechShop.ECommerce.Application.Features.Orders.Invoices;
+using TechShop.ECommerce.Application.Features.Orders.PlaceOrder;
 
 namespace TechShop.ECommerce.Api.Endpoints;
 
@@ -25,6 +26,31 @@ public static class OrderEndpoints
             .Produces(StatusCodes.Status400BadRequest)
             .Produces(StatusCodes.Status404NotFound)
             .Produces(StatusCodes.Status401Unauthorized);
+
+        // GET /api/orders/{id}/invoice
+        group.MapGet("/{id:guid}/invoice",
+            async (
+                Guid id,
+                ISender sender,
+                CancellationToken token) =>
+            {
+                var result = await sender.Send(new GetOrderInvoicePdfQuery(id), token);
+
+                return Results.File(
+                    fileContents: result.Content,
+                    contentType: result.ContentType,
+                    fileDownloadName: result.FileName);
+            })
+            .WithName("Orders_GetInvoicePdf")
+            .WithSummary("Downloads invoice PDF for an order")
+            .WithDescription("""
+                Generates and downloads a PDF invoice for the specified order.
+
+                Only confirmed orders can be exported as invoice PDFs.
+                """)
+            .Produces(StatusCodes.Status200OK, contentType: "application/pdf")
+            .Produces(StatusCodes.Status400BadRequest)
+            .Produces(StatusCodes.Status404NotFound);
 
         return group;
     }

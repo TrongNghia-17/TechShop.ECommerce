@@ -7,7 +7,7 @@ public sealed class OrderRepository(TechShopDbContext context) : IOrderRepositor
         await context.Orders.AddAsync(order, token);
     }
 
-    public async Task<Order?> GetByIdAsync(Guid id, CancellationToken token = default)
+    public async Task<Order?> GetByIdWithItemsAsync(Guid id, CancellationToken token = default)
     {
         return await context.Orders
             .Include(o => o.OrderItems)

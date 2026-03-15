@@ -16,7 +16,7 @@ public sealed class SendOrderConfirmedEmailCommandHandler(
         SendOrderConfirmedEmailCommand command,
         CancellationToken cancellationToken)
     {
-        var order = await orderRepository.GetByIdAsync(command.OrderId, cancellationToken);
+        var order = await orderRepository.GetByIdWithItemsAsync(command.OrderId, cancellationToken);
 
         if (order is null)
         {

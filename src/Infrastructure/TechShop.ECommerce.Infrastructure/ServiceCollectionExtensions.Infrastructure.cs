@@ -11,6 +11,7 @@ public static partial class ServiceCollectionExtensions
         services.AddPaymentInfrastructureServices(configuration);
         services.AddStorageServices(configuration);
         services.AddBackgroundJobInfrastructureServices();
+        services.AddDocumentServices();
 
         return services;
     }

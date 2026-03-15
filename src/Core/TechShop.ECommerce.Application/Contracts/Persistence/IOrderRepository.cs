@@ -3,7 +3,7 @@
 public interface IOrderRepository
 {
     Task AddAsync(Order order, CancellationToken token = default);
-    Task<Order?> GetByIdAsync(Guid id, CancellationToken token);
+    Task<Order?> GetByIdWithItemsAsync(Guid id, CancellationToken token = default);
     Task<List<Order>> GetPendingOrdersCreatedBeforeAsync(
         DateTimeOffset cutoffUtc,
         CancellationToken cancellationToken);

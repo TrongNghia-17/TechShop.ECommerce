@@ -111,7 +111,7 @@ public sealed class ProcessCheckoutSessionCompletedCommandHandler(
         Guid orderId,
         CancellationToken cancellationToken)
     {
-        var order = await orderRepository.GetByIdAsync(
+        var order = await orderRepository.GetByIdWithItemsAsync(
             orderId,
             cancellationToken);
 
