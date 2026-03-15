@@ -9,4 +9,7 @@ public sealed class AzureStorageOptions
 
     [Required]
     public string ProductImagesContainerName { get; init; } = default!;
+
+    [Range(1, 1440)]
+    public int ReadUrlExpiryMinutes { get; init; } = 30;
 }

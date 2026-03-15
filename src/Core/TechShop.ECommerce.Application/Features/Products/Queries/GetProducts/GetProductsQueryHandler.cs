@@ -31,7 +31,7 @@ public sealed class GetProductsQueryHandler(
                 product.Name,
                 product.Price,
                 product.CategoryName,
-                fileStorage.GetUrl(product.MainImageBlobName)))
+                fileStorage.GetReadUrl(product.MainImageBlobName)))
             .ToList();
 
         return new PagedResponse<GetProductsResponse>

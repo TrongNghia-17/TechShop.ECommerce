@@ -1,5 +1,6 @@
 ﻿using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
+using Azure.Storage.Sas;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats.Jpeg;
 using SixLabors.ImageSharp.Processing;
@@ -78,7 +79,9 @@ public sealed class AzureBlobFileStorage(
             cancellationToken: cancellationToken);
     }
 
-    public string? GetUrl(string? blobName)
+    public string? GetReadUrl(
+         string? blobName,
+         TimeSpan? lifetime = null)
     {
         if (string.IsNullOrWhiteSpace(blobName))
             return null;
@@ -88,7 +91,24 @@ public sealed class AzureBlobFileStorage(
 
         var blobClient = containerClient.GetBlobClient(blobName);
 
-        return blobClient.Uri.AbsoluteUri;
+        if (!blobClient.CanGenerateSasUri)
+            return blobClient.Uri.AbsoluteUri;
+
+        var effectiveLifetime = lifetime ?? TimeSpan.FromMinutes(_options.ReadUrlExpiryMinutes);
+
+        var sasBuilder = new BlobSasBuilder
+        {
+            BlobContainerName = containerClient.Name,
+            BlobName = blobClient.Name,
+            Resource = "b",
+            ExpiresOn = DateTimeOffset.UtcNow.Add(effectiveLifetime)
+        };
+
+        sasBuilder.SetPermissions(BlobSasPermissions.Read);
+
+        var sasUri = blobClient.GenerateSasUri(sasBuilder);
+
+        return sasUri.AbsoluteUri;
     }
 
     private static string BuildProductImageBlobName(

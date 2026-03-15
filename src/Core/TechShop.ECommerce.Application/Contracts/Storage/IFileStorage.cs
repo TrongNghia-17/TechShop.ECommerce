@@ -11,5 +11,7 @@ public interface IFileStorage
         string blobName,
         CancellationToken cancellationToken = default);
 
-    string? GetUrl(string? blobName);
+    string? GetReadUrl(
+        string? blobName,
+        TimeSpan? lifetime = null);
 }
