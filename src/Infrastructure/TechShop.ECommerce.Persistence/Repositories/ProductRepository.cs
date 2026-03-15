@@ -1,8 +1,7 @@
-﻿using TechShop.ECommerce.Persistence.DatabaseContext;
+﻿namespace TechShop.ECommerce.Persistence.Repositories;
 
-namespace TechShop.ECommerce.Persistence.Repositories;
-
-public sealed class ProductRepository(TechShopDbContext context)
+public sealed class ProductRepository(
+    TechShopDbContext context)
     : IProductRepository
 {
     public async Task<Product?> GetByIdAsync(
@@ -10,7 +9,9 @@ public sealed class ProductRepository(TechShopDbContext context)
         CancellationToken token)
     {
         return await context.Products
-            .FirstOrDefaultAsync(p => p.Id == id, cancellationToken: token);
+            .FirstOrDefaultAsync(
+                product => product.Id == id,
+                cancellationToken: token);
     }
 
     public async Task<List<Product>> GetByIdAsync(
@@ -18,24 +19,25 @@ public sealed class ProductRepository(TechShopDbContext context)
         CancellationToken token)
     {
         return await context.Products
-            .Where(p => ids.Contains(p.Id))
+            .Where(product => ids.Contains(product.Id))
             .ToListAsync(cancellationToken: token);
     }
 
-    public async Task<IReadOnlyList<ProductDto>> GetAllAsync()
+    public async Task<IReadOnlyList<GetProductsProjection>> GetAllAsync()
     {
         return await context.Products
             .AsNoTracking()
-            .Select(p => new ProductDto(
-                p.Id,
-                p.Name,
-                p.Price,
-                p.Category.Name
-            ))
+            .OrderBy(product => product.Name)
+            .Select(product => new GetProductsProjection(
+                product.Id,
+                product.Name,
+                product.Price,
+                product.Category.Name,
+                product.MainImageBlobName))
             .ToListAsync();
     }
 
-    public async Task<PagedResponse<ProductDto>> GetPagedAsync(
+    public async Task<PagedResponse<GetProductsProjection>> GetPagedAsync(
         ProductQueryFilter filter,
         CancellationToken token)
     {
@@ -62,16 +64,28 @@ public sealed class ProductRepository(TechShopDbContext context)
         // Sort (default Name asc)
         query = ApplySort(query, filter.SortBy);
 
+        var totalRecords = await query.CountAsync(token);
+
         // Project
-        var dtoQuery = query.Select(p => new ProductDto(
-            p.Id,
-            p.Name,
-            p.Price,
-            p.Category.Name
-        ));
+        var data = await query
+            .ApplyPagination(pageNumber, pageSize)
+            .Select(product => new GetProductsProjection(
+                product.Id,
+                product.Name,
+                product.Price,
+                product.Category.Name,
+                product.MainImageBlobName))
+            .ToListAsync(token);
 
         // Count + Pagination
-        return await dtoQuery.ToPagedResponseAsync(pageNumber, pageSize, token);
+        return new PagedResponse<GetProductsProjection>
+        {
+            Data = data,
+            PageNumber = pageNumber,
+            PageSize = pageSize,
+            TotalRecords = totalRecords,
+            TotalPages = (int)Math.Ceiling(totalRecords / (double)pageSize)
+        };
     }
 
 

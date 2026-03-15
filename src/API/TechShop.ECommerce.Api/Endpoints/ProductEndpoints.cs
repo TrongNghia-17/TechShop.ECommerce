@@ -17,11 +17,11 @@ public static class ProductEndpoints
                 CancellationToken token) =>
             {
                 var result = await sender.Send(query, token);
-                return Result<PagedResponse<ProductDto>>.Success(result);
+                return Result<PagedResponse<GetProductsResponse>>.Success(result);
             })
         .WithName("Products_GetPaged")
         .WithSummary("Gets paginated list of products")
-        .Produces<PagedResponse<ProductDto>>(StatusCodes.Status200OK)
+        .Produces<PagedResponse<GetProductsResponse>>(StatusCodes.Status200OK)
         .Produces(StatusCodes.Status400BadRequest)
         .RequireRateLimiting("ProductsSliding");
 

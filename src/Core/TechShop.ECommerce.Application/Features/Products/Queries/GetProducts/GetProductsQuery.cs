@@ -6,4 +6,4 @@ public sealed record GetProductsQuery(
     Guid? CategoryId = null,
     string? SortBy = null,
     string? Search = null
-) : IRequest<PagedResponse<ProductDto>>;
+) : IRequest<PagedResponse<GetProductsResponse>>;

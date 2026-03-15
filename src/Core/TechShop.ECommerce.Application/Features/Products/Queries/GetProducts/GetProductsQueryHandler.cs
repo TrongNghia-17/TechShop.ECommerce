@@ -1,10 +1,13 @@
-﻿namespace TechShop.ECommerce.Application.Features.Products.Queries.GetProducts;
+﻿using TechShop.ECommerce.Application.Contracts.Storage;
+
+namespace TechShop.ECommerce.Application.Features.Products.Queries.GetProducts;
 
 public sealed class GetProductsQueryHandler(
-    IProductRepository productRepository)
-    : IRequestHandler<GetProductsQuery, PagedResponse<ProductDto>>
+    IProductRepository productRepository,
+    IFileStorage fileStorage)
+    : IRequestHandler<GetProductsQuery, PagedResponse<GetProductsResponse>>
 {
-    public async Task<PagedResponse<ProductDto>> Handle(
+    public async Task<PagedResponse<GetProductsResponse>> Handle(
         GetProductsQuery request,
         CancellationToken cancellationToken)
     {
@@ -18,7 +21,27 @@ public sealed class GetProductsQueryHandler(
             Search = request.Search
         };
 
-        return await productRepository.GetPagedAsync(filter, cancellationToken);
+        var pagedItems = await productRepository.GetPagedAsync(
+           filter,
+           cancellationToken);
+
+        var data = pagedItems.Data
+            .Select(product => new GetProductsResponse(
+                product.Id,
+                product.Name,
+                product.Price,
+                product.CategoryName,
+                fileStorage.GetUrl(product.MainImageBlobName)))
+            .ToList();
+
+        return new PagedResponse<GetProductsResponse>
+        {
+            Data = data,
+            PageNumber = pagedItems.PageNumber,
+            PageSize = pagedItems.PageSize,
+            TotalRecords = pagedItems.TotalRecords,
+            TotalPages = pagedItems.TotalPages
+        };
     }
 }
 
