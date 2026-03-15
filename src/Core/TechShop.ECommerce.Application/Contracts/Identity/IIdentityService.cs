@@ -2,8 +2,18 @@
 
 public interface IIdentityService
 {
-    Task<(bool Success, Guid UserId, string Email, string UserName, IList<string> Roles)>
-        LoginAsync(string email, string password);
+    Task<IdentitySession?> LoginAsync(
+        string email,
+        string password,
+        CancellationToken cancellationToken = default);
+
+    Task<IdentitySession?> RefreshTokenAsync(
+        string refreshToken,
+        CancellationToken cancellationToken = default);
+
+    Task<bool> RevokeRefreshTokenAsync(
+        string refreshToken,
+        CancellationToken cancellationToken = default);
 
     Task<(bool Success, Guid UserId, string Errors)>
         RegisterAsync(

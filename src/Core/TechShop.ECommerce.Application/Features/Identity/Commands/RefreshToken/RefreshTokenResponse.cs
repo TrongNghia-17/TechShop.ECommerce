@@ -1,8 +1,8 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace TechShop.ECommerce.Application.Features.Identity.Commands.Login;
+namespace TechShop.ECommerce.Application.Features.Identity.Commands.RefreshToken;
 
-public sealed record LoginResponse(
+public sealed record RefreshTokenResponse(
     Guid UserId,
     string Email,
     string UserName,

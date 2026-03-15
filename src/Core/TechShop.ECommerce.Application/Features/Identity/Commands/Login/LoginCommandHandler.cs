@@ -1,33 +1,43 @@
-﻿namespace TechShop.ECommerce.Application.Features.Identity.Commands.Login;
+﻿using Microsoft.Extensions.Options;
+
+namespace TechShop.ECommerce.Application.Features.Identity.Commands.Login;
 
 public sealed class LoginCommandHandler(
     IIdentityService identityService,
-    IJwtTokenGenerator tokenGenerator)
+    IJwtTokenGenerator tokenGenerator,
+    IOptions<JwtOptions> jwtOptions,
+    TimeProvider timeProvider)
     : IRequestHandler<LoginCommand, Result<LoginResponse>>
 {
+    private readonly JwtOptions _jwtOptions = jwtOptions.Value;
+
     public async Task<Result<LoginResponse>> Handle(
         LoginCommand command,
         CancellationToken cancellationToken)
     {
-        var (Success, UserId, Email, UserName, Roles) =
-            await identityService.LoginAsync(
-                command.Email,
-                command.Password);
+        var session = await identityService.LoginAsync(
+            command.Email,
+            command.Password,
+            cancellationToken);
 
-        if (!Success)
+        if (session is null)
             return IdentityErrors.InvalidCredentials;
 
-        var token = await tokenGenerator.GenerateTokenAsync(
+        var accessToken = await tokenGenerator.GenerateTokenAsync(
             new UserTokenRequest(
-                UserId,
-                Email,
-                Roles));
+                session.UserId,
+                session.Email,
+                session.Roles.ToList()));
 
         return new LoginResponse(
-            UserId,
-            Email,
-            UserName,
-            token
-        );
+        session.UserId,
+        session.Email,
+        session.UserName,
+        accessToken,
+        timeProvider.GetUtcNow().AddMinutes(_jwtOptions.DurationInMinutes),
+        session.RefreshTokenExpiresAtUtc)
+        {
+            RefreshToken = session.RefreshToken
+        };
     }
 }

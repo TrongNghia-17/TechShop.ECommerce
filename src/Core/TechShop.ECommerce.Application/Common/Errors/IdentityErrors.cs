@@ -8,14 +8,24 @@ public static class IdentityErrors
             "User is not authorized.");
 
     public static Error EmailNotFound =>
-        Error.Validation(
+        Error.Unauthorized(
             "Identity.EmailNotFound",
             "Current user email was not found.");
 
     public static Error InvalidCredentials =>
-        Error.Validation(
+        Error.Unauthorized(
             "Identity.InvalidCredentials",
             "Invalid email or password.");
+
+    public static Error MissingRefreshToken =>
+        Error.Validation(
+            "Identity.MissingRefreshToken",
+            "Refresh token is required.");
+
+    public static Error InvalidRefreshToken =>
+        Error.Unauthorized(
+            "Identity.InvalidRefreshToken",
+            "Refresh token is invalid or inactive.");
 
     public static Error RegisterFailed(string message) =>
         Error.Validation(
