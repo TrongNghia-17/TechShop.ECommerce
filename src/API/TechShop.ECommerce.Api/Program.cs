@@ -6,7 +6,8 @@ builder.Host.AddSerilog();
 
 builder.Services
     .AddApiServices(builder.Configuration)
-    .AddApiRateLimiting();
+    .AddApiRateLimiting()
+    .AddApiHealthChecks();
 
 var app = builder.Build();
 

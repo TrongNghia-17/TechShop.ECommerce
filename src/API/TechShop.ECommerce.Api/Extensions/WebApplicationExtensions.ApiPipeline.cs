@@ -35,6 +35,8 @@ public static class WebApplicationExtensions
             app.MapScalarApiReference();
         }
 
+        app.MapTechShopHealthChecks();
+
         app.MapStripeWebhookEndpoints();
         app.MapProductEndpoints();
         app.MapAuthEndpoints();
