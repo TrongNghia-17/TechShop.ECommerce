@@ -18,6 +18,7 @@ public static class CartEndpoints
             .WithName("Cart_AddItem")
             .WithSummary("Adds an item to the cart")
             .Produces<AddToCartResult>(StatusCodes.Status200OK)
+            .Produces(StatusCodes.Status401Unauthorized)
             .Produces(StatusCodes.Status404NotFound)
             .Produces(StatusCodes.Status400BadRequest);
 
@@ -31,6 +32,7 @@ public static class CartEndpoints
             .WithName("Cart_RemoveItem")
             .WithSummary("Removes an item from the cart")
             .Produces<AddToCartResult>(StatusCodes.Status200OK)
+            .Produces(StatusCodes.Status401Unauthorized)
             .Produces(StatusCodes.Status404NotFound)
             .Produces(StatusCodes.Status400BadRequest);
 
@@ -47,6 +49,7 @@ public static class CartEndpoints
             .WithName("Cart_Get")
             .WithSummary("Gets current user's cart")
             .Produces<GetCartResult>(StatusCodes.Status200OK)
+            .Produces(StatusCodes.Status401Unauthorized)
             .Produces(StatusCodes.Status400BadRequest);
 
         return group;

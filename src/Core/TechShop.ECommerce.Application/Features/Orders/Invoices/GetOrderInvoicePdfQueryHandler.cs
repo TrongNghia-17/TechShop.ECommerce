@@ -4,18 +4,22 @@ namespace TechShop.ECommerce.Application.Features.Orders.Invoices;
 
 public sealed class GetOrderInvoicePdfQueryHandler(
     IOrderRepository orderRepository,
-    IInvoicePdfGenerator invoicePdfGenerator)
+    IInvoicePdfGenerator invoicePdfGenerator,
+    ICurrentUserService currentUserService)
     : IRequestHandler<GetOrderInvoicePdfQuery, GetOrderInvoicePdfResponse>
 {
     public async Task<GetOrderInvoicePdfResponse> Handle(
         GetOrderInvoicePdfQuery request,
         CancellationToken cancellationToken)
     {
+        var currentUserId = currentUserService.UserId;
+
         var order = await orderRepository.GetByIdWithItemsAsync(
             request.OrderId,
-            cancellationToken);
+            cancellationToken)
+            ?? throw new NotFoundException(nameof(Order), request.OrderId);
 
-        if (order is null)
+        if (order.CustomerId != currentUserId)
             throw new NotFoundException(nameof(Order), request.OrderId);
 
         if (order.Status != OrderStatus.Confirmed)

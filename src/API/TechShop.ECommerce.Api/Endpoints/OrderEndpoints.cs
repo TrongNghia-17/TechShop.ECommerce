@@ -24,8 +24,8 @@ public static class OrderEndpoints
             .WithDescription("Places a new order for the current authenticated user.")
             .Produces<Guid>(StatusCodes.Status201Created)
             .Produces(StatusCodes.Status400BadRequest)
-            .Produces(StatusCodes.Status404NotFound)
-            .Produces(StatusCodes.Status401Unauthorized);
+            .Produces(StatusCodes.Status401Unauthorized)
+            .Produces(StatusCodes.Status404NotFound);
 
         // GET /api/orders/{id}/invoice
         group.MapGet("/{id:guid}/invoice",
@@ -50,6 +50,7 @@ public static class OrderEndpoints
                 """)
             .Produces(StatusCodes.Status200OK, contentType: "application/pdf")
             .Produces(StatusCodes.Status400BadRequest)
+            .Produces(StatusCodes.Status401Unauthorized)
             .Produces(StatusCodes.Status404NotFound);
 
         return group;
