@@ -20,7 +20,9 @@ public static class CartEndpoints
             .Produces<AddToCartResult>(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status401Unauthorized)
             .Produces(StatusCodes.Status404NotFound)
-            .Produces(StatusCodes.Status400BadRequest);
+            .Produces(StatusCodes.Status400BadRequest)
+            .Produces(StatusCodes.Status429TooManyRequests)
+            .RequireRateLimiting(RateLimitPolicies.CartFixed);
 
         // DELETE /api/carts/items
         group.MapDelete("/items",
@@ -34,7 +36,9 @@ public static class CartEndpoints
             .Produces<AddToCartResult>(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status401Unauthorized)
             .Produces(StatusCodes.Status404NotFound)
-            .Produces(StatusCodes.Status400BadRequest);
+            .Produces(StatusCodes.Status400BadRequest)
+            .Produces(StatusCodes.Status429TooManyRequests)
+            .RequireRateLimiting(RateLimitPolicies.CartFixed);
 
         // GET /api/carts
         group.MapGet("/",
@@ -50,7 +54,9 @@ public static class CartEndpoints
             .WithSummary("Gets current user's cart")
             .Produces<GetCartResult>(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status401Unauthorized)
-            .Produces(StatusCodes.Status400BadRequest);
+            .Produces(StatusCodes.Status400BadRequest)
+            .Produces(StatusCodes.Status429TooManyRequests)
+            .RequireRateLimiting(RateLimitPolicies.CartFixed);
 
         return group;
     }

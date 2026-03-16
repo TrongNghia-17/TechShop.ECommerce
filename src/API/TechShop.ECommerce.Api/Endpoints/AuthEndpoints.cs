@@ -31,7 +31,18 @@ public static class AuthEndpoints
                     jwtOptions.Value);
 
                 return Results.Ok(Result<LoginResponse>.Success(result.Value));
-            });
+            })
+            .WithName("Auth_Login")
+            .WithSummary("User login")
+            .WithDescription("""
+                Authenticates the user and returns a short-lived JWT access token.
+                A refresh token is issued in a secure HttpOnly cookie.
+                """)
+            .Produces<LoginResponse>(StatusCodes.Status200OK)
+            .Produces(StatusCodes.Status400BadRequest)
+            .Produces(StatusCodes.Status401Unauthorized)
+            .Produces(StatusCodes.Status429TooManyRequests)
+            .RequireRateLimiting(RateLimitPolicies.AuthFixed);
 
         group.MapPost("/refresh-token",
             async (
@@ -55,7 +66,18 @@ public static class AuthEndpoints
                     jwtOptions.Value);
 
                 return Results.Ok(Result<RefreshTokenResponse>.Success(result.Value));
-            });
+            })
+            .WithName("Auth_RefreshToken")
+            .WithSummary("Refresh access token")
+            .WithDescription("""
+                Uses the refresh token stored in the secure HttpOnly cookie
+                to issue a new JWT access token and rotate the refresh token.
+                """)
+            .Produces<RefreshTokenResponse>(StatusCodes.Status200OK)
+            .Produces(StatusCodes.Status400BadRequest)
+            .Produces(StatusCodes.Status401Unauthorized)
+            .Produces(StatusCodes.Status429TooManyRequests)
+            .RequireRateLimiting(RateLimitPolicies.AuthFixed);
 
         group.MapPost("/revoke-refresh-token",
             async (
@@ -79,7 +101,17 @@ public static class AuthEndpoints
                 httpContext.Response.DeleteRefreshTokenCookie(jwtOptions.Value);
 
                 return result.ToApiResult();
-            });
+            })
+            .WithName("Auth_RevokeRefreshToken")
+            .WithSummary("Revoke refresh token")
+            .WithDescription("""
+                Revokes the current refresh token and removes the refresh token cookie.
+                """)
+            .Produces(StatusCodes.Status200OK)
+            .Produces(StatusCodes.Status400BadRequest)
+            .Produces(StatusCodes.Status401Unauthorized)
+            .Produces(StatusCodes.Status429TooManyRequests)
+            .RequireRateLimiting(RateLimitPolicies.AuthFixed);
 
         return group;
     }

@@ -61,7 +61,9 @@ public static class StripeWebhookEndpoints
         .WithName("Stripe_Webhook")
         .WithSummary("Stripe webhook endpoint")
         .Produces(StatusCodes.Status200OK)
-        .Produces(StatusCodes.Status400BadRequest);
+        .Produces(StatusCodes.Status400BadRequest)
+        .Produces(StatusCodes.Status429TooManyRequests)
+        .RequireRateLimiting(RateLimitPolicies.WebhookFixed);
 
         return group;
     }

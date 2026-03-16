@@ -23,7 +23,8 @@ public static class ProductEndpoints
         .WithSummary("Gets paginated list of products")
         .Produces<PagedResponse<GetProductsResponse>>(StatusCodes.Status200OK)
         .Produces(StatusCodes.Status400BadRequest)
-        .RequireRateLimiting("ProductsSliding");
+        .Produces(StatusCodes.Status429TooManyRequests)
+        .RequireRateLimiting(RateLimitPolicies.ProductsReadSliding);
 
         // GET /api/products/{id}
         group.MapGet("/{id:guid}",
@@ -38,7 +39,9 @@ public static class ProductEndpoints
         .WithName("Products_GetById")
         .WithSummary("Gets product details by id")
         .Produces<ProductDetailsDto>(StatusCodes.Status200OK)
-        .Produces(StatusCodes.Status404NotFound);
+        .Produces(StatusCodes.Status404NotFound)
+        .Produces(StatusCodes.Status429TooManyRequests)
+        .RequireRateLimiting(RateLimitPolicies.ProductsReadSliding);
 
         // PUT /api/products/{id}
         group.MapPut("/{id:guid}",
@@ -54,7 +57,9 @@ public static class ProductEndpoints
         .WithName("Products_Update")
         .WithSummary("Updates product")
         .Produces(StatusCodes.Status204NoContent)
-        .Produces(StatusCodes.Status400BadRequest);
+        .Produces(StatusCodes.Status400BadRequest)
+        .Produces(StatusCodes.Status429TooManyRequests)
+        .RequireRateLimiting(RateLimitPolicies.ProductsManagementFixed);
 
         // POST /api/products/{id}/image
         group.MapPost("/{id:guid}/image",
@@ -93,7 +98,9 @@ public static class ProductEndpoints
         .Produces(StatusCodes.Status200OK)
         .Produces(StatusCodes.Status400BadRequest)
         .Produces(StatusCodes.Status404NotFound)
-        .DisableAntiforgery();
+        .Produces(StatusCodes.Status429TooManyRequests)
+        .DisableAntiforgery()
+        .RequireRateLimiting(RateLimitPolicies.FileUploadFixed);
 
         return group;
     }
