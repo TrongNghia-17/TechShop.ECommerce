@@ -36,10 +36,15 @@ public static partial class ServiceCollectionExtensions
 
         services.AddCors(options =>
         {
-            options.AddPolicy("all", p => p
-                .AllowAnyOrigin()
-                .AllowAnyHeader()
-                .AllowAnyMethod());
+            options.AddPolicy("Frontend", policy =>
+            {
+                policy.WithOrigins(
+                        "http://localhost:5173",
+                        "https://localhost:5173")
+                    .AllowAnyHeader()
+                    .AllowAnyMethod()
+                    .AllowCredentials();
+            });
         });
 
         services.AddHangfire(hangfireConfig =>

@@ -10,7 +10,7 @@ public static class WebApplicationExtensions
 
         app.UseSerilogRequestLogging();
         app.UseHttpsRedirection();
-        app.UseCors("all");
+        app.UseCors("Frontend");
 
         app.UseAuthentication();
         app.UseAuthorization();

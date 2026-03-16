@@ -8,8 +8,9 @@ public class JwtTokenGenerator(IOptions<JwtOptions> jwtSettings)
     public Task<string> GenerateTokenAsync(UserTokenRequest request)
     {
         var claims = new List<Claim>
-        {
+{
             new(JwtRegisteredClaimNames.Sub, request.UserId.ToString()),
+            new("uid", request.UserId.ToString()),
             new(JwtRegisteredClaimNames.Email, request.Email),
             new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
         };
