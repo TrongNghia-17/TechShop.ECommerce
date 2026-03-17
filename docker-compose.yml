@@ -37,8 +37,45 @@ services:
       - "6379:6379"
     volumes:
       - redis_data:/data
+  
+  otel-collector:
+    image: otel/opentelemetry-collector-contrib:latest
+    container_name: otel-collector
+    restart: always
+    command: ["--config=/etc/otelcol/config.yml"]
+    volumes:
+      - ./otel-collector-config.yml:/etc/otelcol/config.yml
+    ports:
+      - "4317:4317"
+      - "4318:4318"
+      - "9464:9464"
+      - "13133:13133"
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    restart: always
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data:/prometheus
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    restart: always
+    environment:
+      GF_SECURITY_ADMIN_USER: admin
+      GF_SECURITY_ADMIN_PASSWORD: TechShop
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana_data:/var/lib/grafana
 
 volumes:
   postgres_data:
   seq_data:
   redis_data:
+  prometheus_data:
+  grafana_data:

@@ -54,6 +54,8 @@ public static partial class ServiceCollectionExtensions
                     configuration.GetConnectionString("DefaultConnection")));
         });
 
+        services.AddApiOpenTelemetry();
+
         return services;
     }
 }

@@ -35,13 +35,12 @@ public static class WebApplicationExtensions
             app.MapScalarApiReference();
         }
 
-        app.MapTechShopHealthChecks();
-
         app.MapStripeWebhookEndpoints();
         app.MapProductEndpoints();
         app.MapAuthEndpoints();
         app.MapCartEndpoints();
         app.MapOrderEndpoints();
+        app.MapTechShopHealthChecks();
 
         return app;
     }
