@@ -15,20 +15,9 @@ public class LoggingBehavior<TRequest, TResponse>(
 
         try
         {
-            logger.LogInformation(
-                "Handling {RequestName} {@Request}",
-                requestName,
-                request);
-
             var response = await next();
 
             stopwatch.Stop();
-
-            logger.LogInformation(
-                "Handled {RequestName} in {ElapsedMilliseconds}ms",
-                requestName,
-                stopwatch.ElapsedMilliseconds);
-
             return response;
         }
         catch (Exception ex)
