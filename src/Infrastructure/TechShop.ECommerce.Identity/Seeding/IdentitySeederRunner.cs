@@ -2,14 +2,17 @@
 
 public static class IdentitySeederRunner
 {
-    public static async Task SeedAsync(IServiceProvider services,
-        CancellationToken cancellationToken = default)
+    public static async Task SeedAsync(
+        IServiceProvider serviceProvider,
+        CancellationToken cancellationToken)
     {
-        var seeders = services.GetServices<IIdentitySeeder>();
+        using var scope = serviceProvider.CreateScope();
 
-        foreach (var seeder in seeders)
+        var identitySeeders = scope.ServiceProvider.GetServices<IIdentitySeeder>();
+
+        foreach (var identitySeeder in identitySeeders)
         {
-            await seeder.SeedAsync(cancellationToken);
+            await identitySeeder.SeedAsync(cancellationToken);
         }
     }
 }

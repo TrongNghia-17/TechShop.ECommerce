@@ -2,16 +2,22 @@
 
 public sealed class OrderRepository(TechShopDbContext context) : IOrderRepository
 {
-    public async Task AddAsync(Order order, CancellationToken token = default)
+    public async Task AddAsync(
+        Order order,
+        CancellationToken cancellationToken)
     {
-        await context.Orders.AddAsync(order, token);
+        await context.Orders.AddAsync(order, cancellationToken);
     }
 
-    public async Task<Order?> GetByIdWithItemsAsync(Guid id, CancellationToken token = default)
+    public async Task<Order?> GetByIdWithItemsAsync(
+        Guid orderId,
+        CancellationToken cancellationToken)
     {
         return await context.Orders
-            .Include(o => o.OrderItems)
-            .FirstOrDefaultAsync(o => o.Id == id, token);
+            .Include(order => order.OrderItems)
+            .FirstOrDefaultAsync(
+                order => order.Id == orderId,
+                cancellationToken);
     }
 
     public async Task<List<Order>> GetPendingOrdersCreatedBeforeAsync(

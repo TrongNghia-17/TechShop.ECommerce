@@ -1,4 +1,7 @@
-﻿namespace TechShop.ECommerce.Persistence;
+﻿using TechShop.ECommerce.Persistence.Repositories;
+using TechShop.ECommerce.Persistence.Seeding;
+
+namespace TechShop.ECommerce.Persistence;
 
 public static class PersistenceServiceRegistration
 {
@@ -6,21 +9,19 @@ public static class PersistenceServiceRegistration
         this IServiceCollection services,
         IConfiguration configuration)
     {
-        services.AddScoped<SlowQueryInterceptor>();
         services.AddScoped<AuditSaveChangesInterceptor>();
         services.AddScoped<SoftDeleteSaveChangesInterceptor>();
 
         services.AddDbContext<TechShopDbContext>((serviceProvider, options) =>
         {
             options.UseNpgsql(
-                configuration.GetConnectionString("DefaultConnection"),
+                configuration.GetConnectionString(PersistenceConstants.DefaultConnectionStringName),
                 npgsqlOptions =>
-                    npgsqlOptions.MigrationsAssembly("TechShop.ECommerce.Migrations"));
+                    npgsqlOptions.MigrationsAssembly(PersistenceConstants.MigrationsAssemblyName));
 
             options.AddInterceptors(
                 serviceProvider.GetRequiredService<AuditSaveChangesInterceptor>(),
-                serviceProvider.GetRequiredService<SoftDeleteSaveChangesInterceptor>(),
-                serviceProvider.GetRequiredService<SlowQueryInterceptor>());
+                serviceProvider.GetRequiredService<SoftDeleteSaveChangesInterceptor>());
         });
 
         services.AddScoped<IProductRepository, ProductRepository>();

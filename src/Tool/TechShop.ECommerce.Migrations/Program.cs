@@ -13,18 +13,19 @@ var builder = Host.CreateApplicationBuilder(args);
 builder.Services.AddPersistenceServices(builder.Configuration);
 builder.Services.AddIdentityCoreServices(builder.Configuration);
 
-var app = builder.Build();
-
+using var app = builder.Build();
 using var scope = app.Services.CreateScope();
+
 var services = scope.ServiceProvider;
+var cancellationToken = CancellationToken.None;
 
-var db = services.GetRequiredService<TechShopDbContext>();
-await db.Database.MigrateAsync();
+var appDbContext = services.GetRequiredService<TechShopDbContext>();
+await appDbContext.Database.MigrateAsync(cancellationToken);
 
-var identityDb = services.GetRequiredService<TechShopIdentityDbContext>();
-await identityDb.Database.MigrateAsync();
+var identityDbContext = services.GetRequiredService<TechShopIdentityDbContext>();
+await identityDbContext.Database.MigrateAsync(cancellationToken);
 
-await IdentitySeederRunner.SeedAsync(services);
-await TechShopDataSeeder.SeedAsync(services);
+await IdentitySeederRunner.SeedAsync(services, cancellationToken);
+await TechShopSeederRunner.SeedAsync(services, cancellationToken);
 
-Console.WriteLine("Database migration completed.");
+Console.WriteLine("Database migration completed successfully.");

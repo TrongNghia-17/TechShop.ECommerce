@@ -8,7 +8,7 @@ public sealed class AuditSaveChangesInterceptor(
         DbContextEventData eventData,
         InterceptionResult<int> result)
     {
-        ApplyAudit(eventData.Context);
+        ApplyAudit(eventData.Context, currentUserService.UserId);
         return base.SavingChanges(eventData, result);
     }
 
@@ -17,15 +17,16 @@ public sealed class AuditSaveChangesInterceptor(
         InterceptionResult<int> result,
         CancellationToken cancellationToken = default)
     {
-        ApplyAudit(eventData.Context);
+        ApplyAudit(eventData.Context, currentUserService.UserId);
         return base.SavingChangesAsync(eventData, result, cancellationToken);
     }
 
-    private void ApplyAudit(Microsoft.EntityFrameworkCore.DbContext? context)
+    private static void ApplyAudit(DbContext? context, Guid? userId)
     {
-        if (context is null) return;
-
-        var userId = currentUserService.UserId;
+        if (context is null)
+        {
+            return;
+        }
 
         foreach (var entry in context.ChangeTracker.Entries<BaseEntity>())
         {
@@ -37,7 +38,7 @@ public sealed class AuditSaveChangesInterceptor(
 
             if (entry.State == EntityState.Modified)
             {
-                entry.Property(x => x.DateCreated).IsModified = false;
+                entry.Property(entity => entity.DateCreated).IsModified = false;
                 entry.Entity.MarkAsUpdated(userId);
             }
         }

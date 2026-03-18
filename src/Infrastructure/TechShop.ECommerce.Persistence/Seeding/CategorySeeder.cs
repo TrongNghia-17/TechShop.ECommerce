@@ -1,18 +1,23 @@
-﻿using TechShop.ECommerce.Persistence.DatabaseContext;
-
-namespace TechShop.ECommerce.Persistence.Seeding;
+﻿namespace TechShop.ECommerce.Persistence.Seeding;
 
 public sealed class CategorySeeder(TechShopDbContext context) : IDataSeeder
 {
-    public async Task SeedAsync(CancellationToken cancellationToken = default)
+    public async Task SeedAsync(CancellationToken cancellationToken)
     {
-        if (await context.Categories.AnyAsync(c => c.Name == "Laptop", cancellationToken))
+        var hasCategories = await context.Categories.AnyAsync(cancellationToken);
+
+        if (hasCategories)
+        {
             return;
+        }
 
         var categories = new[]
         {
-            Category.Create("Laptop"),
-            Category.Create("Smartphone")
+            Category.Create("Laptop", "Portable computers for work and gaming."),
+            Category.Create("Smartphone", "Modern smartphones and accessories."),
+            Category.Create("Tablet", "Tablets for entertainment and productivity."),
+            Category.Create("Headphone", "Audio devices for music and calls."),
+            Category.Create("Accessory", "Tech accessories and peripherals.")
         };
 
         await context.Categories.AddRangeAsync(categories, cancellationToken);

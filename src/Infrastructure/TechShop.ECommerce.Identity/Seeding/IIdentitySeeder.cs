@@ -2,5 +2,5 @@
 
 public interface IIdentitySeeder
 {
-    Task SeedAsync(CancellationToken cancellationToken = default);
+    Task SeedAsync(CancellationToken cancellationToken);
 }

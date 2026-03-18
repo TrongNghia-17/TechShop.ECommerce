@@ -8,7 +8,7 @@ public sealed class SoftDeleteSaveChangesInterceptor(
         DbContextEventData eventData,
         InterceptionResult<int> result)
     {
-        ApplySoftDelete(eventData.Context);
+        ApplySoftDelete(eventData.Context, currentUserService.UserId);
         return base.SavingChanges(eventData, result);
     }
 
@@ -17,19 +17,23 @@ public sealed class SoftDeleteSaveChangesInterceptor(
         InterceptionResult<int> result,
         CancellationToken cancellationToken = default)
     {
-        ApplySoftDelete(eventData.Context);
+        ApplySoftDelete(eventData.Context, currentUserService.UserId);
         return base.SavingChangesAsync(eventData, result, cancellationToken);
     }
 
-    private void ApplySoftDelete(Microsoft.EntityFrameworkCore.DbContext? context)
+    private static void ApplySoftDelete(DbContext? context, Guid? userId)
     {
-        if (context is null) return;
-
-        var userId = currentUserService.UserId;
+        if (context is null)
+        {
+            return;
+        }
 
         foreach (var entry in context.ChangeTracker.Entries<ISoftDelete>())
         {
-            if (entry.State != EntityState.Deleted) continue;
+            if (entry.State != EntityState.Deleted)
+            {
+                continue;
+            }
 
             entry.State = EntityState.Modified;
             entry.Entity.MarkAsDeleted(userId);

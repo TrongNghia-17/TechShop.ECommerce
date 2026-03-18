@@ -1,23 +1,22 @@
-﻿using TechShop.ECommerce.Persistence.DatabaseContext;
+﻿namespace TechShop.ECommerce.Persistence.Repositories;
 
-namespace TechShop.ECommerce.Persistence.Repositories;
-
-public sealed class CartRepository(TechShopDbContext context)
-    : ICartRepository
+public sealed class CartRepository(TechShopDbContext context) : ICartRepository
 {
     public async Task<Cart?> GetByCustomerIdAsync(
         Guid customerId,
-        CancellationToken token)
+        CancellationToken cancellationToken)
     {
         return await context.Carts
-            .Include(c => c.Items)
-            .FirstOrDefaultAsync(c => c.CustomerId == customerId, cancellationToken: token);
+            .Include(cart => cart.Items)
+            .FirstOrDefaultAsync(
+                cart => cart.CustomerId == customerId,
+                cancellationToken);
     }
 
     public async Task AddAsync(
         Cart cart,
-        CancellationToken token)
+        CancellationToken cancellationToken)
     {
-        await context.Carts.AddAsync(cart, token);
+        await context.Carts.AddAsync(cart, cancellationToken);
     }
 }
