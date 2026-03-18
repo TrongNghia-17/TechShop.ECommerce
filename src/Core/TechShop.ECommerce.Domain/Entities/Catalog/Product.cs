@@ -32,7 +32,9 @@ public class Product : BaseEntity, ISoftDelete
         SetInitialStock(stockQuantity);
 
         if (categoryId == Guid.Empty)
+        {
             throw new DomainException("Category is required.");
+        }
 
         CategoryId = categoryId;
         Summary = summary;
@@ -46,12 +48,16 @@ public class Product : BaseEntity, ISoftDelete
         Guid categoryId,
         string? summary = null,
         string? description = null)
-        => new(name, price, stockQuantity, categoryId, summary, description);
+    {
+        return new Product(name, price, stockQuantity, categoryId, summary, description);
+    }
 
     public void Rename(string name)
     {
         if (string.IsNullOrWhiteSpace(name))
-            throw new DomainException("Product name is required");
+        {
+            throw new DomainException("Product name is required.");
+        }
 
         Name = name.Trim();
     }
@@ -59,21 +65,25 @@ public class Product : BaseEntity, ISoftDelete
     public void ChangePrice(decimal newPrice)
     {
         if (newPrice <= 0)
-            throw new DomainException("Price must be greater than zero");
+        {
+            throw new DomainException("Price must be greater than zero.");
+        }
 
         Price = newPrice;
     }
 
     public void UpdateDescription(string? summary, string? description)
     {
-        Summary = summary;
-        Description = description;
+        Summary = NormalizeOptionalText(summary);
+        Description = NormalizeOptionalText(description);
     }
 
     public void UpdateMainImage(string blobName)
     {
         if (string.IsNullOrWhiteSpace(blobName))
+        {
             throw new DomainException("Main image blob name is required.");
+        }
 
         MainImageBlobName = blobName.Trim();
     }
@@ -112,17 +122,28 @@ public class Product : BaseEntity, ISoftDelete
     public void RemoveStock(int quantity)
     {
         if (quantity <= 0)
+        {
             throw new DomainException("Quantity to remove must be greater than zero.");
+        }
 
         if (StockQuantity < quantity)
+        {
             throw new DomainException(
-                $"Not enough stock for product '{Name}'. Available: {StockQuantity}, Requested: {quantity}");
+                $"Not enough stock for product '{Name}'. Available: {StockQuantity}, Requested: {quantity}.");
+        }
 
         StockQuantity -= quantity;
     }
 
-    public bool HasEnoughStock(int quantity)
+    public bool HasEnoughStock(int quantity) => StockQuantity >= quantity;
+
+    private static string? NormalizeOptionalText(string? value)
     {
-        return StockQuantity >= quantity;
+        if (string.IsNullOrWhiteSpace(value))
+        {
+            return null;
+        }
+
+        return value.Trim();
     }
 }

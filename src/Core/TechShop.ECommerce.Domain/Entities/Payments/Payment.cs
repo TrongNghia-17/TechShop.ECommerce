@@ -3,50 +3,64 @@
 public class Payment : BaseEntity
 {
     public Guid OrderId { get; private set; }
-
     public string StripeCheckoutSessionId { get; private set; } = default!;
-
     public decimal Amount { get; private set; }
-
     public string Currency { get; private set; } = default!;
-
     public PaymentStatus Status { get; private set; }
 
-    private Payment() { } // EF
+    private Payment()
+    {
+    }
 
-    private Payment(Guid orderId, string checkoutSessionId, decimal amount, string currency)
+    private Payment(
+       Guid orderId,
+       string checkoutSessionId,
+       decimal amount,
+       string currency)
     {
         if (orderId == Guid.Empty)
-            throw new DomainException("OrderId is required.");
+        {
+            throw new DomainException("Order ID is required.");
+        }
 
         if (string.IsNullOrWhiteSpace(checkoutSessionId))
-            throw new DomainException("CheckoutSessionId is required.");
+        {
+            throw new DomainException("Checkout session ID is required.");
+        }
 
         if (amount <= 0)
+        {
             throw new DomainException("Amount must be greater than zero.");
+        }
 
         if (string.IsNullOrWhiteSpace(currency))
+        {
             throw new DomainException("Currency is required.");
+        }
 
         OrderId = orderId;
-        StripeCheckoutSessionId = checkoutSessionId;
+        StripeCheckoutSessionId = checkoutSessionId.Trim();
         Amount = amount;
-        Currency = currency;
+        Currency = currency.Trim();
         Status = PaymentStatus.Pending;
     }
 
     public static Payment Create(
         Guid orderId,
-        string intentId,
+        string checkoutSessionId,
         decimal amount,
         string currency)
-    => new(orderId, intentId, amount, currency);
+    {
+        return new Payment(orderId, checkoutSessionId, amount, currency);
+    }
 
 
     public void MarkSucceeded()
     {
         if (Status != PaymentStatus.Pending)
+        {
             throw new DomainException("Invalid state transition.");
+        }
 
         Status = PaymentStatus.Succeeded;
     }
@@ -54,7 +68,9 @@ public class Payment : BaseEntity
     public void MarkFailed()
     {
         if (Status != PaymentStatus.Pending)
+        {
             throw new DomainException("Invalid state transition.");
+        }
 
         Status = PaymentStatus.Failed;
     }
@@ -62,10 +78,14 @@ public class Payment : BaseEntity
     public void MarkRefundPending()
     {
         if (Status == PaymentStatus.RefundPending)
+        {
             return;
+        }
 
         if (Status != PaymentStatus.Succeeded)
-            throw new DomainException("Only succeeded payment can be marked as refund pending.");
+        {
+            throw new DomainException("Only succeeded payments can be marked as refund pending.");
+        }
 
         Status = PaymentStatus.RefundPending;
     }
@@ -73,10 +93,14 @@ public class Payment : BaseEntity
     public void MarkRefunded()
     {
         if (Status == PaymentStatus.Refunded)
+        {
             return;
+        }
 
         if (Status != PaymentStatus.RefundPending)
-            throw new DomainException("Only refund pending payment can be marked as refunded.");
+        {
+            throw new DomainException("Only refund pending payments can be marked as refunded.");
+        }
 
         Status = PaymentStatus.Refunded;
     }
@@ -84,10 +108,14 @@ public class Payment : BaseEntity
     public void Expire()
     {
         if (Status == PaymentStatus.Expired)
+        {
             return;
+        }
 
         if (Status != PaymentStatus.Pending)
-            throw new DomainException("Only pending payment can be expired.");
+        {
+            throw new DomainException("Only pending payments can be expired.");
+        }
 
         Status = PaymentStatus.Expired;
     }

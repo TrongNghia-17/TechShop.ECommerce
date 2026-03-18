@@ -2,23 +2,49 @@
 
 public class Category : BaseEntity
 {
-    public string Name { get; private set; } = null!;
+    public string Name { get; private set; } = default!;
     public string? Description { get; private set; }
 
     public ICollection<Product> Products { get; private set; } = [];
 
-    private Category() { }
+    private Category()
+    {
+    }
+
+    private Category(string name, string? description)
+    {
+        Rename(name);
+        UpdateDescription(description);
+    }
 
     public static Category Create(string name, string? description = null)
     {
-        if (string.IsNullOrWhiteSpace(name))
-            throw new ArgumentException("Category name cannot be empty.", nameof(name));
+        return new Category(name, description);
+    }
 
-        return new Category
+    public void Rename(string name)
+    {
+        if (string.IsNullOrWhiteSpace(name))
         {
-            Name = name,
-            Description = description
-        };
+            throw new DomainException("Category name is required.");
+        }
+
+        Name = name.Trim();
+    }
+
+    public void UpdateDescription(string? description)
+    {
+        Description = NormalizeOptionalText(description);
+    }
+
+    private static string? NormalizeOptionalText(string? value)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+        {
+            return null;
+        }
+
+        return value.Trim();
     }
 }
 

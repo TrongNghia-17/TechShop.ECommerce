@@ -5,7 +5,7 @@ public static class CartErrors
     public static Error InvalidQuantity =>
         Error.Validation(
             "Cart.InvalidQuantity",
-            "Quantity must be greater than 0.");
+            "Quantity must be greater than zero.");
 
     public static Error NotFound(Guid customerId) =>
         Error.NotFound(

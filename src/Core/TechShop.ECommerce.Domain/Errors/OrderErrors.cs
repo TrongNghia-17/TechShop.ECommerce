@@ -5,7 +5,7 @@ public static class OrderErrors
     public static Error EmptyCart =>
         Error.Validation(
             "Order.EmptyCart",
-            "Cannot place order with an empty cart.");
+            "Cannot place an order with an empty cart.");
 
     public static Error NotFound(Guid orderId) =>
         Error.NotFound(

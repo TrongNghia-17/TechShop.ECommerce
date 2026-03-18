@@ -4,7 +4,6 @@ public record Error(string Code, string Description)
 {
     public static readonly Error None = new(string.Empty, string.Empty);
 
-    // Factory methods for common error types
     public static Error NotFound(string code, string description) =>
         new NotFoundError(code, description);
 

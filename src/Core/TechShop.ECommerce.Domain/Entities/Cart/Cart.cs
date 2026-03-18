@@ -3,34 +3,47 @@
 public class Cart : BaseEntity
 {
     private readonly List<CartItem> _items = [];
-    public IReadOnlyCollection<CartItem> Items => _items.AsReadOnly();
 
+    public IReadOnlyCollection<CartItem> Items => _items.AsReadOnly();
     public Guid CustomerId { get; private set; }
 
-    private Cart() { } // EF
+    private Cart()
+    {
+    }
 
     private Cart(Guid customerId)
     {
         if (customerId == Guid.Empty)
-            throw new DomainException("CustomerId is required.");
+        {
+            throw new DomainException("Customer ID is required.");
+        }
 
         CustomerId = customerId;
     }
 
-    public static Cart Create(Guid customerId) => new(customerId);
+    public static Cart Create(Guid customerId)
+    {
+        return new Cart(customerId);
+    }
 
     public void AddItem(Guid productId, decimal unitPrice, int quantity)
     {
         if (productId == Guid.Empty)
-            throw new DomainException("ProductId is required.");
+        {
+            throw new DomainException("Product ID is required.");
+        }
 
         if (unitPrice <= 0)
-            throw new DomainException("UnitPrice must be greater than zero.");
+        {
+            throw new DomainException("Unit price must be greater than zero.");
+        }
 
         if (quantity <= 0)
-            throw new DomainException("Quantity must be greater than zero");
+        {
+            throw new DomainException("Quantity must be greater than zero.");
+        }
 
-        var existingItem = _items.FirstOrDefault(x => x.ProductId == productId);
+        var existingItem = _items.FirstOrDefault(item => item.ProductId == productId);
 
         if (existingItem is not null)
         {
@@ -44,12 +57,16 @@ public class Cart : BaseEntity
     public void RemoveItem(Guid productId, int quantity)
     {
         if (productId == Guid.Empty)
-            throw new DomainException("ProductId is required.");
+        {
+            throw new DomainException("Product ID is required.");
+        }
 
         if (quantity <= 0)
-            throw new DomainException("Quantity must be greater than zero");
+        {
+            throw new DomainException("Quantity must be greater than zero.");
+        }
 
-        var existingItem = _items.FirstOrDefault(x => x.ProductId == productId)
+        var existingItem = _items.FirstOrDefault(item => item.ProductId == productId)
             ?? throw new DomainException("Product does not exist in cart.");
 
         if (quantity >= existingItem.Quantity)

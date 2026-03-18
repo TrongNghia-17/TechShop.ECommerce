@@ -8,7 +8,9 @@ public class OrderItem : BaseEntity
     public int Quantity { get; private set; }
     public decimal UnitPrice { get; private set; }
 
-    private OrderItem() { }
+    private OrderItem()
+    {
+    }
 
     internal OrderItem(
         Guid orderId,
@@ -18,23 +20,33 @@ public class OrderItem : BaseEntity
         int quantity)
     {
         if (orderId == Guid.Empty)
-            throw new DomainException("OrderId is required");
+        {
+            throw new DomainException("Order ID is required.");
+        }
 
         if (productId == Guid.Empty)
-            throw new DomainException("ProductId is required");
+        {
+            throw new DomainException("Product ID is required.");
+        }
 
         if (string.IsNullOrWhiteSpace(productName))
-            throw new DomainException("Product name is required");
+        {
+            throw new DomainException("Product name is required.");
+        }
 
         if (unitPrice <= 0)
-            throw new DomainException("Unit price must be greater than zero");
+        {
+            throw new DomainException("Unit price must be greater than zero.");
+        }
 
         if (quantity <= 0)
-            throw new DomainException("Quantity must be greater than zero");
+        {
+            throw new DomainException("Quantity must be greater than zero.");
+        }
 
         OrderId = orderId;
         ProductId = productId;
-        ProductName = productName;
+        ProductName = productName.Trim();
         UnitPrice = unitPrice;
         Quantity = quantity;
     }
@@ -42,7 +54,9 @@ public class OrderItem : BaseEntity
     internal void IncreaseQuantity(int amount)
     {
         if (amount <= 0)
-            throw new DomainException("Quantity must be positive");
+        {
+            throw new DomainException("Quantity must be greater than zero.");
+        }
 
         Quantity += amount;
     }

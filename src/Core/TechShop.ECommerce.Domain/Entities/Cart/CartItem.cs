@@ -9,22 +9,43 @@ public class CartItem : BaseEntity
 
     public decimal SubTotal => UnitPrice * Quantity;
 
-    private CartItem() { }
+    private CartItem()
+    {
+    }
 
     private CartItem(Guid productId, decimal unitPrice, int quantity)
     {
+        if (productId == Guid.Empty)
+        {
+            throw new DomainException("Product ID is required.");
+        }
+
+        if (unitPrice <= 0)
+        {
+            throw new DomainException("Unit price must be greater than zero.");
+        }
+
+        if (quantity <= 0)
+        {
+            throw new DomainException("Quantity must be greater than zero.");
+        }
+
         ProductId = productId;
         UnitPrice = unitPrice;
         Quantity = quantity;
     }
 
     internal static CartItem Create(Guid productId, decimal unitPrice, int quantity)
-        => new(productId, unitPrice, quantity);
+    {
+        return new CartItem(productId, unitPrice, quantity);
+    }
 
     internal void IncreaseQuantity(int quantity)
     {
         if (quantity <= 0)
-            throw new DomainException("Invalid quantity");
+        {
+            throw new DomainException("Quantity must be greater than zero.");
+        }
 
         Quantity += quantity;
     }
@@ -32,10 +53,14 @@ public class CartItem : BaseEntity
     internal void DecreaseQuantity(int quantity)
     {
         if (quantity <= 0)
-            throw new DomainException("Invalid quantity");
+        {
+            throw new DomainException("Quantity must be greater than zero.");
+        }
 
         if (quantity > Quantity)
+        {
             throw new DomainException("Quantity to remove cannot exceed current quantity.");
+        }
 
         Quantity -= quantity;
     }
@@ -43,7 +68,9 @@ public class CartItem : BaseEntity
     internal void UpdateUnitPrice(decimal unitPrice)
     {
         if (unitPrice <= 0)
-            throw new DomainException("Invalid unit price.");
+        {
+            throw new DomainException("Unit price must be greater than zero.");
+        }
 
         UnitPrice = unitPrice;
     }

@@ -73,6 +73,17 @@ services:
     volumes:
       - grafana_data:/var/lib/grafana
 
+  jaeger:
+    image: jaegertracing/all-in-one:1.76.0
+    container_name: jaeger
+    restart: always
+    environment:
+      COLLECTOR_OTLP_ENABLED: "true"
+    ports:
+      - "16686:16686"
+      - "4319:4317"
+      - "4320:4318"
+
 volumes:
   postgres_data:
   seq_data:

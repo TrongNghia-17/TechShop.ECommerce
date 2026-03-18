@@ -2,10 +2,10 @@
 
 public sealed class Address
 {
-    public string Street { get; private set; } = null!;
-    public string City { get; private set; } = null!;
-    public string PostalCode { get; private set; } = null!;
-    public string Country { get; private set; } = null!;
+    public string Street { get; private set; } = default!;
+    public string City { get; private set; } = default!;
+    public string PostalCode { get; private set; } = default!;
+    public string Country { get; private set; } = default!;
 
     private Address() { }
 
@@ -16,13 +16,19 @@ public sealed class Address
         string country)
     {
         if (string.IsNullOrWhiteSpace(street))
-            throw new DomainException("Street is required");
+        {
+            throw new DomainException("Street is required.");
+        }
 
         if (string.IsNullOrWhiteSpace(city))
-            throw new DomainException("City is required");
+        {
+            throw new DomainException("City is required.");
+        }
 
         if (string.IsNullOrWhiteSpace(country))
-            throw new DomainException("Country is required");
+        {
+            throw new DomainException("Country is required.");
+        }
 
         Street = street.Trim();
         City = city.Trim();
