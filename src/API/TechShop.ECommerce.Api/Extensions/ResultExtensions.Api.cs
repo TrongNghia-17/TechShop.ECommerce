@@ -47,7 +47,7 @@ public static class ResultExtensions
         return result.ToApiResult();
     }
 
-    private static ProblemDetails CreateProblemDetails(Error error, int statusCode) =>
+    private static ProblemDetails CreateProblemDetails(DomainErrors error, int statusCode) =>
         new()
         {
             Status = statusCode,

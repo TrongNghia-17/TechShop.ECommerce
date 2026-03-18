@@ -1,4 +1,6 @@
-﻿namespace TechShop.ECommerce.Application.Features.Carts.Commands.AddToCart;
+﻿using TechShop.ECommerce.Domain.Entities.Carts;
+
+namespace TechShop.ECommerce.Application.Features.Carts.Commands.AddToCart;
 
 public sealed class AddToCartCommandHandler(
     ICartRepository cartRepository,

@@ -1,4 +1,7 @@
-﻿namespace TechShop.ECommerce.Api.Extensions;
+﻿using TechShop.ECommerce.Identity.DependencyInjection;
+using TechShop.ECommerce.Persistence.DependencyInjection;
+
+namespace TechShop.ECommerce.Api.Extensions;
 
 public static partial class ServiceCollectionExtensions
 {
@@ -10,9 +13,9 @@ public static partial class ServiceCollectionExtensions
         services.AddPersistenceServices(configuration);
         services.AddInfrastructureServices(configuration);
 
-        services.AddIdentityCoreServices(configuration);
-        services.AddHttpCurrentUser();
-        services.AddJwtAuthenticationServices(configuration);
+        services.AddIdentityInfrastructure(configuration);
+        services.AddCurrentUserContext();
+        services.AddJwtAuthentication();
 
         services.AddAuthorization();
 

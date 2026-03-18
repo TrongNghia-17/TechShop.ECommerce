@@ -2,11 +2,11 @@
 
 public static class ProductErrors
 {
-    public static Error NotFound(Guid productId) =>
-        Error.NotFound("Product.NotFound", $"Product {productId} was not found.");
+    public static DomainErrors NotFound(Guid productId) =>
+        DomainErrors.NotFound("Product.NotFound", $"Product {productId} was not found.");
 
-    public static Error InsufficientStock(Guid productId) =>
-        Error.Conflict(
+    public static DomainErrors InsufficientStock(Guid productId) =>
+        DomainErrors.Conflict(
             "Product.InsufficientStock",
             $"Product {productId} does not have enough stock.");
 }

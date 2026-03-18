@@ -6,7 +6,8 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using NpgsqlTypes;
-using TechShop.ECommerce.Persistence.DatabaseContext;
+using TechShop.ECommerce.Persistence.Context;
+
 
 
 #nullable disable

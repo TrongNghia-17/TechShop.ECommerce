@@ -1,4 +1,6 @@
-﻿namespace TechShop.ECommerce.Domain.ValueObjects;
+﻿using TechShop.ECommerce.Domain.Exceptions;
+
+namespace TechShop.ECommerce.Domain.ValueObjects;
 
 public sealed class Address
 {

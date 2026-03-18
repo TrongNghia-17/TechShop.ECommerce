@@ -2,33 +2,33 @@
 
 public static class IdentityErrors
 {
-    public static Error Unauthorized =>
-        Error.Unauthorized(
+    public static Domain.Errors.DomainErrors Unauthorized =>
+        Domain.Errors.DomainErrors.Unauthorized(
             "Identity.Unauthorized",
             "User is not authorized.");
 
-    public static Error EmailNotFound =>
-        Error.Unauthorized(
+    public static Domain.Errors.DomainErrors EmailNotFound =>
+        Domain.Errors.DomainErrors.Unauthorized(
             "Identity.EmailNotFound",
             "Current user email was not found.");
 
-    public static Error InvalidCredentials =>
-        Error.Unauthorized(
+    public static Domain.Errors.DomainErrors InvalidCredentials =>
+        Domain.Errors.DomainErrors.Unauthorized(
             "Identity.InvalidCredentials",
             "Invalid email or password.");
 
-    public static Error MissingRefreshToken =>
-        Error.Validation(
+    public static Domain.Errors.DomainErrors MissingRefreshToken =>
+        Domain.Errors.DomainErrors.Validation(
             "Identity.MissingRefreshToken",
             "Refresh token is required.");
 
-    public static Error InvalidRefreshToken =>
-        Error.Unauthorized(
+    public static Domain.Errors.DomainErrors InvalidRefreshToken =>
+        Domain.Errors.DomainErrors.Unauthorized(
             "Identity.InvalidRefreshToken",
             "Refresh token is invalid or inactive.");
 
-    public static Error RegisterFailed(string message) =>
-        Error.Validation(
+    public static Domain.Errors.DomainErrors RegisterFailed(string message) =>
+        Domain.Errors.DomainErrors.Validation(
             "Identity.RegisterFailed",
             message);
 }

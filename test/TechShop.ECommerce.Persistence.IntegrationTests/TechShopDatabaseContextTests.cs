@@ -1,7 +1,7 @@
 ﻿using Moq;
 using TechShop.ECommerce.Application.Contracts.Identity;
-using TechShop.ECommerce.Domain.Entities.Catalog;
-using TechShop.ECommerce.Persistence.DatabaseContext;
+using TechShop.ECommerce.Domain.Entities.Catalogs;
+using TechShop.ECommerce.Persistence.Context;
 
 namespace TechShop.ECommerce.Persistence.IntegrationTests;
 

@@ -1,4 +1,6 @@
 ﻿using TechShop.ECommerce.Application.Common.Telemetry;
+using TechShop.ECommerce.Domain.Entities.Carts;
+using TechShop.ECommerce.Domain.Entities.Catalogs;
 
 namespace TechShop.ECommerce.Application.Features.Orders.PlaceOrder;
 

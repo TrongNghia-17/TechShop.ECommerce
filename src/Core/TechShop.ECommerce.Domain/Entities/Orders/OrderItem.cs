@@ -1,4 +1,7 @@
-﻿namespace TechShop.ECommerce.Domain.Entities.Orders;
+﻿using TechShop.ECommerce.Domain.Abstractions;
+using TechShop.ECommerce.Domain.Exceptions;
+
+namespace TechShop.ECommerce.Domain.Entities.Orders;
 
 public class OrderItem : BaseEntity
 {

@@ -1,4 +1,7 @@
-﻿namespace TechShop.ECommerce.Domain.Entities.Payments;
+﻿using TechShop.ECommerce.Domain.Abstractions;
+using TechShop.ECommerce.Domain.Exceptions;
+
+namespace TechShop.ECommerce.Domain.Entities.Payments;
 
 public class Payment : BaseEntity
 {

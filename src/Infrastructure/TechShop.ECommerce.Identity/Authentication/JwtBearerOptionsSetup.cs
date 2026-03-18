@@ -1,14 +1,16 @@
 ﻿namespace TechShop.ECommerce.Identity.Authentication;
 
-public class JwtBearerOptionsSetup(IOptions<JwtOptions> options)
-        : IConfigureNamedOptions<JwtBearerOptions>
+public sealed class JwtBearerOptionsSetup(IOptions<JwtOptions> options)
+    : IConfigureNamedOptions<JwtBearerOptions>
 {
-    private readonly JwtOptions _jwtSettings = options.Value;
+    private readonly JwtOptions _jwtOptions = options.Value;
 
     public void Configure(string? name, JwtBearerOptions options)
     {
         if (name != JwtBearerDefaults.AuthenticationScheme)
+        {
             return;
+        }
 
         options.TokenValidationParameters = new TokenValidationParameters
         {
@@ -17,10 +19,10 @@ public class JwtBearerOptionsSetup(IOptions<JwtOptions> options)
             ValidateAudience = true,
             ValidateLifetime = true,
             ClockSkew = TimeSpan.Zero,
-            ValidIssuer = _jwtSettings.Issuer,
-            ValidAudience = _jwtSettings.Audience,
+            ValidIssuer = _jwtOptions.Issuer,
+            ValidAudience = _jwtOptions.Audience,
             IssuerSigningKey = new SymmetricSecurityKey(
-                Encoding.UTF8.GetBytes(_jwtSettings.Key))
+                Encoding.UTF8.GetBytes(_jwtOptions.Key))
         };
     }
 

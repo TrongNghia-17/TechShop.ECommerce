@@ -1,4 +1,5 @@
 ﻿using TechShop.ECommerce.Application.Features.Products.Queries.GetProducts;
+using TechShop.ECommerce.Domain.Entities.Catalogs;
 
 namespace TechShop.ECommerce.Application.Contracts.Persistence;
 

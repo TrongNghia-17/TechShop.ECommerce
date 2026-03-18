@@ -4,31 +4,41 @@ public sealed class RefreshTokenConfiguration : IEntityTypeConfiguration<Refresh
 {
     public void Configure(EntityTypeBuilder<RefreshToken> builder)
     {
+        // Table
         builder.ToTable("RefreshTokens");
 
-        builder.HasKey(x => x.Id);
+        // Key
+        builder.HasKey(refreshToken => refreshToken.Id);
 
-        builder.Property(x => x.TokenHash)
+        // Properties
+        builder.Property(refreshToken => refreshToken.TokenHash)
             .HasMaxLength(128)
             .IsRequired();
 
-        builder.Property(x => x.UserId)
+        builder.Property(refreshToken => refreshToken.UserId)
             .IsRequired();
 
-        builder.Property(x => x.CreatedAtUtc)
+        builder.Property(refreshToken => refreshToken.CreatedAtUtc)
             .IsRequired();
 
-        builder.Property(x => x.ExpiresAtUtc)
+        builder.Property(refreshToken => refreshToken.ExpiresAtUtc)
             .IsRequired();
 
-        builder.HasIndex(x => x.TokenHash)
+        builder.Property(refreshToken => refreshToken.RevokedAtUtc);
+
+        builder.Property(refreshToken => refreshToken.ReplacedByTokenHash)
+            .HasMaxLength(128);
+
+        // Indexes
+        builder.HasIndex(refreshToken => refreshToken.TokenHash)
             .IsUnique();
 
-        builder.HasIndex(x => x.UserId);
+        builder.HasIndex(refreshToken => refreshToken.UserId);
 
-        builder.HasOne(x => x.User)
-            .WithMany(x => x.RefreshTokens)
-            .HasForeignKey(x => x.UserId)
+        // Relationships
+        builder.HasOne(refreshToken => refreshToken.User)
+            .WithMany(user => user.RefreshTokens)
+            .HasForeignKey(refreshToken => refreshToken.UserId)
             .OnDelete(DeleteBehavior.Cascade);
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace TechShop.ECommerce.Application.Contracts.Persistence;
+﻿using TechShop.ECommerce.Domain.Entities.Carts;
+
+namespace TechShop.ECommerce.Application.Contracts.Persistence;
 
 public interface ICartRepository
 {

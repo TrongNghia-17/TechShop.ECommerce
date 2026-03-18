@@ -1,4 +1,6 @@
-﻿namespace TechShop.ECommerce.Persistence.Configurations.Carts;
+﻿using TechShop.ECommerce.Domain.Entities.Carts;
+
+namespace TechShop.ECommerce.Persistence.Configurations.Carts;
 
 public sealed class CartConfiguration : IEntityTypeConfiguration<Cart>
 {

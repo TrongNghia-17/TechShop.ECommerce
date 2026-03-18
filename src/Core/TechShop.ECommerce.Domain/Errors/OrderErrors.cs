@@ -2,13 +2,13 @@
 
 public static class OrderErrors
 {
-    public static Error EmptyCart =>
-        Error.Validation(
+    public static DomainErrors EmptyCart =>
+        DomainErrors.Validation(
             "Order.EmptyCart",
             "Cannot place an order with an empty cart.");
 
-    public static Error NotFound(Guid orderId) =>
-        Error.NotFound(
+    public static DomainErrors NotFound(Guid orderId) =>
+        DomainErrors.NotFound(
             "Order.NotFound",
             $"Order {orderId} was not found.");
 }

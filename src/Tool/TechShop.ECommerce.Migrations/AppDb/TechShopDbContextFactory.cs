@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
-using TechShop.ECommerce.Persistence.DatabaseContext;
+using TechShop.ECommerce.Persistence.Context;
 
 namespace TechShop.ECommerce.Migrations.AppDb;
 

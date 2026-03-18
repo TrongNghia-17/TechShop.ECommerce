@@ -1,5 +1,7 @@
 ﻿using TechShop.ECommerce.Application.Common.Paging;
+using TechShop.ECommerce.Application.Contracts.Persistence;
 using TechShop.ECommerce.Application.Features.Products.Queries.GetProducts;
+using TechShop.ECommerce.Persistence.Context;
 
 namespace TechShop.ECommerce.Persistence.Repositories;
 

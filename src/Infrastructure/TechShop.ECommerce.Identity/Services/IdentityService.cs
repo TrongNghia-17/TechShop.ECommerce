@@ -1,14 +1,14 @@
 ﻿using System.Security.Cryptography;
+using TechShop.ECommerce.Identity.Context;
 
 namespace TechShop.ECommerce.Identity.Services;
 
-public class IdentityService(
+public sealed class IdentityService(
     UserManager<ApplicationUser> userManager,
     SignInManager<ApplicationUser> signInManager,
     TechShopIdentityDbContext dbContext,
     IOptions<JwtOptions> jwtOptions,
-    TimeProvider timeProvider)
-    : IIdentityService
+    TimeProvider timeProvider) : IIdentityService
 {
     private readonly JwtOptions _jwtOptions = jwtOptions.Value;
 
@@ -18,40 +18,21 @@ public class IdentityService(
         CancellationToken cancellationToken = default)
     {
         var user = await dbContext.Users
-            .Include(x => x.RefreshTokens)
             .SingleOrDefaultAsync(x => x.Email == email, cancellationToken);
 
         if (user is null)
+        {
             return null;
+        }
 
-        var result = await signInManager.CheckPasswordSignInAsync(user, password, false);
+        var signInResult = await signInManager.CheckPasswordSignInAsync(user, password, lockoutOnFailure: false);
 
-        if (!result.Succeeded)
+        if (!signInResult.Succeeded)
+        {
             return null;
+        }
 
-        var roles = await userManager.GetRolesAsync(user);
-        var now = timeProvider.GetUtcNow();
-
-        var refreshTokenValue = GenerateRefreshTokenValue();
-        var refreshTokenHash = HashRefreshToken(refreshTokenValue);
-
-        var refreshToken = RefreshToken.Create(
-            refreshTokenHash,
-            user.Id,
-            now,
-            now.AddDays(_jwtOptions.RefreshTokenLifetimeInDays));
-
-        await dbContext.RefreshTokens.AddAsync(refreshToken, cancellationToken);
-
-        await dbContext.SaveChangesAsync(cancellationToken);
-
-        return new IdentitySession(
-            user.Id,
-            user.Email!,
-            user.UserName!,
-            roles.ToList(),
-            refreshTokenValue,
-            refreshToken.ExpiresAtUtc);
+        return await CreateIdentitySessionAsync(user, cancellationToken);
     }
 
     public async Task<IdentitySession?> RefreshTokenAsync(
@@ -59,46 +40,46 @@ public class IdentityService(
         CancellationToken cancellationToken = default)
     {
         if (string.IsNullOrWhiteSpace(refreshToken))
+        {
             return null;
+        }
 
         var now = timeProvider.GetUtcNow();
         var refreshTokenHash = HashRefreshToken(refreshToken);
 
-        var storedToken = await dbContext.RefreshTokens
+        var storedRefreshToken = await dbContext.RefreshTokens
             .Include(x => x.User)
             .SingleOrDefaultAsync(x => x.TokenHash == refreshTokenHash, cancellationToken);
 
-        if (storedToken is null)
+        if (storedRefreshToken is null || !storedRefreshToken.IsActive(now))
+        {
             return null;
+        }
 
-        if (!storedToken.IsActive(now))
-            return null;
-
-        var user = storedToken.User;
-        var roles = await userManager.GetRolesAsync(user);
+        var user = storedRefreshToken.User;
 
         var newRefreshTokenValue = GenerateRefreshTokenValue();
         var newRefreshTokenHash = HashRefreshToken(newRefreshTokenValue);
 
-        storedToken.Revoke(now, newRefreshTokenHash);
+        storedRefreshToken.Revoke(now, newRefreshTokenHash);
 
-        var replacementToken = RefreshToken.Create(
-            newRefreshTokenHash,
-            user.Id,
-            now,
-            now.AddDays(_jwtOptions.RefreshTokenLifetimeInDays));
+        var replacementRefreshToken = CreateRefreshToken(
+            userId: user.Id,
+            tokenHash: newRefreshTokenHash,
+            createdAtUtc: now);
 
-        await dbContext.RefreshTokens.AddAsync(replacementToken, cancellationToken);
-
+        await dbContext.RefreshTokens.AddAsync(replacementRefreshToken, cancellationToken);
         await dbContext.SaveChangesAsync(cancellationToken);
+
+        var roles = await userManager.GetRolesAsync(user);
 
         return new IdentitySession(
             user.Id,
-            user.Email!,
-            user.UserName!,
+            user.Email ?? string.Empty,
+            user.UserName ?? string.Empty,
             roles.ToList(),
             newRefreshTokenValue,
-            replacementToken.ExpiresAtUtc);
+            replacementRefreshToken.ExpiresAtUtc);
     }
 
     public async Task<bool> RevokeRefreshTokenAsync(
@@ -106,21 +87,22 @@ public class IdentityService(
         CancellationToken cancellationToken = default)
     {
         if (string.IsNullOrWhiteSpace(refreshToken))
+        {
             return false;
+        }
 
         var now = timeProvider.GetUtcNow();
         var refreshTokenHash = HashRefreshToken(refreshToken);
 
-        var storedToken = await dbContext.RefreshTokens
+        var storedRefreshToken = await dbContext.RefreshTokens
             .SingleOrDefaultAsync(x => x.TokenHash == refreshTokenHash, cancellationToken);
 
-        if (storedToken is null)
+        if (storedRefreshToken is null || !storedRefreshToken.IsActive(now))
+        {
             return false;
+        }
 
-        if (!storedToken.IsActive(now))
-            return false;
-
-        storedToken.Revoke(now);
+        storedRefreshToken.Revoke(now);
 
         await dbContext.SaveChangesAsync(cancellationToken);
 
@@ -138,30 +120,77 @@ public class IdentityService(
         {
             Email = email,
             UserName = userName,
-            FirstName = firstName,
-            LastName = lastName,
             EmailConfirmed = true
         };
 
-        var result = await userManager.CreateAsync(user, password);
+        var createUserResult = await userManager.CreateAsync(user, password);
 
-        if (!result.Succeeded)
+        if (!createUserResult.Succeeded)
         {
-            var errors = string.Join("\n", result.Errors.Select(x => x.Description));
-            return (false, Guid.Empty, errors);
+            return (
+                false,
+                Guid.Empty,
+                string.Join(Environment.NewLine, createUserResult.Errors.Select(x => x.Description)));
         }
 
-        await userManager.AddToRoleAsync(user, Roles.Customer);
+        var addToRoleResult = await userManager.AddToRoleAsync(user, Roles.Customer);
+
+        if (!addToRoleResult.Succeeded)
+        {
+            await userManager.DeleteAsync(user);
+
+            return (
+                false,
+                Guid.Empty,
+                string.Join(Environment.NewLine, addToRoleResult.Errors.Select(x => x.Description)));
+        }
 
         return (true, user.Id, string.Empty);
     }
 
+    private async Task<IdentitySession> CreateIdentitySessionAsync(
+        ApplicationUser user,
+        CancellationToken cancellationToken)
+    {
+        var now = timeProvider.GetUtcNow();
+        var roles = await userManager.GetRolesAsync(user);
+
+        var refreshTokenValue = GenerateRefreshTokenValue();
+        var refreshTokenHash = HashRefreshToken(refreshTokenValue);
+
+        var refreshToken = CreateRefreshToken(
+            userId: user.Id,
+            tokenHash: refreshTokenHash,
+            createdAtUtc: now);
+
+        await dbContext.RefreshTokens.AddAsync(refreshToken, cancellationToken);
+        await dbContext.SaveChangesAsync(cancellationToken);
+
+        return new IdentitySession(
+            user.Id,
+            user.Email ?? string.Empty,
+            user.UserName ?? string.Empty,
+            roles.ToList(),
+            refreshTokenValue,
+            refreshToken.ExpiresAtUtc);
+    }
+
+    private RefreshToken CreateRefreshToken(
+        Guid userId,
+        string tokenHash,
+        DateTimeOffset createdAtUtc)
+    {
+        return RefreshToken.Create(
+            tokenHash,
+            userId,
+            createdAtUtc,
+            createdAtUtc.AddDays(_jwtOptions.RefreshTokenLifetimeInDays));
+    }
+
     private static string GenerateRefreshTokenValue()
     {
-        Span<byte> bytes = stackalloc byte[32];
-        RandomNumberGenerator.Fill(bytes);
-
-        return Convert.ToBase64String(bytes);
+        var bytes = RandomNumberGenerator.GetBytes(32);
+        return Base64UrlEncoder.Encode(bytes);
     }
 
     private static string HashRefreshToken(string refreshToken)

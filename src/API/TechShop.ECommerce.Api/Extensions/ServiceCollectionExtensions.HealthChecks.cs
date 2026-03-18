@@ -1,5 +1,5 @@
 ﻿using Microsoft.Extensions.Diagnostics.HealthChecks;
-using TechShop.ECommerce.Persistence.DatabaseContext;
+using TechShop.ECommerce.Persistence.Context;
 
 namespace TechShop.ECommerce.Api.Extensions;
 

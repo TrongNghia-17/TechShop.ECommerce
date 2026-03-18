@@ -1,4 +1,6 @@
-﻿namespace TechShop.ECommerce.Persistence.Interceptors;
+﻿using TechShop.ECommerce.Application.Contracts.Identity;
+
+namespace TechShop.ECommerce.Persistence.Interceptors;
 
 public sealed class AuditSaveChangesInterceptor(
     ICurrentUserService currentUserService)

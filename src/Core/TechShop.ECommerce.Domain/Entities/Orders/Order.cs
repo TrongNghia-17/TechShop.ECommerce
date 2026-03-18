@@ -1,4 +1,6 @@
-﻿using TechShop.ECommerce.Domain.ValueObjects;
+﻿using TechShop.ECommerce.Domain.Abstractions;
+using TechShop.ECommerce.Domain.Exceptions;
+using TechShop.ECommerce.Domain.ValueObjects;
 
 namespace TechShop.ECommerce.Domain.Entities.Orders;
 

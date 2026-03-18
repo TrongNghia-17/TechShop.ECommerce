@@ -2,8 +2,8 @@
 
 public static class PaymentErrors
 {
-    public static Error NotFound(string sessionId) =>
-        Error.NotFound(
+    public static DomainErrors NotFound(string sessionId) =>
+        DomainErrors.NotFound(
             "Payment.NotFound",
             $"Payment for session {sessionId} was not found.");
 }

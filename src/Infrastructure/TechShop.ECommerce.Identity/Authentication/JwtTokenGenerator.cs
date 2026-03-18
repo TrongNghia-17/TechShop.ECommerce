@@ -1,42 +1,47 @@
 ﻿namespace TechShop.ECommerce.Identity.Authentication;
 
-public class JwtTokenGenerator(IOptions<JwtOptions> jwtSettings)
+public class JwtTokenGenerator(IOptions<JwtOptions> options)
     : IJwtTokenGenerator
 {
-    private readonly JwtOptions _jwtSettings = jwtSettings.Value;
+    private readonly JwtOptions _jwtOptions = options.Value;
 
     public Task<string> GenerateTokenAsync(UserTokenRequest request)
     {
-        var claims = new List<Claim>
-{
-            new(JwtRegisteredClaimNames.Sub, request.UserId.ToString()),
-            new("uid", request.UserId.ToString()),
-            new(JwtRegisteredClaimNames.Email, request.Email),
-            new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
-        };
-
-        // Add role claims
-        claims.AddRange(
-            request.Roles.Select(role =>
-                new Claim(ClaimTypes.Role, role)));
+        var claims = BuildClaims(request);
 
         var key = new SymmetricSecurityKey(
-            Encoding.UTF8.GetBytes(_jwtSettings.Key));
+            Encoding.UTF8.GetBytes(_jwtOptions.Key));
 
         var credentials = new SigningCredentials(
             key,
             SecurityAlgorithms.HmacSha256);
 
         var token = new JwtSecurityToken(
-            issuer: _jwtSettings.Issuer,
-            audience: _jwtSettings.Audience,
+            issuer: _jwtOptions.Issuer,
+            audience: _jwtOptions.Audience,
             claims: claims,
-            expires: DateTime.UtcNow.AddMinutes(_jwtSettings.DurationInMinutes),
+            expires: DateTime.UtcNow.AddMinutes(_jwtOptions.DurationInMinutes),
             signingCredentials: credentials);
 
-        var tokenString = new JwtSecurityTokenHandler()
+        var tokenValue = new JwtSecurityTokenHandler()
             .WriteToken(token);
 
-        return Task.FromResult(tokenString);
+        return Task.FromResult(tokenValue);
+    }
+
+    private static List<Claim> BuildClaims(UserTokenRequest request)
+    {
+        var claims = new List<Claim>
+        {
+            new(JwtRegisteredClaimNames.Sub, request.UserId.ToString()),
+            new(ClaimTypes.NameIdentifier, request.UserId.ToString()),
+            new(JwtRegisteredClaimNames.Email, request.Email),
+            new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+        };
+
+        claims.AddRange(
+            request.Roles.Select(role => new Claim(ClaimTypes.Role, role)));
+
+        return claims;
     }
 }

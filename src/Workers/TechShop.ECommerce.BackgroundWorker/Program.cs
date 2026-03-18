@@ -3,11 +3,11 @@ using Hangfire.PostgreSql;
 using Serilog;
 using TechShop.ECommerce.Application.BackgroundJobs;
 using TechShop.ECommerce.Application.Contracts.Identity;
-using TechShop.ECommerce.Identity;
+using TechShop.ECommerce.Identity.DependencyInjection;
 using TechShop.ECommerce.Infrastructure;
-using TechShop.ECommerce.Infrastructure.Jobs.Orders;
 using TechShop.ECommerce.Infrastructure.Identity;
-using TechShop.ECommerce.Persistence;
+using TechShop.ECommerce.Infrastructure.Jobs.Orders;
+using TechShop.ECommerce.Persistence.DependencyInjection;
 
 var builder = Host.CreateApplicationBuilder(args);
 
@@ -23,7 +23,7 @@ builder.Services.AddCachingInfrastructureServices(builder.Configuration);
 builder.Services.AddEmailInfrastructureServices(builder.Configuration);
 builder.Services.AddBackgroundJobInfrastructureServices();
 
-builder.Services.AddIdentityCoreServices(builder.Configuration);
+builder.Services.AddIdentityInfrastructure(builder.Configuration);
 builder.Services.AddScoped<ICurrentUserService, BackgroundCurrentUserService>();
 
 builder.Services.AddHangfire(config =>

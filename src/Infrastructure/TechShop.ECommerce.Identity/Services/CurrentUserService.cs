@@ -1,14 +1,12 @@
 ﻿namespace TechShop.ECommerce.Identity.Services;
 
-public class CurrentUserService(
-    IHttpContextAccessor contextAccessor)
-    : ICurrentUserService
+public sealed class CurrentUserService(IHttpContextAccessor httpContextAccessor) : ICurrentUserService
 {
     public Guid UserId
     {
         get
         {
-            var id = contextAccessor.HttpContext?.User?
+            var id = httpContextAccessor.HttpContext?.User?
                 .FindFirstValue(ClaimTypes.NameIdentifier);
 
             return Guid.TryParse(id, out var guid)
@@ -21,10 +19,10 @@ public class CurrentUserService(
     {
         get
         {
-            var user = contextAccessor.HttpContext?.User;
+            var user = httpContextAccessor.HttpContext?.User;
 
             return user?.FindFirstValue(ClaimTypes.Email)
-                ?? user?.FindFirstValue("email")
+                ?? user?.FindFirstValue(JwtRegisteredClaimNames.Email)
                 ?? string.Empty;
         }
     }

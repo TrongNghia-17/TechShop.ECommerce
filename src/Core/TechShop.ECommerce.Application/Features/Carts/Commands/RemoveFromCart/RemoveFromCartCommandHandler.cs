@@ -25,7 +25,7 @@ public sealed class RemoveFromCartCommandHandler(
         }
         catch (DomainException ex)
         {
-            return Error.Validation("Cart.InvalidOperation", ex.Message);
+            return DomainErrors.Validation("Cart.InvalidOperation", ex.Message);
         }
 
         await unitOfWork.SaveChangesAsync(cancellationToken);
