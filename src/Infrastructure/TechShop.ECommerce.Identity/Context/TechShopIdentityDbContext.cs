@@ -1,4 +1,6 @@
-﻿namespace TechShop.ECommerce.Identity.Context;
+﻿using TechShop.ECommerce.Identity.Entities;
+
+namespace TechShop.ECommerce.Identity.Context;
 
 public sealed class TechShopIdentityDbContext(
     DbContextOptions<TechShopIdentityDbContext> options)

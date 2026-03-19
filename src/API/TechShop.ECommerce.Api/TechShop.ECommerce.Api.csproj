@@ -11,7 +11,7 @@
 		<PackageReference Include="AutoMapper" Version="16.1.1" />		
 		<PackageReference Include="Hangfire.PostgreSql" Version="1.21.1" />		
 		<PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.2" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="10.0.3">
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="10.0.5">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
@@ -37,7 +37,6 @@
 		<ProjectReference Include="..\..\Infrastructure\TechShop.ECommerce.Identity\TechShop.ECommerce.Identity.csproj" />
 		<ProjectReference Include="..\..\Infrastructure\TechShop.ECommerce.Infrastructure\TechShop.ECommerce.Infrastructure.csproj" />
 		<ProjectReference Include="..\..\Infrastructure\TechShop.ECommerce.Persistence\TechShop.ECommerce.Persistence.csproj" />
-		<ProjectReference Include="..\..\Tool\TechShop.ECommerce.Migrations\TechShop.ECommerce.Migrations.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>

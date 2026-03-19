@@ -1,4 +1,4 @@
-﻿namespace TechShop.ECommerce.Identity.Models;
+﻿namespace TechShop.ECommerce.Identity.Entities;
 
 public sealed class RefreshToken
 {

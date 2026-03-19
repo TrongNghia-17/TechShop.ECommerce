@@ -1,4 +1,6 @@
-﻿namespace TechShop.ECommerce.Identity.Seedings;
+﻿using TechShop.ECommerce.Identity.Entities;
+
+namespace TechShop.ECommerce.Identity.Seedings;
 
 public sealed class UserSeeder(UserManager<ApplicationUser> userManager) : IIdentitySeeder
 {

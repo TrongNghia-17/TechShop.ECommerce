@@ -1,4 +1,6 @@
-﻿namespace TechShop.ECommerce.Identity.Configurations;
+﻿using TechShop.ECommerce.Identity.Entities;
+
+namespace TechShop.ECommerce.Identity.Configurations;
 
 public sealed class RefreshTokenConfiguration : IEntityTypeConfiguration<RefreshToken>
 {

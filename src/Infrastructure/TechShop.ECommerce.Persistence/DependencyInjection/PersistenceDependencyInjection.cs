@@ -1,4 +1,5 @@
-﻿using TechShop.ECommerce.Application.Contracts.Persistence;
+﻿using TechShop.ECommerce.Application.Common.Constants;
+using TechShop.ECommerce.Application.Contracts.Persistence;
 using TechShop.ECommerce.Persistence.Context;
 using TechShop.ECommerce.Persistence.Interceptors;
 using TechShop.ECommerce.Persistence.Repositories;
@@ -12,20 +13,16 @@ public static class PersistenceDependencyInjection
         this IServiceCollection services,
         IConfiguration configuration)
     {
-        var connectionString = configuration.GetConnectionString(PersistenceConstants.DefaultConnectionStringName)
+        var connectionString = configuration.GetConnectionString(ConnectionStrings.Default)
             ?? throw new InvalidOperationException(
-                $"Connection string '{PersistenceConstants.DefaultConnectionStringName}' was not found.");
+                $"Connection string '{ConnectionStrings.Default}' was not found.");
 
         services.AddScoped<AuditSaveChangesInterceptor>();
         services.AddScoped<SoftDeleteSaveChangesInterceptor>();
 
         services.AddDbContext<TechShopDbContext>((serviceProvider, options) =>
         {
-            options.UseNpgsql(
-                connectionString,
-                npgsqlOptions =>
-                    npgsqlOptions.MigrationsAssembly(PersistenceConstants.MigrationsAssemblyName));
-
+            options.UseNpgsql(connectionString);
             options.AddInterceptors(
                 serviceProvider.GetRequiredService<AuditSaveChangesInterceptor>(),
                 serviceProvider.GetRequiredService<SoftDeleteSaveChangesInterceptor>());

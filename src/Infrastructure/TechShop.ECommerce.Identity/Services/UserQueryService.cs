@@ -1,4 +1,6 @@
-﻿namespace TechShop.ECommerce.Identity.Services;
+﻿using TechShop.ECommerce.Identity.Entities;
+
+namespace TechShop.ECommerce.Identity.Services;
 
 public sealed class UserQueryService(UserManager<ApplicationUser> userManager) : IUserQueryService
 {
@@ -27,8 +29,6 @@ public sealed class UserQueryService(UserManager<ApplicationUser> userManager) :
     {
         return new Customer(
             Id: user.Id,
-            Email: user.Email ?? string.Empty,
-            Firstname: user.FirstName,
-            Lastname: user.LastName);
+            Email: user.Email ?? string.Empty);
     }
 }

@@ -13,6 +13,8 @@ var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 
+await app.ApplyDatabaseMigrationsAndSeedingAsync();
+
 app.UseApiPipeline();
 
 app.Run();

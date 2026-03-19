@@ -1,6 +1,6 @@
 ﻿namespace TechShop.ECommerce.Application.Contracts.Identity;
 
-public class JwtOptions
+public sealed class JwtOptions
 {
     public const string SectionName = "JwtSettings";
 

@@ -1,9 +1,9 @@
 <Solution>
   <Folder Name="/benchmarks/" />
   <Folder Name="/docker/">
-    <File Path="docker-compose.yml" />
-    <File Path="otel-collector-config.yml" />
-    <File Path="prometheus.yml" />
+    <File Path="docker/docker-compose.yml" />
+    <File Path="docker/otel-collector-config.yml" />
+    <File Path="docker/prometheus.yml" />
   </Folder>
   <Folder Name="/src/" />
   <Folder Name="/src/API/">
@@ -18,9 +18,6 @@
     <Project Path="src/Infrastructure/TechShop.ECommerce.Identity/TechShop.ECommerce.Identity.csproj" />
     <Project Path="src/Infrastructure/TechShop.ECommerce.Infrastructure/TechShop.ECommerce.Infrastructure.csproj" />
     <Project Path="src/Infrastructure/TechShop.ECommerce.Persistence/TechShop.ECommerce.Persistence.csproj" />
-  </Folder>
-  <Folder Name="/src/Tool/">
-    <Project Path="src/Tool/TechShop.ECommerce.Migrations/TechShop.ECommerce.Migrations.csproj" Id="60849d4a-0e86-4b03-b054-e33208233eb8" />
   </Folder>
   <Folder Name="/src/Workers/">
     <Project Path="src/Workers/TechShop.ECommerce.BackgroundWorker/TechShop.ECommerce.BackgroundWorker.csproj" />

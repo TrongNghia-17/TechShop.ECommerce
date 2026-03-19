@@ -1,4 +1,5 @@
-﻿using TechShop.ECommerce.Identity.Seedings;
+﻿using TechShop.ECommerce.Identity.Entities;
+using TechShop.ECommerce.Identity.Seedings;
 using TechShop.ECommerce.Identity.Services;
 
 namespace TechShop.ECommerce.Identity.DependencyInjection;
@@ -9,15 +10,14 @@ public static class IdentityDependencyInjection
         this IServiceCollection services,
         IConfiguration configuration)
     {
-        var connectionString = configuration.GetConnectionString(IdentityConstants.DefaultConnectionStringName)
+        var connectionString = configuration.GetConnectionString(ConnectionStrings.Default)
             ?? throw new InvalidOperationException(
-                $"Connection string '{IdentityConstants.DefaultConnectionStringName}' was not found.");
+                $"Connection string '{ConnectionStrings.Default}' was not found.");
 
         services.AddDbContext<TechShopIdentityDbContext>(options =>
-            options.UseNpgsql(
-                connectionString,
-                npgsqlOptions =>
-                    npgsqlOptions.MigrationsAssembly(IdentityConstants.MigrationsAssemblyName)));
+        {
+            options.UseNpgsql(connectionString);
+        });
 
         services.AddIdentity<ApplicationUser, IdentityRole<Guid>>()
             .AddEntityFrameworkStores<TechShopIdentityDbContext>()

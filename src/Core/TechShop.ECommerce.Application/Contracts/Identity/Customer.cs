@@ -2,7 +2,5 @@
 
 public sealed record Customer(
     Guid Id,
-    string Email,
-    string Firstname,
-    string Lastname
+    string Email
 );
