@@ -1,6 +1,15 @@
-﻿using TechShop.ECommerce.Application.Common.Telemetry;
+﻿using TechShop.ECommerce.Application.Common.Errors;
+using TechShop.ECommerce.Application.Common.Results;
+using TechShop.ECommerce.Application.Common.Telemetry;
+using TechShop.ECommerce.Application.Contracts.Identity;
+using TechShop.ECommerce.Application.Contracts.PaymentGateway;
+using TechShop.ECommerce.Application.Contracts.Persistence;
 using TechShop.ECommerce.Domain.Entities.Carts;
 using TechShop.ECommerce.Domain.Entities.Catalogs;
+using TechShop.ECommerce.Domain.Entities.Orders;
+using TechShop.ECommerce.Domain.Entities.Payments;
+using TechShop.ECommerce.Domain.Errors;
+using TechShop.ECommerce.Domain.ValueObjects;
 
 namespace TechShop.ECommerce.Application.Features.Orders.PlaceOrder;
 

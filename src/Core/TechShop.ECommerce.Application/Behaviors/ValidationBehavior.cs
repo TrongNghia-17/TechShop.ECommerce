@@ -1,4 +1,6 @@
-﻿namespace TechShop.ECommerce.Application.Behaviors;
+﻿using TechShop.ECommerce.Application.Exceptions;
+
+namespace TechShop.ECommerce.Application.Behaviors;
 
 public sealed class ValidationBehavior<TRequest, TResponse>
     (IEnumerable<IValidator<TRequest>> validators)

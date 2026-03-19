@@ -1,4 +1,6 @@
-﻿namespace TechShop.ECommerce.Application.Contracts.Identity;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace TechShop.ECommerce.Application.Contracts.Identity;
 
 public sealed class JwtOptions
 {

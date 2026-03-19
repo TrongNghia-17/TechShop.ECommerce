@@ -1,4 +1,8 @@
-﻿using TechShop.ECommerce.Application.Features.Products.UploadProductImage;
+﻿using TechShop.ECommerce.Application.Common.Results;
+using TechShop.ECommerce.Application.Features.Products.GetProductDetails;
+using TechShop.ECommerce.Application.Features.Products.GetProducts;
+using TechShop.ECommerce.Application.Features.Products.UpdateProduct;
+using TechShop.ECommerce.Application.Features.Products.UploadProductImage;
 
 namespace TechShop.ECommerce.Api.Endpoints;
 

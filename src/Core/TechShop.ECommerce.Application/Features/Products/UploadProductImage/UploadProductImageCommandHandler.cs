@@ -1,4 +1,7 @@
-﻿using TechShop.ECommerce.Application.Contracts.Storage;
+﻿using TechShop.ECommerce.Application.Common.Results;
+using TechShop.ECommerce.Application.Contracts.Persistence;
+using TechShop.ECommerce.Application.Contracts.Storage;
+using TechShop.ECommerce.Domain.Errors;
 
 namespace TechShop.ECommerce.Application.Features.Products.UploadProductImage;
 

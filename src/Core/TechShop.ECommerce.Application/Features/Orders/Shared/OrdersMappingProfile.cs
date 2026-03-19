@@ -1,4 +1,6 @@
-﻿namespace TechShop.ECommerce.Application.Features.Orders.Shared;
+﻿using TechShop.ECommerce.Domain.ValueObjects;
+
+namespace TechShop.ECommerce.Application.Features.Orders.Shared;
 
 public sealed class OrdersMappingProfile : Profile
 {

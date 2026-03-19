@@ -1,4 +1,6 @@
-﻿namespace TechShop.ECommerce.Application.Contracts.Persistence;
+﻿using TechShop.ECommerce.Domain.Entities.Payments;
+
+namespace TechShop.ECommerce.Application.Contracts.Persistence;
 
 public interface IPaymentRepository
 {

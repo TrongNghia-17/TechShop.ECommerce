@@ -16,10 +16,9 @@ builder.Services.AddSerilog((services, loggerConfiguration) => loggerConfigurati
     .ReadFrom.Services(services)
     .Enrich.FromLogContext());
 
-builder.Services.AddBackgroundJobApplicationServices();
+builder.Services.AddBackgroundJobsApplicationServices();
 builder.Services.AddPersistenceServices(builder.Configuration);
 
-//builder.Services.AddCachingInfrastructure(builder.Configuration);
 builder.Services.AddEmailInfrastructure();
 builder.Services.AddBackgroundJobInfrastructure();
 

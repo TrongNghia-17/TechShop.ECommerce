@@ -1,4 +1,6 @@
-﻿namespace TechShop.ECommerce.Application.Behaviors;
+﻿using TechShop.ECommerce.Application.Contracts.Caching;
+
+namespace TechShop.ECommerce.Application.Behaviors;
 
 public class CachingBehavior<TRequest, TResponse>(
     ILogger<CachingBehavior<TRequest, TResponse>> logger,

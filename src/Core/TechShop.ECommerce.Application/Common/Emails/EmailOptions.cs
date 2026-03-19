@@ -1,4 +1,6 @@
-﻿namespace TechShop.ECommerce.Application.Common.Emails;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace TechShop.ECommerce.Application.Common.Emails;
 
 public class EmailOptions
 {

@@ -1,4 +1,6 @@
-﻿namespace TechShop.ECommerce.Application.Common.Emails;
+﻿using TechShop.ECommerce.Domain.Entities.Orders;
+
+namespace TechShop.ECommerce.Application.Common.Emails;
 
 public interface IOrderConfirmationEmailBuilder
 {

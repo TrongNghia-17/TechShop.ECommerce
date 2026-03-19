@@ -1,4 +1,6 @@
-﻿namespace TechShop.ECommerce.Api.Extensions;
+﻿using TechShop.ECommerce.Application.Common.Results;
+
+namespace TechShop.ECommerce.Api.Extensions;
 
 public static class ResultExtensions
 {

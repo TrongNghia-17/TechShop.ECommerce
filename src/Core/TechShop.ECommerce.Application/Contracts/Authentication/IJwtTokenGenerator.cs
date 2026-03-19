@@ -1,4 +1,6 @@
-﻿namespace TechShop.ECommerce.Application.Contracts.Authentication;
+﻿using TechShop.ECommerce.Application.Contracts.Identity;
+
+namespace TechShop.ECommerce.Application.Contracts.Authentication;
 
 public interface IJwtTokenGenerator
 {

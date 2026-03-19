@@ -10,7 +10,7 @@ public static partial class ServiceCollectionExtensions
         this IServiceCollection services,
         IConfiguration configuration)
     {
-        services.AddApplicationServices();
+        services.AddCoreApplicationServices();
         services.AddPersistenceServices(configuration);
         services.AddInfrastructureServices(configuration);
 

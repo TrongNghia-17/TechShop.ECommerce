@@ -1,4 +1,9 @@
-﻿namespace TechShop.ECommerce.Api.Endpoints;
+﻿using TechShop.ECommerce.Application.Features.Carts.AddToCart;
+using TechShop.ECommerce.Application.Features.Carts.GetCart;
+using TechShop.ECommerce.Application.Features.Carts.RemoveFromCart;
+using TechShop.ECommerce.Application.Features.Carts.Shared;
+
+namespace TechShop.ECommerce.Api.Endpoints;
 
 public static class CartEndpoints
 {
@@ -17,7 +22,7 @@ public static class CartEndpoints
             })
             .WithName("Cart_AddItem")
             .WithSummary("Adds an item to the cart")
-            .Produces<AddToCartResult>(StatusCodes.Status200OK)
+            .Produces<CartSummaryResponse>(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status401Unauthorized)
             .Produces(StatusCodes.Status404NotFound)
             .Produces(StatusCodes.Status400BadRequest)
@@ -33,7 +38,7 @@ public static class CartEndpoints
             })
             .WithName("Cart_RemoveItem")
             .WithSummary("Removes an item from the cart")
-            .Produces<AddToCartResult>(StatusCodes.Status200OK)
+            .Produces<CartSummaryResponse>(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status401Unauthorized)
             .Produces(StatusCodes.Status404NotFound)
             .Produces(StatusCodes.Status400BadRequest)
@@ -52,7 +57,7 @@ public static class CartEndpoints
             })
             .WithName("Cart_Get")
             .WithSummary("Gets current user's cart")
-            .Produces<GetCartResult>(StatusCodes.Status200OK)
+            .Produces<GetCartResponse>(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status401Unauthorized)
             .Produces(StatusCodes.Status400BadRequest)
             .Produces(StatusCodes.Status429TooManyRequests)

@@ -1,4 +1,6 @@
-﻿namespace TechShop.ECommerce.Application.Contracts.PaymentGateway;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace TechShop.ECommerce.Application.Contracts.PaymentGateway;
 
 public sealed class StripeOptions
 {

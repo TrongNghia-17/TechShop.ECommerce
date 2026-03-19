@@ -1,4 +1,6 @@
-﻿namespace TechShop.ECommerce.Application.Contracts.Storage;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace TechShop.ECommerce.Application.Contracts.Storage;
 
 public sealed class AzureStorageOptions
 {

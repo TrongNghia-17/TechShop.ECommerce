@@ -1,4 +1,9 @@
 ﻿using TechShop.ECommerce.Application.Contracts.Documents;
+using TechShop.ECommerce.Application.Contracts.Identity;
+using TechShop.ECommerce.Application.Contracts.Persistence;
+using TechShop.ECommerce.Application.Exceptions;
+using TechShop.ECommerce.Domain.Entities.Orders;
+using TechShop.ECommerce.Domain.ValueObjects;
 
 namespace TechShop.ECommerce.Application.Features.Orders.Invoices;
 

@@ -1,4 +1,6 @@
-﻿namespace TechShop.ECommerce.Application.Features.Products.UploadProductImage;
+﻿using TechShop.ECommerce.Application.Common.Results;
+
+namespace TechShop.ECommerce.Application.Features.Products.UploadProductImage;
 
 public sealed record UploadProductImageCommand(
     Guid ProductId,
