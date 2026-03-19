@@ -1,11 +1,11 @@
 ﻿using TechShop.ECommerce.Application.Contracts.Documents;
 using TechShop.ECommerce.Infrastructure.Documents;
 
-namespace TechShop.ECommerce.Infrastructure;
+namespace TechShop.ECommerce.Infrastructure.DependencyInjection;
 
-public static partial class ServiceCollectionExtensions
+public static class DocumentsDependencyInjection
 {
-    public static IServiceCollection AddDocumentServices(this IServiceCollection services)
+    public static IServiceCollection AddDocumentInfrastructure(this IServiceCollection services)
     {
         services.AddScoped<IInvoicePdfGenerator, InvoicePdfGenerator>();
         return services;

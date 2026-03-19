@@ -1,13 +1,13 @@
 ﻿using TechShop.ECommerce.Application.Contracts.Jobs;
+using TechShop.ECommerce.Infrastructure.Jobs.Emails;
 using TechShop.ECommerce.Infrastructure.Jobs.Orders;
 using TechShop.ECommerce.Infrastructure.Jobs.Payments;
 
-namespace TechShop.ECommerce.Infrastructure;
+namespace TechShop.ECommerce.Infrastructure.DependencyInjection;
 
-public static partial class ServiceCollectionExtensions
+public static class BackgroundJobsDependencyInjection
 {
-    public static IServiceCollection AddBackgroundJobInfrastructureServices(
-        this IServiceCollection services)
+    public static IServiceCollection AddBackgroundJobInfrastructure(this IServiceCollection services)
     {
         services.AddScoped<IEmailJobs, HangfireEmailJobs>();
         services.AddScoped<IHangfireEmailJobExecutor, HangfireEmailJobExecutor>();

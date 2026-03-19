@@ -4,8 +4,8 @@ using Serilog;
 using TechShop.ECommerce.Application.BackgroundJobs;
 using TechShop.ECommerce.Application.Contracts.Identity;
 using TechShop.ECommerce.Identity.DependencyInjection;
-using TechShop.ECommerce.Infrastructure;
-using TechShop.ECommerce.Infrastructure.Identity;
+using TechShop.ECommerce.Infrastructure.Background;
+using TechShop.ECommerce.Infrastructure.DependencyInjection;
 using TechShop.ECommerce.Infrastructure.Jobs.Orders;
 using TechShop.ECommerce.Persistence.DependencyInjection;
 
@@ -19,9 +19,9 @@ builder.Services.AddSerilog((services, loggerConfiguration) => loggerConfigurati
 builder.Services.AddBackgroundJobApplicationServices();
 builder.Services.AddPersistenceServices(builder.Configuration);
 
-builder.Services.AddCachingInfrastructureServices(builder.Configuration);
-builder.Services.AddEmailInfrastructureServices(builder.Configuration);
-builder.Services.AddBackgroundJobInfrastructureServices();
+//builder.Services.AddCachingInfrastructure(builder.Configuration);
+builder.Services.AddEmailInfrastructure();
+builder.Services.AddBackgroundJobInfrastructure();
 
 builder.Services.AddIdentityInfrastructure(builder.Configuration);
 builder.Services.AddScoped<ICurrentUserService, BackgroundCurrentUserService>();

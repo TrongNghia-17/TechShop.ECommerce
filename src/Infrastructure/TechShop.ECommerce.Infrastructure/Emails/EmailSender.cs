@@ -6,13 +6,15 @@ public sealed class EmailSender(
     ILogger<EmailSender> logger)
     : IEmailSender
 {
-    private readonly EmailOptions _settings = options.Value;
+    private readonly EmailOptions _emailOptions = options.Value;
 
     public async Task SendEmailAsync(
         EmailMessage message,
-        CancellationToken cancellationToken = default)
+        CancellationToken cancellationToken)
     {
-        var from = new EmailAddress(_settings.FromAddress, _settings.FromName);
+        ArgumentNullException.ThrowIfNull(message);
+
+        var from = new EmailAddress(_emailOptions.FromAddress, _emailOptions.FromName);
         var to = new EmailAddress(message.To);
 
         var sendGridMessage = MailHelper.CreateSingleEmail(
@@ -29,15 +31,15 @@ public sealed class EmailSender(
             var body = await response.Body.ReadAsStringAsync(cancellationToken);
 
             logger.LogError(
-                "SendGrid failed: {StatusCode} {Body}",
+                "SendGrid failed to send email. StatusCode: {StatusCode}, Body: {Body}",
                 (int)response.StatusCode,
                 body);
 
-            throw new InvalidOperationException("SendGrid failed to send email.");
+            throw new InvalidOperationException("Failed to send email.");
         }
 
         logger.LogInformation(
-            "Email sent successfully to {To} with subject {Subject}",
+            "Email sent successfully to {Recipient} with subject {Subject}",
             message.To,
             message.Subject);
     }

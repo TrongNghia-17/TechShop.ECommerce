@@ -1,4 +1,5 @@
 ﻿using TechShop.ECommerce.Identity.DependencyInjection;
+using TechShop.ECommerce.Infrastructure.DependencyInjection;
 using TechShop.ECommerce.Persistence.DependencyInjection;
 
 namespace TechShop.ECommerce.Api.Extensions;

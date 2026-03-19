@@ -80,8 +80,8 @@ public sealed class AzureBlobFileStorage(
     }
 
     public string? GetReadUrl(
-         string? blobName,
-         TimeSpan? lifetime = null)
+        string? blobName,
+        TimeSpan? lifetime = null)
     {
         if (string.IsNullOrWhiteSpace(blobName))
             return null;

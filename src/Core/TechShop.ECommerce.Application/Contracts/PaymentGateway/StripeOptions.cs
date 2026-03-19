@@ -2,6 +2,8 @@
 
 public sealed class StripeOptions
 {
+    public const string SectionName = "StripeSettings";
+
     [Required]
     public string SecretKey { get; init; } = default!;
 

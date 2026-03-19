@@ -1,17 +1,16 @@
 ﻿using Stripe;
 using Stripe.Checkout;
-using TechShop.ECommerce.Application.Contracts.PaymentGateway;
 
 namespace TechShop.ECommerce.Infrastructure.PaymentGateway;
 
 public sealed class StripePaymentService : IPaymentService
 {
-    private readonly StripeOptions _settings;
+    private readonly StripeOptions _stripeOptions;
 
     public StripePaymentService(IOptions<StripeOptions> options)
     {
-        _settings = options.Value;
-        StripeConfiguration.ApiKey = _settings.SecretKey;
+        _stripeOptions = options.Value;
+        StripeConfiguration.ApiKey = _stripeOptions.SecretKey;
     }
 
     public async Task<CheckoutSessionResult> CreateCheckoutSessionAsync(
@@ -19,13 +18,13 @@ public sealed class StripePaymentService : IPaymentService
         decimal amount,
         CancellationToken cancellationToken)
     {
-        var currency = _settings.Currency;
+        var currency = _stripeOptions.Currency;
 
         var options = new SessionCreateOptions
         {
             Mode = "payment",
-            SuccessUrl = $"{_settings.SuccessUrl}?orderId={orderId}",
-            CancelUrl = $"{_settings.CancelUrl}?orderId={orderId}",
+            SuccessUrl = $"{_stripeOptions.SuccessUrl}?orderId={orderId}",
+            CancelUrl = $"{_stripeOptions.CancelUrl}?orderId={orderId}",
 
             Metadata = new Dictionary<string, string>
             {
@@ -40,7 +39,7 @@ public sealed class StripePaymentService : IPaymentService
                     PriceData = new SessionLineItemPriceDataOptions
                     {
                         Currency = currency.ToLowerInvariant(),
-                        UnitAmount = ConvertAmount(amount, currency),
+                        UnitAmount = ConvertToMinorUnit(amount, currency),
                         ProductData = new SessionLineItemPriceDataProductDataOptions
                         {
                             Name = $"Order {orderId}"
@@ -56,11 +55,11 @@ public sealed class StripePaymentService : IPaymentService
         return new CheckoutSessionResult(session.Id, session.Url, currency);
     }
 
-    private static long ConvertAmount(decimal amount, string currency)
+    private static long ConvertToMinorUnit(decimal amount, string currency)
         => currency.ToLowerInvariant() switch
         {
             "usd" => (long)(amount * 100),
             "vnd" => (long)amount,
-            _ => throw new NotSupportedException("Unsupported currency")
+            _ => throw new NotSupportedException($"Unsupported currency '{currency}'.")
         };
 }

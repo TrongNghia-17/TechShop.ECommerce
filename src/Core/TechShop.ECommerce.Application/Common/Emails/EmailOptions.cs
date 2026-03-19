@@ -2,6 +2,8 @@
 
 public class EmailOptions
 {
+    public const string SectionName = "EmailSettings";
+
     [Required]
     public string ApiKey { get; set; } = default!;
 

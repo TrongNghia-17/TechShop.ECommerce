@@ -2,13 +2,11 @@
 using TechShop.ECommerce.Application.Contracts.Storage;
 using TechShop.ECommerce.Infrastructure.Storage;
 
-namespace TechShop.ECommerce.Infrastructure;
+namespace TechShop.ECommerce.Infrastructure.DependencyInjection;
 
-public static partial class ServiceCollectionExtensions
+public static class StorageDependencyInjection
 {
-    public static IServiceCollection AddStorageServices(
-        this IServiceCollection services,
-        IConfiguration configuration)
+    public static IServiceCollection AddStorageInfrastructure(this IServiceCollection services)
     {
         services.AddOptions<AzureStorageOptions>()
             .BindConfiguration(AzureStorageOptions.SectionName)

@@ -3,4 +3,5 @@
 public static class ConnectionStrings
 {
     public const string Default = "DefaultConnection";
+    public const string Redis = "Redis";
 }
