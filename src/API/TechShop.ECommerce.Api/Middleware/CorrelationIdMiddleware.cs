@@ -1,4 +1,6 @@
-﻿namespace TechShop.ECommerce.Api.Middleware;
+﻿using Serilog.Context;
+
+namespace TechShop.ECommerce.Api.Middleware;
 
 public sealed class CorrelationIdMiddleware(RequestDelegate next)
 {

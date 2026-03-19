@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Options;
 using Stripe;
 using Stripe.Checkout;
+using TechShop.ECommerce.Api.Extensions.RateLimiting;
 using TechShop.ECommerce.Application.Contracts.Jobs;
 using TechShop.ECommerce.Application.Contracts.PaymentGateway;
 

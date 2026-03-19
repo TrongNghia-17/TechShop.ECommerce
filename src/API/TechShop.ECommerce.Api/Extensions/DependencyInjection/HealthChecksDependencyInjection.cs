@@ -1,9 +1,9 @@
 ﻿using Microsoft.Extensions.Diagnostics.HealthChecks;
 using TechShop.ECommerce.Persistence.Context;
 
-namespace TechShop.ECommerce.Api.Extensions;
+namespace TechShop.ECommerce.Api.Extensions.DependencyInjection;
 
-public static partial class ServiceCollectionExtensions
+public static class HealthChecksDependencyInjection
 {
     public static IServiceCollection AddApiHealthChecks(
         this IServiceCollection services)

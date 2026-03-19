@@ -1,7 +1,12 @@
-﻿namespace TechShop.ECommerce.Api.Extensions;
+﻿using TechShop.ECommerce.Api.Endpoints;
+using TechShop.ECommerce.Api.Middleware;
 
-public static class WebApplicationExtensions
+namespace TechShop.ECommerce.Api.Extensions.Pipeline;
+
+public static class ApiPipelineExtensions
 {
+    private const string FrontendCorsPolicy = "Frontend";
+
     public static WebApplication UseApiPipeline(this WebApplication app)
     {
         app.UseExceptionHandler();
@@ -17,7 +22,7 @@ public static class WebApplicationExtensions
 
         app.UseSerilogRequestLogging();
         app.UseHttpsRedirection();
-        app.UseCors("Frontend");
+        app.UseCors(FrontendCorsPolicy);
 
         app.UseAuthentication();
         app.UseAuthorization();

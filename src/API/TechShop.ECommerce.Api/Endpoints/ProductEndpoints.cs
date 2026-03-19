@@ -1,4 +1,7 @@
-﻿using TechShop.ECommerce.Application.Common.Results;
+﻿using TechShop.ECommerce.Api.Extensions.Http;
+using TechShop.ECommerce.Api.Extensions.RateLimiting;
+using TechShop.ECommerce.Application.Common.Paging;
+using TechShop.ECommerce.Application.Common.Results;
 using TechShop.ECommerce.Application.Features.Products.GetProductDetails;
 using TechShop.ECommerce.Application.Features.Products.GetProducts;
 using TechShop.ECommerce.Application.Features.Products.UpdateProduct;

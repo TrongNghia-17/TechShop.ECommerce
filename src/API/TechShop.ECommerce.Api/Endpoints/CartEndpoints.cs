@@ -1,4 +1,6 @@
-﻿using TechShop.ECommerce.Application.Features.Carts.AddToCart;
+﻿using TechShop.ECommerce.Api.Extensions.Http;
+using TechShop.ECommerce.Api.Extensions.RateLimiting;
+using TechShop.ECommerce.Application.Features.Carts.AddToCart;
 using TechShop.ECommerce.Application.Features.Carts.GetCart;
 using TechShop.ECommerce.Application.Features.Carts.RemoveFromCart;
 using TechShop.ECommerce.Application.Features.Carts.Shared;

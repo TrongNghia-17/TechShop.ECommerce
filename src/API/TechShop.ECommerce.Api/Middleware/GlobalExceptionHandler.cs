@@ -1,4 +1,6 @@
-﻿namespace TechShop.ECommerce.Api.Middleware;
+﻿using TechShop.ECommerce.Application.Exceptions;
+
+namespace TechShop.ECommerce.Api.Middleware;
 
 public sealed class GlobalExceptionHandler(
     ILogger<GlobalExceptionHandler> logger,

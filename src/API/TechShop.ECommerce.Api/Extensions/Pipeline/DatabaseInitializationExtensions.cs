@@ -3,11 +3,11 @@ using TechShop.ECommerce.Identity.Seedings;
 using TechShop.ECommerce.Persistence.Context;
 using TechShop.ECommerce.Persistence.Seedings;
 
-namespace TechShop.ECommerce.Api.Extensions;
+namespace TechShop.ECommerce.Api.Extensions.Pipeline;
 
 public static class DatabaseInitializationExtensions
 {
-    public static async Task<WebApplication> ApplyDatabaseMigrationsAndSeedingAsync(
+    public static async Task<WebApplication> ApplyDevelopmentDatabaseInitializationAsync(
         this WebApplication app)
     {
         if (!app.Environment.IsDevelopment())

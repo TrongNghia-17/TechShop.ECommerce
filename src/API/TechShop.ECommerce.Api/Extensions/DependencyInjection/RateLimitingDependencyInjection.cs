@@ -1,6 +1,8 @@
-﻿namespace TechShop.ECommerce.Api.Extensions;
+﻿using TechShop.ECommerce.Api.Extensions.RateLimiting;
 
-public static partial class ServiceCollectionExtensions
+namespace TechShop.ECommerce.Api.Extensions.DependencyInjection;
+
+public static class RateLimitingDependencyInjection
 {
     public static IServiceCollection AddApiRateLimiting(
         this IServiceCollection services)

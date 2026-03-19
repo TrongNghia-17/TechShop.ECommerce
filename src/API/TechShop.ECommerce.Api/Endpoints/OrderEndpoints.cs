@@ -1,4 +1,6 @@
-﻿using TechShop.ECommerce.Application.Features.Orders.Invoices;
+﻿using TechShop.ECommerce.Api.Extensions.Http;
+using TechShop.ECommerce.Api.Extensions.RateLimiting;
+using TechShop.ECommerce.Application.Features.Orders.Invoices;
 using TechShop.ECommerce.Application.Features.Orders.PlaceOrder;
 
 namespace TechShop.ECommerce.Api.Endpoints;

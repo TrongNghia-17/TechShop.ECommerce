@@ -1,20 +1,18 @@
-﻿var builder = WebApplication.CreateBuilder(args);
+﻿using TechShop.ECommerce.Api.Extensions.DependencyInjection;
+using TechShop.ECommerce.Api.Extensions.Hosting;
+using TechShop.ECommerce.Api.Extensions.Pipeline;
 
-// Add services to the container.
+var builder = WebApplication.CreateBuilder(args);
 
-builder.Host.AddSerilog();
+builder.AddSerilogLogging();
 
-builder.Services
-    .AddApiServices(builder.Configuration)
-    .AddApiRateLimiting()
-    .AddApiHealthChecks();
+builder.Services.AddApiServices(builder.Configuration);
+builder.Services.AddApiHealthChecks();
+builder.Services.AddApiRateLimiting();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-
-await app.ApplyDatabaseMigrationsAndSeedingAsync();
-
+await app.ApplyDevelopmentDatabaseInitializationAsync();
 app.UseApiPipeline();
 
-app.Run();
+await app.RunAsync();

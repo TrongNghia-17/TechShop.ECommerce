@@ -1,11 +1,16 @@
-﻿using TechShop.ECommerce.Identity.DependencyInjection;
+﻿using TechShop.ECommerce.Api.Middleware;
+using TechShop.ECommerce.Application;
+using TechShop.ECommerce.Application.Common.Constants;
+using TechShop.ECommerce.Identity.DependencyInjection;
 using TechShop.ECommerce.Infrastructure.DependencyInjection;
 using TechShop.ECommerce.Persistence.DependencyInjection;
 
-namespace TechShop.ECommerce.Api.Extensions;
+namespace TechShop.ECommerce.Api.Extensions.DependencyInjection;
 
-public static partial class ServiceCollectionExtensions
+public static class ApiDependencyInjection
 {
+    private const string FrontendCorsPolicy = "Frontend";
+
     public static IServiceCollection AddApiServices(
         this IServiceCollection services,
         IConfiguration configuration)
@@ -20,13 +25,20 @@ public static partial class ServiceCollectionExtensions
 
         services.AddAuthorization();
 
-        services.AddHttpContextAccessor();
-
         services.AddProblemDetails();
         services.AddExceptionHandler<GlobalExceptionHandler>();
 
         services.AddOpenApi();
+        services.AddApiOpenTelemetry(configuration);
+        services.AddApiResponseCompression();
+        services.AddApiCors();
+        services.AddApiHangfire(configuration);
 
+        return services;
+    }
+
+    private static IServiceCollection AddApiResponseCompression(this IServiceCollection services)
+    {
         services.AddResponseCompression(options =>
         {
             options.EnableForHttps = true;
@@ -38,9 +50,14 @@ public static partial class ServiceCollectionExtensions
             options.Level = CompressionLevel.Optimal;
         });
 
+        return services;
+    }
+
+    private static IServiceCollection AddApiCors(this IServiceCollection services)
+    {
         services.AddCors(options =>
         {
-            options.AddPolicy("Frontend", policy =>
+            options.AddPolicy(FrontendCorsPolicy, policy =>
             {
                 policy.WithOrigins(
                         "http://localhost:5173",
@@ -51,14 +68,22 @@ public static partial class ServiceCollectionExtensions
             });
         });
 
+        return services;
+    }
+
+    private static IServiceCollection AddApiHangfire(
+        this IServiceCollection services,
+        IConfiguration configuration)
+    {
+        var connectionString = configuration.GetConnectionString(ConnectionStrings.Default)
+            ?? throw new InvalidOperationException(
+                $"Connection string '{ConnectionStrings.Default}' was not found.");
+
         services.AddHangfire(hangfireConfig =>
         {
             hangfireConfig.UsePostgreSqlStorage(options =>
-                options.UseNpgsqlConnection(
-                    configuration.GetConnectionString("DefaultConnection")));
+                options.UseNpgsqlConnection(connectionString));
         });
-
-        services.AddApiOpenTelemetry();
 
         return services;
     }

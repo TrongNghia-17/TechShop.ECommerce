@@ -1,4 +1,6 @@
 ﻿using Microsoft.Extensions.Options;
+using TechShop.ECommerce.Api.Extensions.Http;
+using TechShop.ECommerce.Api.Extensions.RateLimiting;
 using TechShop.ECommerce.Application.Common.Results;
 using TechShop.ECommerce.Application.Contracts.Identity;
 using TechShop.ECommerce.Application.Features.Identity.Login;

@@ -2,9 +2,9 @@
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using System.Text.Json;
 
-namespace TechShop.ECommerce.Api.Extensions;
+namespace TechShop.ECommerce.Api.Extensions.Pipeline;
 
-public static class ApplicationBuilderExtensions
+public static class HealthChecksEndpointExtensions
 {
     public static WebApplication MapTechShopHealthChecks(
         this WebApplication app)

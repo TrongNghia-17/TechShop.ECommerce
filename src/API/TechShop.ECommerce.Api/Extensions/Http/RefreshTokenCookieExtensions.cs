@@ -1,6 +1,6 @@
 ﻿using TechShop.ECommerce.Application.Contracts.Identity;
 
-namespace TechShop.ECommerce.Api.Extensions;
+namespace TechShop.ECommerce.Api.Extensions.Http;
 
 public static class RefreshTokenCookieExtensions
 {
