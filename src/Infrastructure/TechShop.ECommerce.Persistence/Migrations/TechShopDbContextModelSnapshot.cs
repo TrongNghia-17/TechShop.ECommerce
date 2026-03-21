@@ -2,31 +2,27 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using TechShop.ECommerce.Persistence.Context;
 
-
 #nullable disable
 
-namespace TechShop.ECommerce.Migrations.AppDb.Migrations
+namespace TechShop.ECommerce.Persistence.Migrations
 {
     [DbContext(typeof(TechShopDbContext))]
-    [Migration("20260313135725_AddProductMainImageBlobName")]
-    partial class AddProductMainImageBlobName
+    partial class TechShopDbContextModelSnapshot : ModelSnapshot
     {
-        /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "10.0.3")
+                .HasAnnotation("ProductVersion", "10.0.5")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("TechShop.ECommerce.Domain.Entities.Cart.Cart", b =>
+            modelBuilder.Entity("TechShop.ECommerce.Domain.Entities.Carts.Cart", b =>
                 {
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid");
@@ -54,7 +50,7 @@ namespace TechShop.ECommerce.Migrations.AppDb.Migrations
                     b.ToTable("Carts", (string)null);
                 });
 
-            modelBuilder.Entity("TechShop.ECommerce.Domain.Entities.Cart.CartItem", b =>
+            modelBuilder.Entity("TechShop.ECommerce.Domain.Entities.Carts.CartItem", b =>
                 {
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid");
@@ -81,7 +77,8 @@ namespace TechShop.ECommerce.Migrations.AppDb.Migrations
                         .HasColumnType("integer");
 
                     b.Property<decimal>("UnitPrice")
-                        .HasColumnType("decimal(18,2)");
+                        .HasPrecision(18, 2)
+                        .HasColumnType("numeric(18,2)");
 
                     b.HasKey("Id");
 
@@ -90,7 +87,7 @@ namespace TechShop.ECommerce.Migrations.AppDb.Migrations
                     b.ToTable("CartItems", (string)null);
                 });
 
-            modelBuilder.Entity("TechShop.ECommerce.Domain.Entities.Catalog.Category", b =>
+            modelBuilder.Entity("TechShop.ECommerce.Domain.Entities.Catalogs.Category", b =>
                 {
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid");
@@ -124,7 +121,7 @@ namespace TechShop.ECommerce.Migrations.AppDb.Migrations
                     b.ToTable("Categories", (string)null);
                 });
 
-            modelBuilder.Entity("TechShop.ECommerce.Domain.Entities.Catalog.Product", b =>
+            modelBuilder.Entity("TechShop.ECommerce.Domain.Entities.Catalogs.Product", b =>
                 {
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid");
@@ -296,7 +293,8 @@ namespace TechShop.ECommerce.Migrations.AppDb.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<decimal>("Amount")
-                        .HasColumnType("decimal(18,2)");
+                        .HasPrecision(18, 2)
+                        .HasColumnType("numeric(18,2)");
 
                     b.Property<Guid?>("CreatedBy")
                         .HasColumnType("uuid");
@@ -338,18 +336,18 @@ namespace TechShop.ECommerce.Migrations.AppDb.Migrations
                     b.ToTable("Payments", (string)null);
                 });
 
-            modelBuilder.Entity("TechShop.ECommerce.Domain.Entities.Cart.CartItem", b =>
+            modelBuilder.Entity("TechShop.ECommerce.Domain.Entities.Carts.CartItem", b =>
                 {
-                    b.HasOne("TechShop.ECommerce.Domain.Entities.Cart.Cart", null)
+                    b.HasOne("TechShop.ECommerce.Domain.Entities.Carts.Cart", null)
                         .WithMany("Items")
                         .HasForeignKey("CartId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("TechShop.ECommerce.Domain.Entities.Catalog.Product", b =>
+            modelBuilder.Entity("TechShop.ECommerce.Domain.Entities.Catalogs.Product", b =>
                 {
-                    b.HasOne("TechShop.ECommerce.Domain.Entities.Catalog.Category", "Category")
+                    b.HasOne("TechShop.ECommerce.Domain.Entities.Catalogs.Category", "Category")
                         .WithMany("Products")
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -419,12 +417,12 @@ namespace TechShop.ECommerce.Migrations.AppDb.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("TechShop.ECommerce.Domain.Entities.Cart.Cart", b =>
+            modelBuilder.Entity("TechShop.ECommerce.Domain.Entities.Carts.Cart", b =>
                 {
                     b.Navigation("Items");
                 });
 
-            modelBuilder.Entity("TechShop.ECommerce.Domain.Entities.Catalog.Category", b =>
+            modelBuilder.Entity("TechShop.ECommerce.Domain.Entities.Catalogs.Category", b =>
                 {
                     b.Navigation("Products");
                 });

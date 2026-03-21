@@ -12,8 +12,8 @@ using TechShop.ECommerce.Identity.Context;
 namespace TechShop.ECommerce.Identity.Migrations
 {
     [DbContext(typeof(TechShopIdentityDbContext))]
-    [Migration("20260319041857_RemoveUserFirstAndLastName")]
-    partial class RemoveUserFirstAndLastName
+    [Migration("20260321143105_InitialIdentity")]
+    partial class InitialIdentity
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -155,7 +155,7 @@ namespace TechShop.ECommerce.Identity.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("TechShop.ECommerce.Identity.Models.ApplicationUser", b =>
+            modelBuilder.Entity("TechShop.ECommerce.Identity.Entities.ApplicationUser", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -220,7 +220,7 @@ namespace TechShop.ECommerce.Identity.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
-            modelBuilder.Entity("TechShop.ECommerce.Identity.Models.RefreshToken", b =>
+            modelBuilder.Entity("TechShop.ECommerce.Identity.Entities.RefreshToken", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -268,7 +268,7 @@ namespace TechShop.ECommerce.Identity.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<System.Guid>", b =>
                 {
-                    b.HasOne("TechShop.ECommerce.Identity.Models.ApplicationUser", null)
+                    b.HasOne("TechShop.ECommerce.Identity.Entities.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -277,7 +277,7 @@ namespace TechShop.ECommerce.Identity.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<System.Guid>", b =>
                 {
-                    b.HasOne("TechShop.ECommerce.Identity.Models.ApplicationUser", null)
+                    b.HasOne("TechShop.ECommerce.Identity.Entities.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -292,7 +292,7 @@ namespace TechShop.ECommerce.Identity.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("TechShop.ECommerce.Identity.Models.ApplicationUser", null)
+                    b.HasOne("TechShop.ECommerce.Identity.Entities.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -301,16 +301,16 @@ namespace TechShop.ECommerce.Identity.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<System.Guid>", b =>
                 {
-                    b.HasOne("TechShop.ECommerce.Identity.Models.ApplicationUser", null)
+                    b.HasOne("TechShop.ECommerce.Identity.Entities.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("TechShop.ECommerce.Identity.Models.RefreshToken", b =>
+            modelBuilder.Entity("TechShop.ECommerce.Identity.Entities.RefreshToken", b =>
                 {
-                    b.HasOne("TechShop.ECommerce.Identity.Models.ApplicationUser", "User")
+                    b.HasOne("TechShop.ECommerce.Identity.Entities.ApplicationUser", "User")
                         .WithMany("RefreshTokens")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -319,7 +319,7 @@ namespace TechShop.ECommerce.Identity.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("TechShop.ECommerce.Identity.Models.ApplicationUser", b =>
+            modelBuilder.Entity("TechShop.ECommerce.Identity.Entities.ApplicationUser", b =>
                 {
                     b.Navigation("RefreshTokens");
                 });
