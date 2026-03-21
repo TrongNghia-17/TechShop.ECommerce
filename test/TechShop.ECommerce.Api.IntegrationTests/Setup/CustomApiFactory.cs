@@ -34,6 +34,19 @@ public class CustomApiFactory : WebApplicationFactory<Program>, IAsyncLifetime
         {
             config.AddInMemoryCollection(new Dictionary<string, string?>
         {
+                { "JwtSettings:Key", "ThisIsADummyKeyForTestingPurposeOnly12345!" },
+
+                { "EmailSettings:ApiKey", "dummy_email_api_key" },
+                { "EmailSettings:FromAddress", "test@techshop.com" },
+
+                { "StripeSettings:SecretKey", "sk_test_dummy" },
+                { "StripeSettings:WebhookSecret", "whsec_dummy" },
+                { "StripeSettings:SuccessUrl", "http://localhost/success" },
+                { "StripeSettings:CancelUrl", "http://localhost/cancel" },
+                { "StripeSettings:Currency", "usd" },
+
+                { "AzureStorage:ConnectionString", "UseDevelopmentStorage=true;" },
+
             { "ConnectionStrings:DefaultConnection", _dbContainer.GetConnectionString() }
         });
         });
