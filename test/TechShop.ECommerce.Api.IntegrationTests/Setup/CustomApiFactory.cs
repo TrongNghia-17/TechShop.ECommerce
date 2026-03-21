@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Moq;
 using TechShop.ECommerce.Application.Contracts.PaymentGateway;
 using TechShop.ECommerce.Persistence.Context;
@@ -43,22 +44,15 @@ public class CustomApiFactory : WebApplicationFactory<Program>, IAsyncLifetime
             })
             .AddScheme<AuthenticationSchemeOptions, TestAuthHandler>("TestScheme", options => { });
 
-            var dbContextDescriptor = services.SingleOrDefault(
-                    d => d.ServiceType == typeof(DbContextOptions<TechShopDbContext>));
-
-            if (dbContextDescriptor != null)
-            {
-                services.Remove(dbContextDescriptor);
-            }
+            services.RemoveAll(typeof(DbContextOptions<TechShopDbContext>));
+            services.RemoveAll(typeof(DbContextOptions));
 
             services.AddDbContext<TechShopDbContext>(options =>
             {
                 options.UseNpgsql(_dbContainer.GetConnectionString());
             });
 
-            var paymentDescriptor = services.SingleOrDefault(
-                d => d.ServiceType == typeof(IPaymentService));
-            if (paymentDescriptor != null) services.Remove(paymentDescriptor);
+            services.RemoveAll(typeof(IPaymentService));
 
             var paymentServiceMock = new Mock<IPaymentService>();
             paymentServiceMock
@@ -72,7 +66,6 @@ public class CustomApiFactory : WebApplicationFactory<Program>, IAsyncLifetime
     public new async Task DisposeAsync()
     {
         await _dbContainer.DisposeAsync();
-
         await base.DisposeAsync();
     }
 }
