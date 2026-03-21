@@ -29,92 +29,31 @@ public class PlaceOrderCommandHandler(
         PlaceOrderCommand command,
         CancellationToken token)
     {
-        using var activity = TelemetryConfig.ActivitySource
-            .StartActivity("orders.place-order");
-
-        activity?.SetTag("operation", "place-order");
-
         var currentUserResult = GetCurrentUser();
-        if (currentUserResult.IsFailure)
-        {
-            activity?.SetTag("result", "unauthorized");
-            return currentUserResult.Error;
-        }
-
+        if (currentUserResult.IsFailure) return currentUserResult.Error;
         var (customerId, customerEmail) = currentUserResult.Value;
 
-        activity?.SetTag("customer.id", customerId);
-        activity?.SetTag("customer.email", customerEmail);
+        Activity.Current?.SetTag("customer.id", customerId);
 
-        Result<Cart> cartResult;
-        using (TelemetryConfig.ActivitySource.StartActivity("orders.load-cart"))
-        {
-            cartResult = await GetCartAsync(customerId, token);
-        }
-
-        if (cartResult.IsFailure)
-        {
-            activity?.SetTag("result", "cart-invalid");
-            return cartResult.Error;
-        }
-
+        var cartResult = await GetCartAsync(customerId, token);
+        if (cartResult.IsFailure) return cartResult.Error;
         var cart = cartResult.Value;
-        activity?.SetTag("cart.items.count", cart.Items.Count);
 
-        Result<IReadOnlyDictionary<Guid, Product>> productsResult;
-        using (TelemetryConfig.ActivitySource.StartActivity("orders.validate-products"))
-        {
-            productsResult = await GetValidatedProductsAsync(cart, token);
-        }
-
-        if (productsResult.IsFailure)
-        {
-            activity?.SetTag("result", "products-invalid");
-            return productsResult.Error;
-        }
-
+        var productsResult = await GetValidatedProductsAsync(cart, token);
+        if (productsResult.IsFailure) return productsResult.Error;
         var products = productsResult.Value;
 
-        Order order;
-        using (TelemetryConfig.ActivitySource.StartActivity("orders.create-order"))
-        {
-            order = CreateOrder(
-                customerId,
-                customerEmail,
-                command,
-                cart,
-                products);
-        }
+        var order = CreateOrder(customerId, customerEmail, command, cart, products);
 
-        activity?.SetTag("order.id", order.Id);
-        activity?.SetTag("order.total_amount", (double)order.TotalAmount);
+        var checkoutSession = await paymentService.CreateCheckoutSessionAsync(order.Id, order.TotalAmount, token);
+        var payment = CreatePayment(order, checkoutSession);
 
-        CheckoutSessionResult checkoutSession;
-        using (TelemetryConfig.ActivitySource.StartActivity("orders.create-checkout-session"))
-        {
-            checkoutSession = await paymentService.CreateCheckoutSessionAsync(
-                order.Id,
-                order.TotalAmount,
-                token);
-        }
+        await PersistOrderAsync(order, payment, cart, token);
 
-        activity?.SetTag("payment.session_id", checkoutSession.SessionId);
-        activity?.SetTag("payment.currency", checkoutSession.Currency);
-
-        Payment payment;
-        using (TelemetryConfig.ActivitySource.StartActivity("orders.create-payment"))
-        {
-            payment = CreatePayment(order, checkoutSession);
-        }
-
-        using (TelemetryConfig.ActivitySource.StartActivity("orders.persist"))
-        {
-            await PersistOrderAsync(order, payment, cart, token);
-        }
-
-        TechShopMetrics.OrdersCreated.Add(1);
-
-        activity?.SetTag("result", "success");
+        TechShopMetrics.OrdersCreated.Add(1,
+            new KeyValuePair<string, object?>("payment.method", "Stripe"),
+            new KeyValuePair<string, object?>("currency", "USD")
+        );
 
         logger.LogInformation(
             "Order {OrderId} created successfully for customer {CustomerId}",

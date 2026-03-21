@@ -43,6 +43,7 @@ public static class OpenTelemetryDependencyInjection
                         options.RecordException = true;
                     })
                     .AddHttpClientInstrumentation()
+                    .AddEntityFrameworkCoreInstrumentation()
                     .AddOtlpExporter(options =>
                     {
                         options.Endpoint = otlpEndpoint;
@@ -52,6 +53,7 @@ public static class OpenTelemetryDependencyInjection
             .WithMetrics(metrics =>
             {
                 metrics
+                    .AddRuntimeInstrumentation()
                     .AddAspNetCoreInstrumentation()
                     .AddHttpClientInstrumentation()
                     .AddMeter(TechShopMetrics.MeterName)
