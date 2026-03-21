@@ -1,0 +1,39 @@
+﻿# Tên của kịch bản này (sẽ hiển thị trên GitHub)
+name: .NET CI Pipeline
+
+# Khi nào thì kịch bản này chạy?
+on:
+  push:
+    branches: [ "main" ] # Chạy khi bạn push code lên nhánh main
+  pull_request:
+    branches: [ "main" ] # Hoặc khi có người tạo Pull Request vào main
+
+# Công việc cần làm
+jobs:
+  build-and-test:
+    # Mượn một máy ảo Linux (Ubuntu) miễn phí của GitHub để chạy
+    runs-on: ubuntu-latest
+
+    # Các bước thực hiện tuần tự
+    steps:
+    # Bước 1: Lấy code mới nhất của bạn về máy ảo
+    - name: Tải mã nguồn (Checkout)
+      uses: actions/checkout@v4
+
+    # Bước 2: Cài đặt môi trường .NET (Ví dụ ở đây là bản .NET 8)
+    - name: Thiết lập .NET 8
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 8.0.x
+
+    # Bước 3: Tải các thư viện (NuGet packages) mà project bạn đang dùng
+    - name: Cài đặt thư viện (Restore dependencies)
+      run: dotnet restore
+
+    # Bước 4: Đóng gói code (Build) để xem có lỗi cú pháp nào không
+    - name: Build mã nguồn
+      run: dotnet build --no-restore
+
+    # Bước 5: Chạy các bài Unit Test (Phần quan trọng nhất!)
+    - name: Chạy Automated Tests
+      run: dotnet test --no-build --verbosity normal
