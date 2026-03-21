@@ -11,4 +11,9 @@ public static class CartErrors
         DomainErrors.NotFound(
             "Cart.NotFound",
             $"Cart for customer {customerId} was not found.");
+
+    public static DomainErrors Empty =>
+        DomainErrors.Validation(
+            "Cart.Empty",
+            "Cart does not contain any items.");
 }
