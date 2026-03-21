@@ -1,7 +1,7 @@
 <Solution>
   <Folder Name="/.github/" />
   <Folder Name="/.github/workflows/">
-    <File Path="dotnet-ci.yml" />
+    <File Path=".github/workflows/dotnet-ci.yml" />
   </Folder>
   <Folder Name="/benchmarks/" />
   <Folder Name="/docker/">

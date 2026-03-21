@@ -1,7 +1,4 @@
-﻿using TechShop.ECommerce.Domain.Entities.Carts;
-using TechShop.ECommerce.Domain.Entities.Catalogs;
-
-namespace TechShop.ECommerce.Persistence.Context;
+﻿namespace TechShop.ECommerce.Persistence.Context;
 
 public sealed class TechShopDbContext(DbContextOptions<TechShopDbContext> options)
     : DbContext(options)
