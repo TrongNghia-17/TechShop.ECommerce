@@ -23,6 +23,7 @@
     <Project Path="src/Workers/TechShop.ECommerce.BackgroundWorker/TechShop.ECommerce.BackgroundWorker.csproj" />
   </Folder>
   <Folder Name="/test/">
-    <Project Path="test/TechShop.ECommerce.Application.Tests/TechShop.ECommerce.Application.Tests.csproj" Id="72383db6-e6a5-44c5-b7cb-cf4bb0863a65" />
+    <Project Path="test/TechShop.ECommerce.Api.IntegrationTests/TechShop.ECommerce.Api.IntegrationTests.csproj" Id="5236a347-292c-43b6-bcaf-15bcbdb9f2c4" />
+    <Project Path="test/TechShop.ECommerce.Application.UnitTests/TechShop.ECommerce.Application.UnitTests.csproj" />
   </Folder>
 </Solution>
