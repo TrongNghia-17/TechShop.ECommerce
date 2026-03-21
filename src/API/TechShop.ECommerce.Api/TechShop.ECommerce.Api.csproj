@@ -5,11 +5,12 @@
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<UserSecretsId>cbd57680-6124-4165-9769-6252ceee42f7</UserSecretsId>
+		<IsTestProject>false</IsTestProject>
 	</PropertyGroup>
 
-	<ItemGroup>		
-		<PackageReference Include="AutoMapper" Version="16.1.1" />		
-		<PackageReference Include="Hangfire.PostgreSql" Version="1.21.1" />		
+	<ItemGroup>
+		<PackageReference Include="AutoMapper" Version="16.1.1" />
+		<PackageReference Include="Hangfire.PostgreSql" Version="1.21.1" />
 		<PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.2" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="10.0.5">
 			<PrivateAssets>all</PrivateAssets>
@@ -42,7 +43,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Folder Include="logs\" />
+		<Folder Include="logs\" />
 	</ItemGroup>
 
 </Project>

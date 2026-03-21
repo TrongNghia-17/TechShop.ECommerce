@@ -1,4 +1,8 @@
 <Solution>
+  <Folder Name="/.github/" />
+  <Folder Name="/.github/workflows/">
+    <File Path="dotnet-ci.yml" />
+  </Folder>
   <Folder Name="/benchmarks/" />
   <Folder Name="/docker/">
     <File Path="docker/docker-compose.yml" />
