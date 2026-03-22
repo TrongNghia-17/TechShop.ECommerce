@@ -22,6 +22,9 @@ public class CustomApiFactory : WebApplicationFactory<Program>, IAsyncLifetime
     public async Task InitializeAsync()
     {
         await _dbContainer.StartAsync();
+        Environment.SetEnvironmentVariable(
+            "ConnectionStrings__DefaultConnection",
+            _dbContainer.GetConnectionString());
     }
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
@@ -69,6 +72,7 @@ public class CustomApiFactory : WebApplicationFactory<Program>, IAsyncLifetime
     public new async Task DisposeAsync()
     {
         await _dbContainer.DisposeAsync();
+        Environment.SetEnvironmentVariable("ConnectionStrings__DefaultConnection", null);
         await base.DisposeAsync();
     }
 }
