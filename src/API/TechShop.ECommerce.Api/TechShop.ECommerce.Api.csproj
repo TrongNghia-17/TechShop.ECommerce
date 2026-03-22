@@ -6,6 +6,10 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<UserSecretsId>cbd57680-6124-4165-9769-6252ceee42f7</UserSecretsId>
 		<IsTestProject>false</IsTestProject>
+
+		<ContainerRepository>techshop-api</ContainerRepository>
+		<ContainerFamily>alpine</ContainerFamily>
+		<ContainerImageTags>latest</ContainerImageTags>
 	</PropertyGroup>
 
 	<ItemGroup>

@@ -1,34 +1,64 @@
-name: techshopecommerce
+﻿name: techshopecommerce
 
 services:
+  # ==========================================
+  # 1. ỨNG DỤNG CỐT LÕI (API)
+  # ==========================================
+  api:
+    image: techshop-api:latest
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT}
+      
+      # --- KẾT NỐI DATABASE & CACHE ---
+      - ConnectionStrings__DefaultConnection=Host=postgres;Port=5432;Database=${DB_NAME};Username=${DB_USER};Password=${DB_PASSWORD}
+      - ConnectionStrings__Redis=redis:6379
+      
+      # --- CẤU HÌNH THEO APPSETTINGS.JSON ---
+      - JwtSettings__Key=${JWT_SECRET_KEY}
+      
+      - EmailSettings__ApiKey=${SENDGRID_API_KEY}
+      - EmailSettings__FromAddress=${EMAIL_FROM_ADDRESS}
+      
+      - StripeSettings__SecretKey=${STRIPE_SECRET_KEY}
+      - StripeSettings__WebhookSecret=${STRIPE_WEBHOOK_SECRET}
+      - StripeSettings__SuccessUrl=${STRIPE_SUCCESS_URL}
+      - StripeSettings__CancelUrl=${STRIPE_CANCEL_URL}
+      - StripeSettings__Currency=${STRIPE_CURRENCY}
+      
+      - AzureStorage__ConnectionString=${AZURE_STORAGE_CONNECTION}
+      
+      # --- CẤU HÌNH TRACING TRONG DOCKER ---
+      - OpenTelemetry__OtlpEndpoint=http://otel-collector:4317
+
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_started
+
+  # ==========================================
+  # 2. HẠ TẦNG DỮ LIỆU (POSTGRES & REDIS)
+  # ==========================================
   postgres:
     image: postgres:17-alpine
     restart: unless-stopped
     environment:
-      POSTGRES_USER: admin
-      POSTGRES_PASSWORD: secret
-      POSTGRES_DB: TechShopDb
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
     ports:
       - "5433:5432"
     volumes:
       - techshop_postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U admin -d TechShopDb"]
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}"]
       interval: 10s
       timeout: 5s
       retries: 5
       start_period: 10s
-
-  seq:
-    image: datalust/seq
-    restart: unless-stopped
-    environment:
-      ACCEPT_EULA: "Y"
-      SEQ_FIRSTRUN_ADMINPASSWORD: "TechShop@123"
-    ports:
-      - "5341:80"
-    volumes:
-      - techshop_seq_data:/data
 
   redis:
     image: redis:7-alpine
@@ -37,7 +67,21 @@ services:
       - "6379:6379"
     volumes:
       - techshop_redis_data:/data
-  
+
+  # ==========================================
+  # 3. QUAN TRẮC (SEQ, OTEL, PROMETHEUS, GRAFANA, JAEGER)
+  # ==========================================
+  seq:
+    image: datalust/seq
+    restart: unless-stopped
+    environment:
+      ACCEPT_EULA: "Y"
+      SEQ_FIRSTRUN_ADMINPASSWORD: ${SEQ_ADMIN_PASSWORD}
+    ports:
+      - "5341:80"
+    volumes:
+      - techshop_seq_data:/data
+
   otel-collector:
     image: otel/opentelemetry-collector-contrib:latest
     restart: unless-stopped
@@ -67,7 +111,7 @@ services:
     restart: unless-stopped
     environment:
       GF_SECURITY_ADMIN_USER: admin
-      GF_SECURITY_ADMIN_PASSWORD: "TechShop@123"
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASSWORD}
     ports:
       - "3000:3000"
     volumes:
@@ -86,6 +130,9 @@ services:
       - "4319:4317"
       - "4320:4318"
 
+# ==========================================
+# 4. VOLUMES
+# ==========================================
 volumes:
   techshop_postgres_data:
     name: techshop_postgres_data

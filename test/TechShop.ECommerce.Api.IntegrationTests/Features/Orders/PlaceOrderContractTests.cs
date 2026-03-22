@@ -10,16 +10,9 @@ using TechShop.ECommerce.Persistence.Context;
 
 namespace TechShop.ECommerce.Api.IntegrationTests.Features.Orders;
 
-public class PlaceOrderContractTests : IClassFixture<CustomApiFactory>
+public class PlaceOrderContractTests(CustomApiFactory factory) : IClassFixture<CustomApiFactory>
 {
-    private readonly HttpClient _client;
-    private readonly CustomApiFactory _factory;
-
-    public PlaceOrderContractTests(CustomApiFactory factory)
-    {
-        _factory = factory;
-        _client = factory.CreateClient();
-    }
+    private readonly HttpClient _client = factory.CreateClient();
 
     [Fact]
     public async Task PlaceOrder_Response_ShouldFollowStrictApiContract()
@@ -27,7 +20,7 @@ public class PlaceOrderContractTests : IClassFixture<CustomApiFactory>
         // ARRANGE
         var customerId = Guid.Parse("11111111-1111-1111-1111-111111111111");
 
-        using (var scope = _factory.Services.CreateScope())
+        using (var scope = factory.Services.CreateScope())
         {
             var dbContext = scope.ServiceProvider.GetRequiredService<TechShopDbContext>();
 
