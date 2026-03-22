@@ -10,7 +10,8 @@ using TechShop.ECommerce.Persistence.Context;
 
 namespace TechShop.ECommerce.Api.IntegrationTests.Features.Orders;
 
-public class PlaceOrderContractTests(CustomApiFactory factory) : IClassFixture<CustomApiFactory>
+[Collection("Shared Test Collection")]
+public class PlaceOrderContractTests(CustomApiFactory factory)
 {
     private readonly HttpClient _client = factory.CreateClient();
 
@@ -18,30 +19,20 @@ public class PlaceOrderContractTests(CustomApiFactory factory) : IClassFixture<C
     public async Task PlaceOrder_Response_ShouldFollowStrictApiContract()
     {
         // ARRANGE
-        var customerId = Guid.Parse("11111111-1111-1111-1111-111111111111");
+        var customerId = Guid.NewGuid();
+
+        _client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("TestScheme", "FakeToken");
+        _client.DefaultRequestHeaders.Add("X-Test-User-Id", customerId.ToString());
 
         using (var scope = factory.Services.CreateScope())
         {
             var dbContext = scope.ServiceProvider.GetRequiredService<TechShopDbContext>();
 
-            var fakeCategory = Category.Create("Electronics", "Danh mục test");
+            var fakeCategory = Category.Create($"Electronics_{Guid.NewGuid()}", "Danh mục test");
             dbContext.Categories.Add(fakeCategory);
 
-            var categoryId = Guid.NewGuid();
-
-            var fakeProduct = Product.Create(
-                    name: "Laptop Gaming Test",
-                    price: 50000m,
-                    stockQuantity: 100,
-                    categoryId: fakeCategory.Id
-                );
+            var fakeProduct = Product.Create($"Laptop_{Guid.NewGuid()}", 50000m, 100, fakeCategory.Id);
             dbContext.Products.Add(fakeProduct);
-
-            var oldCart = await dbContext.Carts.FirstOrDefaultAsync(c => c.CustomerId == customerId);
-            if (oldCart != null)
-            {
-                dbContext.Carts.Remove(oldCart);
-            }
 
             var fakeCart = Cart.Create(customerId);
             fakeCart.AddItem(fakeProduct.Id, fakeProduct.Price, 2);

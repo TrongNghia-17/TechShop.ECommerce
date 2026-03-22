@@ -11,7 +11,8 @@ using TechShop.ECommerce.Persistence.Context;
 
 namespace TechShop.ECommerce.Api.IntegrationTests.Features.Orders;
 
-public class OrderEndpointsTests : IClassFixture<CustomApiFactory>
+[Collection("Shared Test Collection")]
+public class OrderEndpointsTests
 {
     private readonly HttpClient _client;
     private readonly CustomApiFactory _factory;
@@ -26,17 +27,19 @@ public class OrderEndpointsTests : IClassFixture<CustomApiFactory>
     [Fact]
     public async Task PlaceOrder_WithValidData_ShouldReturn201Created()
     {
-        var userId = Guid.Parse("11111111-1111-1111-1111-111111111111");
+        var userId = Guid.NewGuid();
+
+        _client.DefaultRequestHeaders.Add("X-Test-User-Id", userId.ToString());
 
         using (var scope = _factory.Services.CreateScope())
         {
             var db = scope.ServiceProvider.GetRequiredService<TechShopDbContext>();
 
-            var category = Category.Create("Electronics", "Tech products");
+            var category = Category.Create($"Electronics_{Guid.NewGuid()}", "Tech products");
             db.Categories.Add(category);
             await db.SaveChangesAsync();
 
-            var product = Product.Create("Laptop", 1000m, 10, category.Id, "Desc");
+            var product = Product.Create($"Laptop_{Guid.NewGuid()}", 1000m, 10, category.Id, "Desc");
             db.Products.Add(product);
 
             var cart = Cart.Create(userId);

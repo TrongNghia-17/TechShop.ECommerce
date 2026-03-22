@@ -7,7 +7,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Moq;
 using TechShop.ECommerce.Application.Contracts.PaymentGateway;
-using TechShop.ECommerce.Persistence.Context;
 using Testcontainers.PostgreSql;
 
 namespace TechShop.ECommerce.Api.IntegrationTests.Setup;
@@ -23,9 +22,6 @@ public class CustomApiFactory : WebApplicationFactory<Program>, IAsyncLifetime
     public async Task InitializeAsync()
     {
         await _dbContainer.StartAsync();
-        Environment.SetEnvironmentVariable(
-            "ConnectionStrings__DefaultConnection",
-            _dbContainer.GetConnectionString());
     }
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
@@ -47,8 +43,8 @@ public class CustomApiFactory : WebApplicationFactory<Program>, IAsyncLifetime
 
                 { "AzureStorage:ConnectionString", "UseDevelopmentStorage=true;" },
 
-            { "ConnectionStrings:DefaultConnection", _dbContainer.GetConnectionString() }
-        });
+                { "ConnectionStrings:DefaultConnection", _dbContainer.GetConnectionString() }
+            });
         });
 
         builder.ConfigureServices(services =>
@@ -60,20 +56,11 @@ public class CustomApiFactory : WebApplicationFactory<Program>, IAsyncLifetime
             })
             .AddScheme<AuthenticationSchemeOptions, TestAuthHandler>("TestScheme", options => { });
 
-            services.RemoveAll(typeof(DbContextOptions<TechShopDbContext>));
-            services.RemoveAll(typeof(DbContextOptions));
-
-            services.AddDbContext<TechShopDbContext>(options =>
-            {
-                options.UseNpgsql(_dbContainer.GetConnectionString());
-            });
-
             services.RemoveAll(typeof(IPaymentService));
-
             var paymentServiceMock = new Mock<IPaymentService>();
             paymentServiceMock
                 .Setup(x => x.CreateCheckoutSessionAsync(It.IsAny<Guid>(), It.IsAny<decimal>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(new CheckoutSessionResult("mock_session_id", "https://checkout.stripe.com/test", "USD"));
+                .ReturnsAsync(() => new CheckoutSessionResult($"mock_session_{Guid.NewGuid()}", "https://checkout.stripe.com/test", "USD"));
 
             services.AddSingleton(paymentServiceMock.Object);
         });
@@ -82,9 +69,6 @@ public class CustomApiFactory : WebApplicationFactory<Program>, IAsyncLifetime
     public new async Task DisposeAsync()
     {
         await _dbContainer.DisposeAsync();
-        Environment.SetEnvironmentVariable(
-            "ConnectionStrings__DefaultConnection",
-            null);
         await base.DisposeAsync();
     }
 }

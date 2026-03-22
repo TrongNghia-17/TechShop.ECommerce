@@ -12,10 +12,13 @@ public class TestAuthHandler(
 {
     protected override Task<AuthenticateResult> HandleAuthenticateAsync()
     {
+        var userId = Context.Request.Headers["X-Test-User-Id"].FirstOrDefault()
+                     ?? "11111111-1111-1111-1111-111111111111";
+
         var claims = new[]
         {
-            new Claim(ClaimTypes.NameIdentifier, "11111111-1111-1111-1111-111111111111"),
-            new Claim(ClaimTypes.Email, "test@student.hcmus.edu.vn")
+            new Claim(ClaimTypes.NameIdentifier, userId),
+            new Claim(ClaimTypes.Email, "test@techshop.com")
         };
         var identity = new ClaimsIdentity(claims, "Test");
         var principal = new ClaimsPrincipal(identity);
