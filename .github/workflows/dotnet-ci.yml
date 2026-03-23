@@ -7,52 +7,57 @@ on:
     branches: [ "main" ]
 
 jobs:
-  build-test-publish:
+  # =========================================================
+  # NHÁNH 1: BUILD & TEST
+  # =========================================================
+  build-and-test:
     runs-on: ubuntu-latest
-
     steps:
-    # 1. Checkout the repository code
-    - name: Checkout code
-      uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-    # 2. Setup .NET SDK
-    - name: Setup .NET 8
-      uses: actions/setup-dotnet@v4
-      with:
-        dotnet-version: 8.0.x
+      - name: Setup .NET 8
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
 
-    # 3. Restore dependencies
-    - name: Restore dependencies
-      run: dotnet restore
+      - name: Restore dependencies
+        run: dotnet restore
 
-    # 4. Build the project in Release mode
-    - name: Build project
-      run: dotnet build --no-restore --configuration Release
+      - name: Build project
+        run: dotnet build --no-restore --configuration Release
 
-    # 5. Run automated tests
-    - name: Run tests
-      run: dotnet test --no-build --configuration Release --verbosity normal
+      - name: Run tests
+        run: dotnet test --no-build --configuration Release --verbosity normal
 
-    # ---------------------------------------------------------
-    # DOCKER BUILD & PUSH SECTION (Only runs on push to main)
-    # ---------------------------------------------------------
+  # =========================================================
+  # NHÁNH 2: DOCKER BUILD & PUSH LÊN ACR
+  # =========================================================
+  publish-to-acr:
+    needs: build-and-test
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-    # 6. Authenticate with Azure Container Registry
-    - name: Log in to Azure Container Registry
-      if: github.event_name == 'push'
-      uses: docker/login-action@v3
-      with:
-        registry: ${{ secrets.ACR_LOGIN_SERVER }}
-        username: ${{ secrets.ACR_USERNAME }}
-        password: ${{ secrets.ACR_PASSWORD }}
+      - name: Setup .NET 8
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
 
-    # 7. Build and push Docker image to ACR
-    - name: Build and push Docker image
-      if: github.event_name == 'push'
-      run: |
-        dotnet publish src/API/TechShop.ECommerce.Api/TechShop.ECommerce.Api.csproj \
-          --os linux-musl --arch x64 -c Release \
-          -t:PublishContainer \
-          -p:ContainerRegistry=${{ secrets.ACR_LOGIN_SERVER }} \
-          -p:ContainerRepository=techshop-api \
-          '-p:ContainerImageTags="latest;${{ github.sha }}"'
+      - name: Log in to Azure Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ secrets.ACR_LOGIN_SERVER }}
+          username: ${{ secrets.ACR_USERNAME }}
+          password: ${{ secrets.ACR_PASSWORD }}
+
+      - name: Build and push Docker image
+        run: |
+          dotnet publish src/API/TechShop.ECommerce.Api/TechShop.ECommerce.Api.csproj \
+            --os linux-musl --arch x64 -c Release \
+            -t:PublishContainer \
+            -p:ContainerRegistry=${{ secrets.ACR_LOGIN_SERVER }} \
+            -p:ContainerRepository=techshop-api \
+            '-p:ContainerImageTags="latest;${{ github.sha }}"'
