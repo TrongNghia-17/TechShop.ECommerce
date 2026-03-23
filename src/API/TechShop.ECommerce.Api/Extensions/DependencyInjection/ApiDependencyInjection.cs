@@ -34,6 +34,8 @@ public static class ApiDependencyInjection
         services.AddApiCors();
         services.AddApiHangfire(configuration);
 
+        services.AddApplicationInsightsTelemetry();
+
         return services;
     }
 

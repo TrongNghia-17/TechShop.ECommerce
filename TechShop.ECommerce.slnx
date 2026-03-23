@@ -5,8 +5,8 @@
   </Folder>
   <Folder Name="/benchmarks/" />
   <Folder Name="/docker/">
-    <File Path=".env" />
-    <File Path="docker/docker-compose.yml" />
+    <File Path="docker/.env" />
+    <File Path="docker/docker-compose.local.yml" />
     <File Path="docker/otel-collector-config.yml" />
     <File Path="docker/prometheus.yml" />
   </Folder>
