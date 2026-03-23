@@ -55,4 +55,4 @@ jobs:
           -t:PublishContainer \
           -p:ContainerRegistry=${{ secrets.ACR_LOGIN_SERVER }} \
           -p:ContainerRepository=techshop-api \
-          -p:ContainerImageTags=\"latest;${{ github.sha }}\"
+          -p:ContainerImageTags='latest;${{ github.sha }}'
