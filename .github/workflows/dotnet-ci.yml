@@ -50,8 +50,9 @@ jobs:
     - name: Build and push Docker image
       if: github.event_name == 'push'
       run: |
-        # Đặt 2 nhãn: 'latest' (luôn là bản mới nhất) và 'mã SHA' (để dễ rollback lại bản cũ nếu lỗi)
-        docker build -t ${{ secrets.ACR_LOGIN_SERVER }}/techshop-api:latest -t ${{ secrets.ACR_LOGIN_SERVER }}/techshop-api:${{ github.sha }} -f src/API/TechShop.ECommerce.Api/Dockerfile .
-        
-        # Đẩy tất cả các nhãn lên Azure
-        docker push --all-tags ${{ secrets.ACR_LOGIN_SERVER }}/techshop-api
+        dotnet publish src/API/TechShop.ECommerce.Api/TechShop.ECommerce.Api.csproj \
+          --os linux --arch x64 -c Release \
+          -t:PublishContainer \
+          -p:ContainerRegistry=${{ secrets.ACR_LOGIN_SERVER }} \
+          -p:ContainerRepository=techshop-api \
+          -p:ContainerImageTags="latest;${{ github.sha }}"
