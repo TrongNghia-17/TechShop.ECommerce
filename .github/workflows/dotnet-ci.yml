@@ -51,7 +51,7 @@ jobs:
       if: github.event_name == 'push'
       run: |
         dotnet publish src/API/TechShop.ECommerce.Api/TechShop.ECommerce.Api.csproj \
-          --os linux --arch x64 -c Release \
+          --os linux-musl --arch x64 -c Release \
           -t:PublishContainer \
           -p:ContainerRegistry=${{ secrets.ACR_LOGIN_SERVER }} \
           -p:ContainerRepository=techshop-api \
