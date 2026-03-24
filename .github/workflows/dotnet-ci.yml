@@ -59,7 +59,7 @@ jobs:
       - name: Build and push API Docker image
         run: |
           dotnet publish src/API/TechShop.ECommerce.Api/TechShop.ECommerce.Api.csproj \
-            --os linux-musl --arch x64 -c Release \
+            --os linux-x64 --arch x64 -c Release \
             -t:PublishContainer \
             -p:ContainerRegistry=ghcr.io \
             -p:ContainerRepository=trongnghia-17/techshop-api \
