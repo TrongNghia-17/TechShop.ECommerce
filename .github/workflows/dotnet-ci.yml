@@ -8,7 +8,7 @@ on:
 
 jobs:
   # =========================================================
-  # NHÁNH 1: BUILD & TEST
+  # JOB 1: BUILD & TEST
   # =========================================================
   build-and-test:
     runs-on: ubuntu-latest
@@ -16,10 +16,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup .NET 8
+      - name: Setup .NET 10
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: 8.0.x
+          dotnet-version: 10.0.x # Đã nâng cấp lên .NET 10
 
       - name: Restore dependencies
         run: dotnet restore
@@ -31,33 +31,36 @@ jobs:
         run: dotnet test --no-build --configuration Release --verbosity normal
 
   # =========================================================
-  # NHÁNH 2: DOCKER BUILD & PUSH LÊN ACR
+  # JOB 2: DOCKER BUILD & PUSH LÊN GHCR
   # =========================================================
-  publish-to-acr:
-    needs: build-and-test
+  publish-to-ghcr:
+    needs: build-and-test # Bắt buộc Job 1 phải thành công (màu xanh) mới chạy Job 2
     if: github.event_name == 'push'
     runs-on: ubuntu-latest
+    permissions:
+      packages: write # Cấp quyền cho Actions được phép ghi (push) image
+      contents: read
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup .NET 8
+      - name: Setup .NET 10
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: 8.0.x
+          dotnet-version: 10.0.x # Đã nâng cấp lên .NET 10
 
-      - name: Log in to Azure Container Registry
+      - name: Log in to GitHub Container Registry
         uses: docker/login-action@v3
         with:
-          registry: ${{ secrets.ACR_LOGIN_SERVER }}
-          username: ${{ secrets.ACR_USERNAME }}
-          password: ${{ secrets.ACR_PASSWORD }}
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build and push Docker image
+      - name: Build and push API Docker image
         run: |
           dotnet publish src/API/TechShop.ECommerce.Api/TechShop.ECommerce.Api.csproj \
             --os linux-musl --arch x64 -c Release \
             -t:PublishContainer \
-            -p:ContainerRegistry=${{ secrets.ACR_LOGIN_SERVER }} \
-            -p:ContainerRepository=techshop-api \
+            -p:ContainerRegistry=ghcr.io \
+            -p:ContainerRepository=trongnghia-17/techshop-api \
             '-p:ContainerImageTags="latest;${{ github.sha }}"'
