@@ -11,26 +11,4 @@ public static class QueryableExtensions
             .Skip((pageNumber - 1) * pageSize)
             .Take(pageSize);
     }
-
-    public static async Task<PagedResponse<T>> ToPagedResponseAsync<T>(
-        this IQueryable<T> query,
-        int pageNumber,
-        int pageSize,
-        CancellationToken token)
-    {
-        var totalRecords = await query.CountAsync(token);
-
-        var data = await query
-            .ApplyPagination(pageNumber, pageSize)
-            .ToListAsync(token);
-
-        return new PagedResponse<T>
-        {
-            Data = data,
-            PageNumber = pageNumber,
-            PageSize = pageSize,
-            TotalRecords = totalRecords,
-            TotalPages = (int)Math.Ceiling(totalRecords / (double)pageSize)
-        };
-    }
 }
