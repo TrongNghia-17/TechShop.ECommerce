@@ -1,4 +1,4 @@
-﻿global using Hangfire;
+global using Hangfire;
 global using MediatR;
 global using Microsoft.Extensions.Caching.Hybrid;
 global using Microsoft.Extensions.Configuration;
@@ -11,3 +11,4 @@ global using TechShop.ECommerce.Application.Common.Emails;
 global using TechShop.ECommerce.Application.Contracts.Caching;
 global using TechShop.ECommerce.Application.Contracts.PaymentGateway;
 global using TechShop.ECommerce.Domain.Entities.Orders;
+global using TechShop.ECommerce.Application.Contracts.AI;

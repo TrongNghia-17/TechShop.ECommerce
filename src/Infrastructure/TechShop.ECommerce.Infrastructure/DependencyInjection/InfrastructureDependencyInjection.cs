@@ -1,4 +1,4 @@
-﻿namespace TechShop.ECommerce.Infrastructure.DependencyInjection;
+namespace TechShop.ECommerce.Infrastructure.DependencyInjection;
 
 public static class InfrastructureDependencyInjection
 {
@@ -12,6 +12,7 @@ public static class InfrastructureDependencyInjection
         services.AddStorageInfrastructure();
         services.AddBackgroundJobInfrastructure();
         services.AddDocumentInfrastructure();
+        services.AddAIInfrastructure(configuration);
 
         return services;
     }
