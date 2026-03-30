@@ -9,8 +9,30 @@ public class PGVectorRepository(TechShopDbContext dbContext) : IPGVectorReposito
 {
     public async Task InsertProductVectorAsync(Product product, float[] embeddings, CancellationToken cancellationToken = default)
     {
-        var productVector = new ProductVector(product.Id, embeddings);
-        dbContext.ProductVectors.Add(productVector);
+        await UpsertProductVectorsAsync([(product, embeddings)], cancellationToken);
+    }
+
+    public async Task UpsertProductVectorsAsync(IEnumerable<(Product Product, float[] Embedding)> batch, CancellationToken cancellationToken = default)
+    {
+        var productIds = batch.Select(b => b.Product.Id).ToList();
+
+        // Lấy tất cả vector hiện có trong 1 lần query
+        var existingVectors = await dbContext.ProductVectors
+            .Where(pv => productIds.Contains(pv.ProductId))
+            .ToDictionaryAsync(pv => pv.ProductId, cancellationToken);
+
+        foreach (var (product, embedding) in batch)
+        {
+            if (existingVectors.TryGetValue(product.Id, out var existingVector))
+            {
+                existingVector.UpdateEmbedding(embedding);
+            }
+            else
+            {
+                var newVector = new ProductVector(product.Id, embedding);
+                await dbContext.ProductVectors.AddAsync(newVector, cancellationToken);
+            }
+        }
 
         await dbContext.SaveChangesAsync(cancellationToken);
     }
@@ -30,7 +52,8 @@ public class PGVectorRepository(TechShopDbContext dbContext) : IPGVectorReposito
                 productVector.Product.Description,
                 productVector.Product.MainImageBlobName,
                 productVector.Product.Price,
-                new CategorySearchModel(productVector.Product.Category.Id.ToString(), productVector.Product.Category.Name)
+                new CategorySearchModel(productVector.Product.Category.Id.ToString(), productVector.Product.Category.Name),
+                1.0f - (float)productVector.Embedding.CosineDistance(pgVector) // <-- Tính Score
             ))
             .ToListAsync(cancellationToken);
 
@@ -50,7 +73,8 @@ public class PGVectorRepository(TechShopDbContext dbContext) : IPGVectorReposito
                 product.Description,
                 product.MainImageBlobName,
                 product.Price,
-                new CategorySearchModel(product.Category.Id.ToString(), product.Category.Name)
+                new CategorySearchModel(product.Category.Id.ToString(), product.Category.Name),
+                1.0f // Keyword match mặc định là 1.0
             ))
             .ToListAsync(cancellationToken);
 
@@ -64,8 +88,11 @@ public class PGVectorRepository(TechShopDbContext dbContext) : IPGVectorReposito
         var products = await dbContext.ProductVectors
             .Include(productVector => productVector.Product)
             .ThenInclude(product => product.Category)
-            .Where(productVector => EF.Functions.ILike(productVector.Product.Name, $"%{query}%") ||
-                                    (productVector.Product.Description != null && EF.Functions.ILike(productVector.Product.Description, $"%{query}%")))
+            .Where(productVector => 
+                EF.Functions.ILike(productVector.Product.Name, $"%{query}%") ||
+                EF.Functions.ILike(productVector.Product.Category.Name, $"%{query}%") ||
+                (productVector.Product.Category.Description != null && EF.Functions.ILike(productVector.Product.Category.Description, $"%{query}%")) ||
+                (productVector.Product.Description != null && EF.Functions.ILike(productVector.Product.Description, $"%{query}%")))
             .OrderBy(productVector => productVector.Embedding.CosineDistance(pgVector))
             .Take(topK)
             .Select(productVector => new ProductSearchModel(
@@ -74,7 +101,8 @@ public class PGVectorRepository(TechShopDbContext dbContext) : IPGVectorReposito
                 productVector.Product.Description,
                 productVector.Product.MainImageBlobName,
                 productVector.Product.Price,
-                new CategorySearchModel(productVector.Product.Category.Id.ToString(), productVector.Product.Category.Name)
+                new CategorySearchModel(productVector.Product.Category.Id.ToString(), productVector.Product.Category.Name),
+                1.0f - (float)productVector.Embedding.CosineDistance(pgVector) // <-- Tính Score cho Hybrid
             ))
             .ToListAsync(cancellationToken);
 

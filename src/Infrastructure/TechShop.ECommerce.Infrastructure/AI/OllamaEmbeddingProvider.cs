@@ -1,100 +1,104 @@
 using System.Net.Http.Json;
-using System.Text.Json;
 using System.Text.Json.Serialization;
 
 namespace TechShop.ECommerce.Infrastructure.AI;
 
-public class OllamaEmbeddingProvider(HttpClient httpClient, IOptions<OllamaSettings> options) : IEmbeddingProvider
+public sealed class OllamaEmbeddingProvider(
+    HttpClient httpClient,
+    IOptions<OllamaSettings> options,
+    ILogger<OllamaEmbeddingProvider> logger) : IEmbeddingProvider
 {
-    private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web);
     private readonly OllamaSettings _settings = options.Value;
 
     public int Dimensions => _settings.Dimensions;
 
     public async Task<float[]> EmbedAsync(string text, CancellationToken cancellationToken = default)
     {
-        var embedding = await TryEmbedWithModernEndpointAsync(text, cancellationToken);
-
-        if (embedding.Length > 0)
-        {
-            return embedding;
-        }
-
-        return await EmbedWithLegacyEndpointAsync(text, cancellationToken);
+        var results = await EmbedBatchAsync([text], cancellationToken);
+        return results.FirstOrDefault()
+            ?? [];
     }
 
     public async Task<IReadOnlyList<float[]>> EmbedBatchAsync(IEnumerable<string> texts, CancellationToken cancellationToken = default)
     {
-        var tasks = texts.Select(text => EmbedAsync(text, cancellationToken));
-        var results = await Task.WhenAll(tasks);
-        
-        return results.ToList();
+        var textList = texts.ToList();
+        if (textList.Count == 0) return [];
+
+        try
+        {
+            // Thử sử dụng modern endpoint (/api/embed) - hỗ trợ nạp theo lô chính chủ Ollama
+            var modernResult = await TryEmbedModernAsync(textList, cancellationToken);
+            if (modernResult.Count > 0) return modernResult;
+
+            // FALLBACK: Nếu Ollama phiên bản cũ không có /api/embed, chuyển sang chạy từng cái một
+            logger.LogWarning("Ollama modern endpoint not available. Falling back to sequential embedding (Legacy)");
+
+            var legacyResults = new List<float[]>();
+            foreach (var text in textList)
+            {
+                legacyResults.Add(await EmbedLegacyAsync(text, cancellationToken));
+            }
+            return legacyResults;
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "Error occurred during Ollama embedding for {Count} texts", textList.Count);
+            throw;
+        }
     }
 
-    private async Task<float[]> TryEmbedWithModernEndpointAsync(
-        string text,
-        CancellationToken cancellationToken)
+    private async Task<IReadOnlyList<float[]>> TryEmbedModernAsync(List<string> inputs, CancellationToken cancellationToken)
     {
-        var requestBody = new
-        {
-            model = _settings.EmbeddingModel,
-            input = text
-        };
+        var request = new { model = _settings.EmbeddingModel, input = inputs };
 
-        using var response = await httpClient.PostAsJsonAsync("/api/embed", requestBody, cancellationToken);
+        using var response = await httpClient.PostAsJsonAsync("/api/embed", request, cancellationToken);
 
-        if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
-        {
-            return Array.Empty<float>();
-        }
+        // Trả về danh sách trống nếu endpoint không tồn tại
+        if (response.StatusCode == System.Net.HttpStatusCode.NotFound) return [];
 
         response.EnsureSuccessStatusCode();
 
-        var responseJson = await response.Content.ReadAsStringAsync(cancellationToken);
-        var result = JsonSerializer.Deserialize<OllamaEmbedResponse>(responseJson, JsonOptions);
-
-        var embedding = result?.Embeddings?.FirstOrDefault();
-        if (embedding == null || embedding.Length == 0)
+        var responseContainer = await response.Content.ReadFromJsonAsync<OllamaEmbedResponse>(cancellationToken);
+        if (responseContainer?.Embeddings == null)
         {
-            return Array.Empty<float>();
+            return [];
         }
 
-        return embedding.Select(value => (float)value).ToArray();
+        // Tách ra để dễ debug: Chuyển đổi từ double[][] (API trả về) sang List<float[]> (Hệ thống dùng)
+        var floatEmbeddings = responseContainer.Embeddings
+            .Select(doubleArray => doubleArray.Select(v => (float)v).ToArray())
+            .ToList();
+
+        return floatEmbeddings;
     }
 
-    private async Task<float[]> EmbedWithLegacyEndpointAsync(
-        string text,
-        CancellationToken cancellationToken)
+    private async Task<float[]> EmbedLegacyAsync(string text, CancellationToken cancellationToken)
     {
-        var requestBody = new
-        {
-            model = _settings.EmbeddingModel,
-            prompt = text
-        };
+        var request = new { model = _settings.EmbeddingModel, prompt = text };
 
-        using var response = await httpClient.PostAsJsonAsync("/api/embeddings", requestBody, cancellationToken);
+        using var response = await httpClient.PostAsJsonAsync("/api/embeddings", request, cancellationToken);
         response.EnsureSuccessStatusCode();
 
-        var responseJson = await response.Content.ReadAsStringAsync(cancellationToken);
-        var result = JsonSerializer.Deserialize<OllamaEmbeddingResponse>(responseJson, JsonOptions);
-
-        if (result?.Embedding == null || result.Embedding.Length == 0)
+        var responseContainer = await response.Content.ReadFromJsonAsync<OllamaEmbeddingResponse>(cancellationToken);
+        if (responseContainer?.Embedding == null)
         {
-            return Array.Empty<float>();
+            return [];
         }
 
-        return result.Embedding.Select(value => (float)value).ToArray();
+        // Tách ra để dễ debug: Chuyển đổi mảng double[] sang float[]
+        var floatArray = responseContainer.Embedding
+            .Select(v => (float)v)
+            .ToArray();
+
+        return floatArray;
     }
 
-    private sealed class OllamaEmbedResponse
-    {
-        [JsonPropertyName("embeddings")]
-        public double[][]? Embeddings { get; set; }
-    }
+    // Records: Cú pháp hiện đại, tối giản và bất biến (Immutable)
+    private record OllamaEmbedResponse(
+        [property: JsonPropertyName("embeddings")] double[][]? Embeddings
+    );
 
-    private sealed class OllamaEmbeddingResponse
-    {
-        [JsonPropertyName("embedding")]
-        public double[]? Embedding { get; set; }
-    }
+    private record OllamaEmbeddingResponse(
+        [property: JsonPropertyName("embedding")] double[]? Embedding
+    );
 }

@@ -1,6 +1,7 @@
 using TechShop.ECommerce.Application.Common.Results;
 using TechShop.ECommerce.Application.Contracts.AI;
 using TechShop.ECommerce.Application.Contracts.Persistence;
+using TechShop.ECommerce.Domain.Entities.Catalogs;
 
 namespace TechShop.ECommerce.Application.Features.Products.IngestProductVectors;
 
@@ -22,34 +23,42 @@ public sealed class IngestProductVectorsCommandHandler(
         if (products.Count == 0)
             return Result<int>.Success(0);
 
-        var processed = 0;
+        var totalProcessed = 0;
 
+        // Xử lý theo từng lô (Batching) để tối ưu RAM và CPU
         for (var i = 0; i < products.Count; i += BatchSize)
         {
-            var batch = products
-                .Skip(i)
-                .Take(BatchSize)
+            var currentBatch = products.Skip(i).Take(BatchSize).ToList();
+
+            // 1. Chuẩn bị nội dung văn bản để AI học
+            var texts = currentBatch.Select(PrepareEmbeddingText).ToArray();
+
+            // 2. Chuyển đổi hàng loạt sang Vectors (Ollama Batch Embed)
+            var embeddings = await embeddingProvider.EmbedBatchAsync(texts, cancellationToken);
+
+            // 3. Chuẩn bị dữ liệu để lưu vào DB theo lô
+            var upsertData = currentBatch
+                .Select((product, index) => (product, embeddings[index]))
                 .ToList();
 
-            var texts = batch
-                .Select(product => $"{product.Name} {product.Summary} {product.Description}")
-                .ToArray();
+            // 4. Lưu toàn bộ lô vào Postgres (Chỉ 1 lần SaveChanges)
+            await vectorRepository.UpsertProductVectorsAsync(upsertData, cancellationToken);
 
-            var vectors = await embeddingProvider.EmbedBatchAsync(texts, cancellationToken);
+            totalProcessed += currentBatch.Count;
 
-            for (var j = 0; j < batch.Count; j++)
-            {
-                var product = batch[j];
-                var embedding = vectors[j];
-
-                await vectorRepository.InsertProductVectorAsync(product, embedding, cancellationToken);
-
-                processed++;
-            }
-
+            // Nghỉ một chút để không làm quá tải CPU của máy chủ Ollama
             await Task.Delay(BatchDelayMs, cancellationToken);
         }
 
-        return Result<int>.Success(processed);
+        return Result<int>.Success(totalProcessed);
+    }
+
+    private static string PrepareEmbeddingText(Product product)
+    {
+        // Nội dung càng chi tiết, AI tìm kiếm càng thông minh
+        return $"Category: {product.Category.Name} ({product.Category.Description}). " +
+               $"Product: {product.Name}. " +
+               $"Summary: {product.Summary}. " +
+               $"Description: {product.Description}";
     }
 }
