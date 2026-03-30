@@ -13,7 +13,7 @@ namespace TechShop.ECommerce.Api.IntegrationTests.Setup;
 
 public class CustomApiFactory : WebApplicationFactory<Program>, IAsyncLifetime
 {
-    private readonly PostgreSqlContainer _dbContainer = new PostgreSqlBuilder("postgres:15-alpine")
+    private readonly PostgreSqlContainer _dbContainer = new PostgreSqlBuilder("pgvector/pgvector:pg15")
         .WithDatabase("TechShop_TestDb")
         .WithUsername("postgres")
         .WithPassword("StrongPassword123!")
