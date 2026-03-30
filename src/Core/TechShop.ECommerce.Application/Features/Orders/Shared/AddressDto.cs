@@ -1,4 +1,4 @@
-﻿namespace TechShop.ECommerce.Application.Features.Orders.Shared;
+namespace TechShop.ECommerce.Application.Features.Orders.Shared;
 
 public sealed record AddressDto(
     string Street,

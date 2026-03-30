@@ -1,4 +1,4 @@
-﻿using TechShop.ECommerce.Application.Common.Paging;
+using TechShop.ECommerce.Application.Common.Paging;
 
 namespace TechShop.ECommerce.Application.Features.Products.GetProducts;
 

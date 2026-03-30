@@ -1,4 +1,4 @@
-﻿namespace TechShop.ECommerce.Infrastructure.Caching;
+namespace TechShop.ECommerce.Infrastructure.Caching;
 
 public class AppHybridCache(HybridCache cache) : IAppCache
 {

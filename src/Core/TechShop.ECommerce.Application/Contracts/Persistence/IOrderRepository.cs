@@ -1,4 +1,4 @@
-﻿using TechShop.ECommerce.Domain.Entities.Orders;
+using TechShop.ECommerce.Domain.Entities.Orders;
 
 namespace TechShop.ECommerce.Application.Contracts.Persistence;
 

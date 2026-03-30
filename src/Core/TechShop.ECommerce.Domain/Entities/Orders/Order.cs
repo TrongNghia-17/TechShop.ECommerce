@@ -1,4 +1,4 @@
-﻿using TechShop.ECommerce.Domain.Abstractions;
+using TechShop.ECommerce.Domain.Abstractions;
 using TechShop.ECommerce.Domain.Exceptions;
 using TechShop.ECommerce.Domain.ValueObjects;
 

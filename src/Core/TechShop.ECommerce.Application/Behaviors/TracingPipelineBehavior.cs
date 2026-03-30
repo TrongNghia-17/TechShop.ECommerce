@@ -1,4 +1,4 @@
-﻿using TechShop.ECommerce.Application.Common.Results;
+using TechShop.ECommerce.Application.Common.Results;
 using TechShop.ECommerce.Application.Common.Telemetry;
 
 namespace TechShop.ECommerce.Application.Behaviors;

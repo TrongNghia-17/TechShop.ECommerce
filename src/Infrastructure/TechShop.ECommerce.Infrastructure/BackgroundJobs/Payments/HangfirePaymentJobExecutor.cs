@@ -1,4 +1,4 @@
-﻿using TechShop.ECommerce.Application.BackgroundJobs.Payments.HandleRefundRequired;
+using TechShop.ECommerce.Application.BackgroundJobs.Payments.HandleRefundRequired;
 
 namespace TechShop.ECommerce.Infrastructure.Jobs.Payments;
 

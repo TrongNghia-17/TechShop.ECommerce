@@ -1,4 +1,4 @@
-﻿using TechShop.ECommerce.Application.BackgroundJobs.Emails.SendOrderConfirmedEmail;
+using TechShop.ECommerce.Application.BackgroundJobs.Emails.SendOrderConfirmedEmail;
 
 namespace TechShop.ECommerce.Infrastructure.Jobs.Emails;
 

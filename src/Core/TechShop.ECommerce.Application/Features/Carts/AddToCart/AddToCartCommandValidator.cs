@@ -1,4 +1,4 @@
-﻿namespace TechShop.ECommerce.Application.Features.Carts.AddToCart;
+namespace TechShop.ECommerce.Application.Features.Carts.AddToCart;
 
 public sealed class AddToCartCommandValidator : AbstractValidator<AddToCartCommand>
 {

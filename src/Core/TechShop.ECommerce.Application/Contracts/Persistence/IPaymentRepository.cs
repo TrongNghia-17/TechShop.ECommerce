@@ -1,4 +1,4 @@
-﻿using TechShop.ECommerce.Domain.Entities.Payments;
+using TechShop.ECommerce.Domain.Entities.Payments;
 
 namespace TechShop.ECommerce.Application.Contracts.Persistence;
 

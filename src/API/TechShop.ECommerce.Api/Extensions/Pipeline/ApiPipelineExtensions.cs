@@ -1,4 +1,4 @@
-﻿using TechShop.ECommerce.Api.Endpoints;
+using TechShop.ECommerce.Api.Endpoints;
 using TechShop.ECommerce.Api.Middleware;
 
 namespace TechShop.ECommerce.Api.Extensions.Pipeline;
@@ -42,6 +42,7 @@ public static class ApiPipelineExtensions
 
         app.MapStripeWebhookEndpoints();
         app.MapProductEndpoints();
+        app.MapSemanticEndpoints();
         app.MapAuthEndpoints();
         app.MapCartEndpoints();
         app.MapOrderEndpoints();

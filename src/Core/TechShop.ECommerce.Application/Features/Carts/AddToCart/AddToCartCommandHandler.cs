@@ -1,4 +1,4 @@
-﻿using TechShop.ECommerce.Application.Common.Errors;
+using TechShop.ECommerce.Application.Common.Errors;
 using TechShop.ECommerce.Application.Common.Results;
 using TechShop.ECommerce.Application.Contracts.Identity;
 using TechShop.ECommerce.Application.Contracts.Persistence;

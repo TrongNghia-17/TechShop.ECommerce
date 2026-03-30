@@ -1,4 +1,4 @@
-﻿using TechShop.ECommerce.Application.Contracts.Identity;
+using TechShop.ECommerce.Application.Contracts.Identity;
 
 namespace TechShop.ECommerce.Infrastructure.Background;
 

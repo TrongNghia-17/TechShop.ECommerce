@@ -1,4 +1,4 @@
-﻿namespace TechShop.ECommerce.Application.Contracts.Caching;
+namespace TechShop.ECommerce.Application.Contracts.Caching;
 
 public interface IAppCache
 {

@@ -1,4 +1,4 @@
-﻿using TechShop.ECommerce.Application.BackgroundJobs.Orders.ExpirePendingOrders;
+using TechShop.ECommerce.Application.BackgroundJobs.Orders.ExpirePendingOrders;
 
 namespace TechShop.ECommerce.Infrastructure.Jobs.Orders;
 

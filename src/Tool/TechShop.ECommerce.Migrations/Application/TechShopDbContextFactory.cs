@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using TechShop.ECommerce.Application.Common.Constants;
 using TechShop.ECommerce.Migrations.Configuration;

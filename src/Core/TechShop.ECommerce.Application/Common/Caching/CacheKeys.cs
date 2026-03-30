@@ -1,4 +1,4 @@
-﻿namespace TechShop.ECommerce.Application.Common.Caching;
+namespace TechShop.ECommerce.Application.Common.Caching;
 
 public static class CacheKeys
 {

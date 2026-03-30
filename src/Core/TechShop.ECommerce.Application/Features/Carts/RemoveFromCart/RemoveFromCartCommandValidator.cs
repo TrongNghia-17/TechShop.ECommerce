@@ -1,4 +1,4 @@
-﻿namespace TechShop.ECommerce.Application.Features.Carts.RemoveFromCart;
+namespace TechShop.ECommerce.Application.Features.Carts.RemoveFromCart;
 
 public sealed class RemoveFromCartCommandValidator
     : AbstractValidator<RemoveFromCartCommand>

@@ -1,4 +1,4 @@
-﻿using TechShop.ECommerce.Application.BackgroundJobs.Payments.ProcessCheckoutSessionCompleted;
+using TechShop.ECommerce.Application.BackgroundJobs.Payments.ProcessCheckoutSessionCompleted;
 
 namespace TechShop.ECommerce.Infrastructure.Jobs.Payments;
 

@@ -1,4 +1,4 @@
-﻿using TechShop.ECommerce.Domain.Entities.Catalogs;
+using TechShop.ECommerce.Domain.Entities.Catalogs;
 using TechShop.ECommerce.Persistence.Context;
 
 namespace TechShop.ECommerce.Persistence.Seedings;

@@ -1,4 +1,4 @@
-﻿using TechShop.ECommerce.Domain.ValueObjects;
+using TechShop.ECommerce.Domain.ValueObjects;
 
 namespace TechShop.ECommerce.Application.Features.Orders.Shared;
 

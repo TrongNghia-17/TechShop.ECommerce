@@ -1,4 +1,4 @@
-﻿namespace TechShop.ECommerce.Application.Features.Identity.Register;
+namespace TechShop.ECommerce.Application.Features.Identity.Register;
 
 public sealed class RegisterCommandValidator
     : AbstractValidator<RegisterCommand>

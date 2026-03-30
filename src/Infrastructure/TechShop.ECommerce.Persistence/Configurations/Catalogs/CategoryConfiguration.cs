@@ -1,4 +1,4 @@
-﻿using TechShop.ECommerce.Domain.Entities.Catalogs;
+using TechShop.ECommerce.Domain.Entities.Catalogs;
 
 namespace TechShop.ECommerce.Persistence.Configurations.Catalogs;
 

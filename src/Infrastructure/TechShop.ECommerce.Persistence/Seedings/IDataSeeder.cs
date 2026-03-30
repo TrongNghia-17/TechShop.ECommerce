@@ -1,4 +1,4 @@
-﻿namespace TechShop.ECommerce.Persistence.Seedings;
+namespace TechShop.ECommerce.Persistence.Seedings;
 
 public interface IDataSeeder
 {

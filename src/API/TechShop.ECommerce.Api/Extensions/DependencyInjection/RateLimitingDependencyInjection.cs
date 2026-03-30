@@ -1,4 +1,4 @@
-﻿using TechShop.ECommerce.Api.Extensions.RateLimiting;
+using TechShop.ECommerce.Api.Extensions.RateLimiting;
 
 namespace TechShop.ECommerce.Api.Extensions.DependencyInjection;
 

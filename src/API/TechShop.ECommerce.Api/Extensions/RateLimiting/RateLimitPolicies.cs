@@ -1,4 +1,4 @@
-﻿namespace TechShop.ECommerce.Api.Extensions.RateLimiting;
+namespace TechShop.ECommerce.Api.Extensions.RateLimiting;
 
 public static class RateLimitPolicies
 {

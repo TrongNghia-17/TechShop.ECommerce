@@ -1,4 +1,4 @@
-﻿namespace TechShop.ECommerce.Identity.Services;
+namespace TechShop.ECommerce.Identity.Services;
 
 public sealed class CurrentUserService(IHttpContextAccessor httpContextAccessor) : ICurrentUserService
 {

@@ -1,4 +1,4 @@
-﻿using TechShop.ECommerce.Application.Common.Constants;
+using TechShop.ECommerce.Application.Common.Constants;
 using TechShop.ECommerce.Application.Contracts.Persistence;
 using TechShop.ECommerce.Persistence.Context;
 using TechShop.ECommerce.Persistence.Interceptors;
@@ -22,13 +22,14 @@ public static class PersistenceDependencyInjection
 
         services.AddDbContext<TechShopDbContext>((serviceProvider, options) =>
         {
-            options.UseNpgsql(connectionString);
+            options.UseNpgsql(connectionString, o => o.UseVector());
             options.AddInterceptors(
                 serviceProvider.GetRequiredService<AuditSaveChangesInterceptor>(),
                 serviceProvider.GetRequiredService<SoftDeleteSaveChangesInterceptor>());
         });
 
         services.AddScoped<IProductRepository, ProductRepository>();
+        services.AddScoped<IPGVectorRepository, PGVectorRepository>();
         services.AddScoped<IOrderRepository, OrderRepository>();
         services.AddScoped<ICartRepository, CartRepository>();
         services.AddScoped<IPaymentRepository, PaymentRepository>();

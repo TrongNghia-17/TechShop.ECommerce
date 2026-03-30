@@ -1,4 +1,4 @@
-﻿using TechShop.ECommerce.Application.Common.Caching;
+using TechShop.ECommerce.Application.Common.Caching;
 using TechShop.ECommerce.Application.Common.Results;
 using TechShop.ECommerce.Application.Contracts.Caching;
 using TechShop.ECommerce.Application.Contracts.Persistence;

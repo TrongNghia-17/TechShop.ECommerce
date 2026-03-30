@@ -1,4 +1,4 @@
-﻿namespace TechShop.ECommerce.Application.Contracts.Persistence;
+namespace TechShop.ECommerce.Application.Contracts.Persistence;
 
 public interface IUnitOfWork
 {

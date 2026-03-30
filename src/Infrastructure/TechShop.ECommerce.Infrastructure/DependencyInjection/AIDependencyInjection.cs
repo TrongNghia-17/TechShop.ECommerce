@@ -17,12 +17,14 @@ public static class AIDependencyInjection
         {
             var options = serviceProvider.GetRequiredService<IOptions<OllamaSettings>>().Value;
             client.BaseAddress = new Uri(options.BaseUrl);
+            client.Timeout = TimeSpan.FromMinutes(5);
         });
 
         services.AddHttpClient<IChatProvider, OllamaChatProvider>((serviceProvider, client) =>
         {
             var options = serviceProvider.GetRequiredService<IOptions<OllamaSettings>>().Value;
             client.BaseAddress = new Uri(options.BaseUrl);
+            client.Timeout = TimeSpan.FromMinutes(5);
         });
 
         return services;

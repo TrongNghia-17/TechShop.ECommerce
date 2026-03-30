@@ -1,4 +1,4 @@
-﻿using TechShop.ECommerce.Application.Behaviors;
+using TechShop.ECommerce.Application.Behaviors;
 using TechShop.ECommerce.Application.Features.Orders.Shared;
 using TechShop.ECommerce.Application.Features.Products.GetProductDetails;
 

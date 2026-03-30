@@ -1,4 +1,4 @@
-﻿namespace TechShop.ECommerce.Infrastructure.Emails;
+namespace TechShop.ECommerce.Infrastructure.Emails;
 
 public sealed class OrderConfirmationEmailBuilder
     : IOrderConfirmationEmailBuilder

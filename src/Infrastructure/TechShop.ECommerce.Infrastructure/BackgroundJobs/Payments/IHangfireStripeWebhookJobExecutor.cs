@@ -1,4 +1,4 @@
-﻿namespace TechShop.ECommerce.Infrastructure.Jobs.Payments;
+namespace TechShop.ECommerce.Infrastructure.Jobs.Payments;
 
 public interface IHangfireStripeWebhookJobExecutor
 {

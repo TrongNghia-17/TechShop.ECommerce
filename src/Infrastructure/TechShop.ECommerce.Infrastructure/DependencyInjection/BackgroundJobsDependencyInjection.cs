@@ -1,4 +1,4 @@
-﻿using TechShop.ECommerce.Application.Contracts.Jobs;
+using TechShop.ECommerce.Application.Contracts.Jobs;
 using TechShop.ECommerce.Infrastructure.Jobs.Emails;
 using TechShop.ECommerce.Infrastructure.Jobs.Orders;
 using TechShop.ECommerce.Infrastructure.Jobs.Payments;

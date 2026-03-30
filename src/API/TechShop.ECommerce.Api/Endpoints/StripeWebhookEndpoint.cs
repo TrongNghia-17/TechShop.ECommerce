@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Options;
 using Stripe;
 using Stripe.Checkout;
 using TechShop.ECommerce.Api.Extensions.RateLimiting;

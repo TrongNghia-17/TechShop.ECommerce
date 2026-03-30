@@ -1,4 +1,4 @@
-namespace TechShop.ECommerce.Application.Features.Products.Models;
+namespace TechShop.ECommerce.Application.Features.Products.Shared;
 
 public record CategorySearchModel(
     string Id, 

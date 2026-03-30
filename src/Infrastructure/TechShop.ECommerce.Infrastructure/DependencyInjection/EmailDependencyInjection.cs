@@ -1,4 +1,4 @@
-﻿using TechShop.ECommerce.Infrastructure.Emails;
+using TechShop.ECommerce.Infrastructure.Emails;
 
 namespace TechShop.ECommerce.Infrastructure.DependencyInjection;
 

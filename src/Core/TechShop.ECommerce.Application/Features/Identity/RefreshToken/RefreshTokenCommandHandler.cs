@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Options;
 using TechShop.ECommerce.Application.Common.Errors;
 using TechShop.ECommerce.Application.Common.Results;
 using TechShop.ECommerce.Application.Contracts.Authentication;

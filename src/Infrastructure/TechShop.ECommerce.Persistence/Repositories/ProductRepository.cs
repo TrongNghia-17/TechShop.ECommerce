@@ -1,4 +1,4 @@
-﻿using TechShop.ECommerce.Application.Common.Paging;
+using TechShop.ECommerce.Application.Common.Paging;
 using TechShop.ECommerce.Application.Contracts.Persistence;
 using TechShop.ECommerce.Application.Features.Products.GetProducts;
 using TechShop.ECommerce.Persistence.Context;
@@ -71,6 +71,15 @@ public sealed class ProductRepository(TechShopDbContext context) : IProductRepos
             TotalRecords = totalRecords,
             TotalPages = (int)Math.Ceiling(totalRecords / (double)pageSize)
         };
+    }
+
+    public async Task<IReadOnlyList<Product>> GetAllForIngestionAsync(CancellationToken cancellationToken)
+    {
+        return await context.Products
+            .AsNoTracking()
+            .Include(product => product.Category)
+            .OrderBy(product => product.Name)
+            .ToListAsync(cancellationToken);
     }
 
     public async Task AddAsync(Product product)

@@ -1,4 +1,4 @@
-﻿using TechShop.ECommerce.Application.Contracts.Documents;
+using TechShop.ECommerce.Application.Contracts.Documents;
 using TechShop.ECommerce.Infrastructure.Documents;
 
 namespace TechShop.ECommerce.Infrastructure.DependencyInjection;

@@ -1,4 +1,4 @@
-﻿using TechShop.ECommerce.Domain.Entities.Carts;
+using TechShop.ECommerce.Domain.Entities.Carts;
 
 namespace TechShop.ECommerce.Application.Contracts.Persistence;
 

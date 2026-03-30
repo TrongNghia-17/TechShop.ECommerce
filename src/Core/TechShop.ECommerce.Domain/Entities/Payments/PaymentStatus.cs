@@ -1,4 +1,4 @@
-﻿namespace TechShop.ECommerce.Domain.Entities.Payments;
+namespace TechShop.ECommerce.Domain.Entities.Payments;
 
 public enum PaymentStatus
 {

@@ -1,4 +1,4 @@
-﻿using TechShop.ECommerce.Application.Contracts.Jobs;
+using TechShop.ECommerce.Application.Contracts.Jobs;
 
 namespace TechShop.ECommerce.Infrastructure.Jobs.Payments;
 

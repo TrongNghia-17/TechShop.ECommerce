@@ -1,4 +1,4 @@
-﻿namespace TechShop.ECommerce.Application.Common.Telemetry;
+namespace TechShop.ECommerce.Application.Common.Telemetry;
 
 public static class TelemetryConfig
 {

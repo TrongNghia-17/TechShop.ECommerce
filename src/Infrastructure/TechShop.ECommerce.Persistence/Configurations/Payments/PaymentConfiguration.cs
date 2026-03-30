@@ -1,4 +1,4 @@
-﻿namespace TechShop.ECommerce.Persistence.Configurations.Payments;
+namespace TechShop.ECommerce.Persistence.Configurations.Payments;
 
 public class PaymentConfiguration : IEntityTypeConfiguration<Payment>
 {

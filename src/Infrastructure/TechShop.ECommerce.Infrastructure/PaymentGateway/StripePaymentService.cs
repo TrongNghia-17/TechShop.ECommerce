@@ -1,4 +1,4 @@
-﻿using Stripe;
+using Stripe;
 using Stripe.Checkout;
 
 namespace TechShop.ECommerce.Infrastructure.PaymentGateway;

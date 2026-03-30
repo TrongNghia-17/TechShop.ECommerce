@@ -1,4 +1,4 @@
-﻿namespace TechShop.ECommerce.Domain.Entities.Orders;
+namespace TechShop.ECommerce.Domain.Entities.Orders;
 
 public enum OrderStatus
 {

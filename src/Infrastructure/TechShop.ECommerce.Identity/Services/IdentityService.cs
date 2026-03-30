@@ -1,4 +1,4 @@
-﻿using System.Security.Cryptography;
+using System.Security.Cryptography;
 using TechShop.ECommerce.Identity.Context;
 using TechShop.ECommerce.Identity.Entities;
 

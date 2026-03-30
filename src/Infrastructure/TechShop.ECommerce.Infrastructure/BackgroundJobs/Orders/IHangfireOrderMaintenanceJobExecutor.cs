@@ -1,4 +1,4 @@
-﻿namespace TechShop.ECommerce.Infrastructure.Jobs.Orders;
+namespace TechShop.ECommerce.Infrastructure.Jobs.Orders;
 
 public interface IHangfireOrderMaintenanceJobExecutor
 {

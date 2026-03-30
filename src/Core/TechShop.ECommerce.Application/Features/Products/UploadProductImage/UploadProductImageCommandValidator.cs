@@ -1,4 +1,4 @@
-﻿namespace TechShop.ECommerce.Application.Features.Products.UploadProductImage;
+namespace TechShop.ECommerce.Application.Features.Products.UploadProductImage;
 
 public sealed class UploadProductImageCommandValidator
     : AbstractValidator<UploadProductImageCommand>

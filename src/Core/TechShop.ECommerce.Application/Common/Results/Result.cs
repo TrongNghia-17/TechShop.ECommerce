@@ -1,4 +1,4 @@
-﻿using TechShop.ECommerce.Domain.Errors;
+using TechShop.ECommerce.Domain.Errors;
 
 namespace TechShop.ECommerce.Application.Common.Results;
 

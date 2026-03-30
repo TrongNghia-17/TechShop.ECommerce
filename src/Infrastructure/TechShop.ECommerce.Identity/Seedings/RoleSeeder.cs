@@ -1,4 +1,4 @@
-﻿namespace TechShop.ECommerce.Identity.Seedings;
+namespace TechShop.ECommerce.Identity.Seedings;
 
 public sealed class RoleSeeder(RoleManager<IdentityRole<Guid>> roleManager) : IIdentitySeeder
 {

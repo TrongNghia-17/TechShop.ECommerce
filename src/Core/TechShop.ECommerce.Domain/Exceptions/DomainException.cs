@@ -1,3 +1,3 @@
-﻿namespace TechShop.ECommerce.Domain.Exceptions;
+namespace TechShop.ECommerce.Domain.Exceptions;
 
 public sealed class DomainException(string message) : Exception(message);

@@ -1,4 +1,4 @@
-﻿using MediatR;
+using MediatR;
 using TechShop.ECommerce.Application.Common.Results;
 
 namespace TechShop.ECommerce.Application.BackgroundJobs.Payments.ProcessCheckoutSessionCompleted;

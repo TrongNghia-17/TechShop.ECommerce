@@ -1,4 +1,4 @@
-﻿using TechShop.ECommerce.Api.Middleware;
+using TechShop.ECommerce.Api.Middleware;
 using TechShop.ECommerce.Application;
 using TechShop.ECommerce.Application.Common.Constants;
 using TechShop.ECommerce.Identity.DependencyInjection;

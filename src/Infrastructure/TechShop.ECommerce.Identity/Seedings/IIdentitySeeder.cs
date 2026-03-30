@@ -1,4 +1,4 @@
-﻿namespace TechShop.ECommerce.Identity.Seedings;
+namespace TechShop.ECommerce.Identity.Seedings;
 
 public interface IIdentitySeeder
 {

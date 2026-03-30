@@ -1,4 +1,4 @@
-﻿using TechShop.ECommerce.Application.Common.Results;
+using TechShop.ECommerce.Application.Common.Results;
 
 namespace TechShop.ECommerce.Application.Features.Identity.RefreshToken;
 

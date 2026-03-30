@@ -1,4 +1,4 @@
-﻿namespace TechShop.ECommerce.Domain.Abstractions;
+namespace TechShop.ECommerce.Domain.Abstractions;
 
 public abstract class BaseEntity
 {

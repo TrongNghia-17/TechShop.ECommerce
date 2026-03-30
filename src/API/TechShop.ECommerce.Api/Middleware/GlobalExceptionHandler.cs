@@ -1,4 +1,4 @@
-﻿using TechShop.ECommerce.Application.Exceptions;
+using TechShop.ECommerce.Application.Exceptions;
 
 namespace TechShop.ECommerce.Api.Middleware;
 

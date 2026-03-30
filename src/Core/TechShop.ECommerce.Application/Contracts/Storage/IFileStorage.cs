@@ -1,4 +1,4 @@
-﻿namespace TechShop.ECommerce.Application.Contracts.Storage;
+namespace TechShop.ECommerce.Application.Contracts.Storage;
 
 public interface IFileStorage
 {

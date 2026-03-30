@@ -1,4 +1,4 @@
-﻿using TechShop.ECommerce.Application.Features.Orders.Invoices;
+using TechShop.ECommerce.Application.Features.Orders.Invoices;
 
 namespace TechShop.ECommerce.Application.Contracts.Documents;
 

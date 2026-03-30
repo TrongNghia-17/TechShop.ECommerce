@@ -1,4 +1,4 @@
-﻿namespace TechShop.ECommerce.Application.Features.Orders.PlaceOrder;
+namespace TechShop.ECommerce.Application.Features.Orders.PlaceOrder;
 
 public sealed record PlaceOrderResponse(
     Guid OrderId,

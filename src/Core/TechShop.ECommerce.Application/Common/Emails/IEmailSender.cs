@@ -1,4 +1,4 @@
-﻿namespace TechShop.ECommerce.Application.Common.Emails;
+namespace TechShop.ECommerce.Application.Common.Emails;
 
 public interface IEmailSender
 {

@@ -1,4 +1,4 @@
-﻿using MediatR;
+using MediatR;
 
 namespace TechShop.ECommerce.Application.BackgroundJobs.Payments.HandleRefundRequired;
 

@@ -1,4 +1,4 @@
-﻿namespace TechShop.ECommerce.Application.Features.Orders.Invoices;
+namespace TechShop.ECommerce.Application.Features.Orders.Invoices;
 
 public sealed record OrderInvoiceModel(
     string InvoiceNumber,

@@ -1,4 +1,4 @@
-﻿namespace TechShop.ECommerce.Application.Contracts.Identity;
+namespace TechShop.ECommerce.Application.Contracts.Identity;
 
 public sealed record IdentitySession(
     Guid UserId,

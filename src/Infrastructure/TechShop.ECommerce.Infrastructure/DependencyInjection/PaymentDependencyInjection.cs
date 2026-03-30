@@ -1,4 +1,4 @@
-﻿using TechShop.ECommerce.Infrastructure.PaymentGateway;
+using TechShop.ECommerce.Infrastructure.PaymentGateway;
 
 namespace TechShop.ECommerce.Infrastructure.DependencyInjection;
 

@@ -1,4 +1,4 @@
-﻿namespace TechShop.ECommerce.Api.Extensions.Hosting;
+namespace TechShop.ECommerce.Api.Extensions.Hosting;
 
 public static class SerilogHostExtensions
 {

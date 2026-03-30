@@ -1,4 +1,4 @@
-﻿using TechShop.ECommerce.Application.Features.Carts.Shared;
+using TechShop.ECommerce.Application.Features.Carts.Shared;
 
 namespace TechShop.ECommerce.Application.Features.Carts.GetCart;
 

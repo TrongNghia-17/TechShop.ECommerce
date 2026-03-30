@@ -1,4 +1,4 @@
-﻿using TechShop.ECommerce.Identity.Authentication;
+using TechShop.ECommerce.Identity.Authentication;
 
 namespace TechShop.ECommerce.Identity.DependencyInjection;
 

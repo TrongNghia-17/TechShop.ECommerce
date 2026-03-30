@@ -1,4 +1,4 @@
-﻿namespace TechShop.ECommerce.Application.Common.Constants;
+namespace TechShop.ECommerce.Application.Common.Constants;
 
 public static class ConnectionStrings
 {

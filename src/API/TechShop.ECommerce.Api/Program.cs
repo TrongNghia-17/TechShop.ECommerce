@@ -1,4 +1,4 @@
-﻿using TechShop.ECommerce.Api.Extensions.DependencyInjection;
+using TechShop.ECommerce.Api.Extensions.DependencyInjection;
 using TechShop.ECommerce.Api.Extensions.Hosting;
 using TechShop.ECommerce.Api.Extensions.Pipeline;
 

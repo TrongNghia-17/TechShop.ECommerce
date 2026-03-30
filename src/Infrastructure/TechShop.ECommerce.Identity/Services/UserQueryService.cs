@@ -1,4 +1,4 @@
-﻿using TechShop.ECommerce.Identity.Entities;
+using TechShop.ECommerce.Identity.Entities;
 
 namespace TechShop.ECommerce.Identity.Services;
 

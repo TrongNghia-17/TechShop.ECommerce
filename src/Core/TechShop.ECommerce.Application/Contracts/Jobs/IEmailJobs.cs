@@ -1,4 +1,4 @@
-﻿namespace TechShop.ECommerce.Application.Contracts.Jobs;
+namespace TechShop.ECommerce.Application.Contracts.Jobs;
 
 public interface IEmailJobs
 {

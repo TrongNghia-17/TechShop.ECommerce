@@ -1,4 +1,4 @@
-﻿namespace TechShop.ECommerce.Domain.Errors;
+namespace TechShop.ECommerce.Domain.Errors;
 
 public static class ProductErrors
 {

@@ -1,5 +1,5 @@
 using TechShop.ECommerce.Domain.Entities.Catalogs;
-using TechShop.ECommerce.Application.Features.Products.Models;
+using TechShop.ECommerce.Application.Features.Products.Shared;
 
 namespace TechShop.ECommerce.Application.Contracts.Persistence;
 

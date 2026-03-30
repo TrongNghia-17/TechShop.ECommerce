@@ -1,4 +1,4 @@
-﻿namespace TechShop.ECommerce.Identity.Authentication;
+namespace TechShop.ECommerce.Identity.Authentication;
 
 public class JwtTokenGenerator(IOptions<JwtOptions> options)
     : IJwtTokenGenerator

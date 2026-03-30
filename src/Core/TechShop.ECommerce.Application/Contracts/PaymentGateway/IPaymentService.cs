@@ -1,4 +1,4 @@
-﻿namespace TechShop.ECommerce.Application.Contracts.PaymentGateway;
+namespace TechShop.ECommerce.Application.Contracts.PaymentGateway;
 
 public sealed record CheckoutSessionResult(
     string SessionId,

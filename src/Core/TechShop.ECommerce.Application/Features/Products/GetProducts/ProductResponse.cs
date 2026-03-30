@@ -1,4 +1,4 @@
-﻿namespace TechShop.ECommerce.Application.Features.Products.GetProducts;
+namespace TechShop.ECommerce.Application.Features.Products.GetProducts;
 
 public sealed record ProductResponse(
     Guid Id,

@@ -1,4 +1,4 @@
-﻿namespace TechShop.ECommerce.Application.Behaviors;
+namespace TechShop.ECommerce.Application.Behaviors;
 
 public class LoggingBehavior<TRequest, TResponse>(
     ILogger<LoggingBehavior<TRequest, TResponse>> logger)

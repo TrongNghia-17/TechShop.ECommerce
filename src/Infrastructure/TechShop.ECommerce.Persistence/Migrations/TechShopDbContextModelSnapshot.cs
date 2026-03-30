@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
+using Pgvector;
 using TechShop.ECommerce.Persistence.Context;
 
 #nullable disable
@@ -20,6 +21,7 @@ namespace TechShop.ECommerce.Persistence.Migrations
                 .HasAnnotation("ProductVersion", "10.0.5")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
+            NpgsqlModelBuilderExtensions.HasPostgresExtension(modelBuilder, "vector");
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
             modelBuilder.Entity("TechShop.ECommerce.Domain.Entities.Carts.Cart", b =>
@@ -189,6 +191,25 @@ namespace TechShop.ECommerce.Persistence.Migrations
                     b.ToTable("Products", (string)null);
                 });
 
+            modelBuilder.Entity("TechShop.ECommerce.Domain.Entities.Catalogs.ProductVector", b =>
+                {
+                    b.Property<Guid>("ProductId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Vector>("Embedding")
+                        .IsRequired()
+                        .HasColumnType("vector(768)");
+
+                    b.HasKey("ProductId");
+
+                    b.HasIndex("Embedding");
+
+                    NpgsqlIndexBuilderExtensions.HasMethod(b.HasIndex("Embedding"), "hnsw");
+                    NpgsqlIndexBuilderExtensions.HasOperators(b.HasIndex("Embedding"), new[] { "vector_cosine_ops" });
+
+                    b.ToTable("ProductVectors", (string)null);
+                });
+
             modelBuilder.Entity("TechShop.ECommerce.Domain.Entities.Orders.Order", b =>
                 {
                     b.Property<Guid>("Id")
@@ -354,6 +375,17 @@ namespace TechShop.ECommerce.Persistence.Migrations
                         .IsRequired();
 
                     b.Navigation("Category");
+                });
+
+            modelBuilder.Entity("TechShop.ECommerce.Domain.Entities.Catalogs.ProductVector", b =>
+                {
+                    b.HasOne("TechShop.ECommerce.Domain.Entities.Catalogs.Product", "Product")
+                        .WithOne()
+                        .HasForeignKey("TechShop.ECommerce.Domain.Entities.Catalogs.ProductVector", "ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
                 });
 
             modelBuilder.Entity("TechShop.ECommerce.Domain.Entities.Orders.Order", b =>

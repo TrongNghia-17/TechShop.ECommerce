@@ -1,4 +1,4 @@
-﻿namespace TechShop.ECommerce.Persistence.Configurations.Orders;
+namespace TechShop.ECommerce.Persistence.Configurations.Orders;
 
 public class OrderConfiguration : IEntityTypeConfiguration<Order>
 {

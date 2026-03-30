@@ -1,4 +1,4 @@
-﻿namespace TechShop.ECommerce.Api.Middleware;
+namespace TechShop.ECommerce.Api.Middleware;
 
 public sealed class SecurityHeadersMiddleware(
     RequestDelegate next)

@@ -1,3 +1,3 @@
-﻿namespace TechShop.ECommerce.Application.Features.Identity.Register;
+namespace TechShop.ECommerce.Application.Features.Identity.Register;
 
 public sealed record RegisterResponse(Guid UserId);

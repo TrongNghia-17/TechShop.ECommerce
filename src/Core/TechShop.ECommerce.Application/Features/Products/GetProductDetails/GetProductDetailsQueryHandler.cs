@@ -1,4 +1,4 @@
-﻿using TechShop.ECommerce.Application.Contracts.Persistence;
+using TechShop.ECommerce.Application.Contracts.Persistence;
 using TechShop.ECommerce.Application.Exceptions;
 using TechShop.ECommerce.Domain.Entities.Catalogs;
 

@@ -1,4 +1,4 @@
-﻿namespace TechShop.ECommerce.Application.Features.Identity.Login;
+namespace TechShop.ECommerce.Application.Features.Identity.Login;
 
 public sealed class LoginCommandValidator
     : AbstractValidator<LoginCommand>

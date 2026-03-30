@@ -1,4 +1,4 @@
-﻿using TechShop.ECommerce.Application.Common.Constants;
+using TechShop.ECommerce.Application.Common.Constants;
 using TechShop.ECommerce.Infrastructure.Caching;
 
 namespace TechShop.ECommerce.Infrastructure.DependencyInjection;

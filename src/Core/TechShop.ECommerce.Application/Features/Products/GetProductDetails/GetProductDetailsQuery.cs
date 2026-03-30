@@ -1,4 +1,4 @@
-﻿using TechShop.ECommerce.Application.Common.Caching;
+using TechShop.ECommerce.Application.Common.Caching;
 using TechShop.ECommerce.Application.Contracts.Caching;
 
 namespace TechShop.ECommerce.Application.Features.Products.GetProductDetails;

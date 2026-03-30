@@ -1,4 +1,4 @@
-﻿using TechShop.ECommerce.Application.Contracts.Caching;
+using TechShop.ECommerce.Application.Contracts.Caching;
 
 namespace TechShop.ECommerce.Application.Behaviors;
 

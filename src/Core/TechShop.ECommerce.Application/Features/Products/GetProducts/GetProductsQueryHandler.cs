@@ -1,4 +1,4 @@
-﻿using TechShop.ECommerce.Application.Common.Paging;
+using TechShop.ECommerce.Application.Common.Paging;
 using TechShop.ECommerce.Application.Contracts.Persistence;
 using TechShop.ECommerce.Application.Contracts.Storage;
 

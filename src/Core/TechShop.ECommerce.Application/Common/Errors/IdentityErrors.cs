@@ -1,4 +1,4 @@
-﻿namespace TechShop.ECommerce.Application.Common.Errors;
+namespace TechShop.ECommerce.Application.Common.Errors;
 
 public static class IdentityErrors
 {

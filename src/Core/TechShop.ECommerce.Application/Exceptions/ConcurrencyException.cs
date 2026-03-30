@@ -1,4 +1,4 @@
-﻿namespace TechShop.ECommerce.Application.Exceptions;
+namespace TechShop.ECommerce.Application.Exceptions;
 
 public sealed class ConcurrencyException : Exception
 {

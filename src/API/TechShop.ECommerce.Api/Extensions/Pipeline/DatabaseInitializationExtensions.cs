@@ -1,4 +1,4 @@
-﻿using TechShop.ECommerce.Identity.Context;
+using TechShop.ECommerce.Identity.Context;
 using TechShop.ECommerce.Identity.Seedings;
 using TechShop.ECommerce.Persistence.Context;
 using TechShop.ECommerce.Persistence.Seedings;

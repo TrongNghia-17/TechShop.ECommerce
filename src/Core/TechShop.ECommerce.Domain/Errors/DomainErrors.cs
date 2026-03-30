@@ -1,4 +1,4 @@
-﻿namespace TechShop.ECommerce.Domain.Errors;
+namespace TechShop.ECommerce.Domain.Errors;
 
 public record DomainErrors(string Code, string Description)
 {
