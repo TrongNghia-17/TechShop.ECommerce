@@ -1,11 +1,8 @@
-using Microsoft.Extensions.Hosting;
 using TechShop.ECommerce.Application.Common.Results;
 using TechShop.ECommerce.Application.Contracts.AI;
 using TechShop.ECommerce.Application.Features.AI.AskProductAssistant;
 using TechShop.ECommerce.Application.Features.AI.Shared;
 using TechShop.ECommerce.Application.Features.Products.IngestProductVectors;
-using TechShop.ECommerce.Application.Features.Products.SearchProductsByKeyword;
-using TechShop.ECommerce.Application.Features.Products.SearchProductsByVector;
 using TechShop.ECommerce.Application.Features.Products.SearchProductsHybrid;
 using TechShop.ECommerce.Application.Features.Products.Shared;
 
@@ -34,36 +31,6 @@ public static class SemanticEndpoints
         .WithName("AI_IngestProductVectors")
         .WithSummary("Ingests all products into the vector database for semantic search")
         .Produces<int>(StatusCodes.Status200OK)
-        .Produces(StatusCodes.Status500InternalServerError);
-
-        // POST /api/ai/search/vector
-        group.MapPost("/search/vector",
-            async (
-                SearchRequest request,
-                ISender sender,
-                CancellationToken token) =>
-            {
-                var results = await sender.Send(new SearchProductsByVectorQuery(request.Query, request.TopK), token);
-                return Results.Ok(results);
-            })
-        .WithName("AI_SearchByVector")
-        .WithSummary("Semantic vector search — finds products by meaning, not exact keywords")
-        .Produces<IReadOnlyList<ProductSearchModel>>(StatusCodes.Status200OK)
-        .Produces(StatusCodes.Status500InternalServerError);
-
-        // POST /api/ai/search/keyword
-        group.MapPost("/search/keyword",
-            async (
-                SearchRequest request,
-                ISender sender,
-                CancellationToken token) =>
-            {
-                var results = await sender.Send(new SearchProductsByKeywordQuery(request.Query, request.TopK), token);
-                return Results.Ok(results);
-            })
-        .WithName("AI_SearchByKeyword")
-        .WithSummary("Traditional keyword search using pattern matching (ILIKE)")
-        .Produces<IReadOnlyList<ProductSearchModel>>(StatusCodes.Status200OK)
         .Produces(StatusCodes.Status500InternalServerError);
 
         // POST /api/ai/search/hybrid

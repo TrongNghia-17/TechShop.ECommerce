@@ -59,34 +59,13 @@ public class PGVectorRepository(TechShopDbContext dbContext) : IPGVectorReposito
         return results.AsReadOnly();
     }
 
-    public async Task<IReadOnlyList<ProductSearchModel>> SearchByKeywordAsync(string keyword, int topK = 5, CancellationToken cancellationToken = default)
-    {
-        var results = await dbContext.ProductVectors
-            .Include(pv => pv.Product).ThenInclude(p => p.Category)
-            .Where(pv => EF.Functions.ILike(pv.Product.Name, $"%{keyword}%") ||
-                         (pv.Product.Description != null && EF.Functions.ILike(pv.Product.Description, $"%{keyword}%")))
-            .Take(topK)
-            .Select(pv => new ProductSearchModel(
-                pv.Product.Id.ToString(),
-                pv.Product.Name,
-                pv.Product.Description,
-                pv.Product.MainImageBlobName,
-                pv.Product.Price,
-                new CategorySearchModel(pv.Product.Category.Id.ToString(), pv.Product.Category.Name),
-                1.0f
-            ))
-            .ToListAsync(cancellationToken);
-
-        return results.AsReadOnly();
-    }
-
     public async Task<IReadOnlyList<ProductSearchModel>> HybridSearchAsync(string query, float[] queryVector, int topK = 5, CancellationToken cancellationToken = default)
     {
         var pgVector = new Pgvector.Vector(queryVector);
 
         var results = await dbContext.ProductVectors
             .Include(pv => pv.Product).ThenInclude(p => p.Category)
-            .Where(pv => 
+            .Where(pv =>
                 EF.Functions.ILike(pv.Product.Name, $"%{query}%") ||
                 EF.Functions.ILike(pv.Product.Category.Name, $"%{query}%") ||
                 (pv.Product.Category.Description != null && EF.Functions.ILike(pv.Product.Category.Description, $"%{query}%")) ||
