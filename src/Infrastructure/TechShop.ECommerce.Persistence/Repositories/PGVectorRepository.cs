@@ -16,7 +16,6 @@ public class PGVectorRepository(TechShopDbContext dbContext) : IPGVectorReposito
     {
         var productIds = batch.Select(b => b.Product.Id).ToList();
 
-        // Lấy tất cả vector hiện có trong 1 lần query
         var existingVectors = await dbContext.ProductVectors
             .Where(pv => productIds.Contains(pv.ProductId))
             .ToDictionaryAsync(pv => pv.ProductId, cancellationToken);
@@ -41,76 +40,75 @@ public class PGVectorRepository(TechShopDbContext dbContext) : IPGVectorReposito
     {
         var pgVector = new Pgvector.Vector(queryVector);
 
-        var products = await dbContext.ProductVectors
-            .Include(productVector => productVector.Product)
-            .ThenInclude(product => product.Category)
-            .OrderBy(productVector => productVector.Embedding.CosineDistance(pgVector))
+        // BẮT BUỘC: Select phải viết tường minh để EF Core dịch được sang SQL
+        var results = await dbContext.ProductVectors
+            .Include(pv => pv.Product).ThenInclude(p => p.Category)
+            .OrderBy(pv => pv.Embedding.CosineDistance(pgVector))
             .Take(topK)
-            .Select(productVector => new ProductSearchModel(
-                productVector.Product.Id.ToString(),
-                productVector.Product.Name,
-                productVector.Product.Description,
-                productVector.Product.MainImageBlobName,
-                productVector.Product.Price,
-                new CategorySearchModel(productVector.Product.Category.Id.ToString(), productVector.Product.Category.Name),
-                1.0f - (float)productVector.Embedding.CosineDistance(pgVector) // <-- Tính Score
+            .Select(pv => new ProductSearchModel(
+                pv.Product.Id.ToString(),
+                pv.Product.Name,
+                pv.Product.Description,
+                pv.Product.MainImageBlobName,
+                pv.Product.Price,
+                new CategorySearchModel(pv.Product.Category.Id.ToString(), pv.Product.Category.Name),
+                1.0f - (float)pv.Embedding.CosineDistance(pgVector)
             ))
             .ToListAsync(cancellationToken);
 
-        return products.AsReadOnly();
+        return results.AsReadOnly();
     }
 
     public async Task<IReadOnlyList<ProductSearchModel>> SearchByKeywordAsync(string keyword, int topK = 5, CancellationToken cancellationToken = default)
     {
-        var products = await dbContext.Products
-            .Include(product => product.Category)
-            .Where(product => EF.Functions.ILike(product.Name, $"%{keyword}%") ||
-                              (product.Description != null && EF.Functions.ILike(product.Description, $"%{keyword}%")))
+        var results = await dbContext.ProductVectors
+            .Include(pv => pv.Product).ThenInclude(p => p.Category)
+            .Where(pv => EF.Functions.ILike(pv.Product.Name, $"%{keyword}%") ||
+                         (pv.Product.Description != null && EF.Functions.ILike(pv.Product.Description, $"%{keyword}%")))
             .Take(topK)
-            .Select(product => new ProductSearchModel(
-                product.Id.ToString(),
-                product.Name,
-                product.Description,
-                product.MainImageBlobName,
-                product.Price,
-                new CategorySearchModel(product.Category.Id.ToString(), product.Category.Name),
-                1.0f // Keyword match mặc định là 1.0
+            .Select(pv => new ProductSearchModel(
+                pv.Product.Id.ToString(),
+                pv.Product.Name,
+                pv.Product.Description,
+                pv.Product.MainImageBlobName,
+                pv.Product.Price,
+                new CategorySearchModel(pv.Product.Category.Id.ToString(), pv.Product.Category.Name),
+                1.0f
             ))
             .ToListAsync(cancellationToken);
 
-        return products.AsReadOnly();
+        return results.AsReadOnly();
     }
 
     public async Task<IReadOnlyList<ProductSearchModel>> HybridSearchAsync(string query, float[] queryVector, int topK = 5, CancellationToken cancellationToken = default)
     {
         var pgVector = new Pgvector.Vector(queryVector);
 
-        var products = await dbContext.ProductVectors
-            .Include(productVector => productVector.Product)
-            .ThenInclude(product => product.Category)
-            .Where(productVector => 
-                EF.Functions.ILike(productVector.Product.Name, $"%{query}%") ||
-                EF.Functions.ILike(productVector.Product.Category.Name, $"%{query}%") ||
-                (productVector.Product.Category.Description != null && EF.Functions.ILike(productVector.Product.Category.Description, $"%{query}%")) ||
-                (productVector.Product.Description != null && EF.Functions.ILike(productVector.Product.Description, $"%{query}%")))
-            .OrderBy(productVector => productVector.Embedding.CosineDistance(pgVector))
+        var results = await dbContext.ProductVectors
+            .Include(pv => pv.Product).ThenInclude(p => p.Category)
+            .Where(pv => 
+                EF.Functions.ILike(pv.Product.Name, $"%{query}%") ||
+                EF.Functions.ILike(pv.Product.Category.Name, $"%{query}%") ||
+                (pv.Product.Category.Description != null && EF.Functions.ILike(pv.Product.Category.Description, $"%{query}%")) ||
+                (pv.Product.Description != null && EF.Functions.ILike(pv.Product.Description, $"%{query}%")))
+            .OrderBy(pv => pv.Embedding.CosineDistance(pgVector))
             .Take(topK)
-            .Select(productVector => new ProductSearchModel(
-                productVector.Product.Id.ToString(),
-                productVector.Product.Name,
-                productVector.Product.Description,
-                productVector.Product.MainImageBlobName,
-                productVector.Product.Price,
-                new CategorySearchModel(productVector.Product.Category.Id.ToString(), productVector.Product.Category.Name),
-                1.0f - (float)productVector.Embedding.CosineDistance(pgVector) // <-- Tính Score cho Hybrid
+            .Select(pv => new ProductSearchModel(
+                pv.Product.Id.ToString(),
+                pv.Product.Name,
+                pv.Product.Description,
+                pv.Product.MainImageBlobName,
+                pv.Product.Price,
+                new CategorySearchModel(pv.Product.Category.Id.ToString(), pv.Product.Category.Name),
+                1.0f - (float)pv.Embedding.CosineDistance(pgVector)
             ))
             .ToListAsync(cancellationToken);
 
-        if (!products.Any())
+        if (results.Count == 0)
         {
             return await SearchByVectorAsync(queryVector, topK, cancellationToken);
         }
 
-        return products.AsReadOnly();
+        return results.AsReadOnly();
     }
 }
