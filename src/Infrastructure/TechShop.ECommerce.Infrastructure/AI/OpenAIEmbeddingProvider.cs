@@ -1,4 +1,4 @@
-﻿using System.Net.Http.Headers;
+﻿
 using System.Net.Http.Json;
 using System.Text.Json.Serialization;
 using TechShop.ECommerce.Application.Common.Configurations.AI;
@@ -38,11 +38,8 @@ public sealed class OpenAIEmbeddingProvider(
                 model = _settings.EmbeddingModel
             };
 
-            httpClient.DefaultRequestHeaders.Authorization =
-                new AuthenticationHeaderValue("Bearer", _settings.ApiKey);
-
             using var response = await httpClient.PostAsJsonAsync(
-                "https://api.openai.com/v1/embeddings",
+                "embeddings",
                 requestBody,
                 cancellationToken);
 

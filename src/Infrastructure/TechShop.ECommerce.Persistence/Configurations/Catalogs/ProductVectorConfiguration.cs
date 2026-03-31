@@ -12,7 +12,7 @@ public class ProductVectorConfiguration : IEntityTypeConfiguration<ProductVector
 
         // Properties
         builder.Property(productVector => productVector.Embedding)
-            .HasColumnType("vector(768)")
+            .HasColumnType("vector(1536)")
             .IsRequired();
 
         // Indexes

@@ -20,4 +20,7 @@ public sealed class OpenAIOptions
 
     [Required]
     public string ChatModel { get; set; } = "gpt-4o-mini";
+
+    public int MaxTokens { get; set; } = 500;
+    public double Temperature { get; set; } = 0.7;
 }

@@ -1,3 +1,4 @@
+using System.Net.Http.Headers;
 using TechShop.ECommerce.Application.Common.Configurations.AI;
 using TechShop.ECommerce.Infrastructure.AI;
 
@@ -15,40 +16,75 @@ public static class AIDependencyInjection
         var aiSettings = aiSection.Get<AIOptions>();
         var aiProvider = aiSettings?.Provider ?? "Ollama";
 
-        if (aiProvider.Equals("OpenAI", StringComparison.OrdinalIgnoreCase))
+        switch (aiProvider.ToLower())
         {
-            services.AddOptions<OpenAIOptions>()
-                .BindConfiguration(OpenAIOptions.SectionName)
-                .ValidateDataAnnotations()
-                .ValidateOnStart();
+            case "openai":
+                services.AddOptions<OpenAIOptions>()
+                    .BindConfiguration(OpenAIOptions.SectionName)
+                    .ValidateDataAnnotations()
+                    .ValidateOnStart();
 
-            services.AddHttpClient<IEmbeddingProvider, OpenAIEmbeddingProvider>((serviceProvider, client) =>
-            {
-                var options = serviceProvider.GetRequiredService<IOptions<OpenAIOptions>>().Value;
-                client.BaseAddress = new Uri(options.BaseUrl);
-                client.Timeout = TimeSpan.FromMinutes(2);
-            });
-        }
-        else
-        {
-            services.AddOptions<OllamaOptions>()
-                .BindConfiguration(OllamaOptions.SectionName)
-                .ValidateDataAnnotations()
-                .ValidateOnStart();
+                services.AddHttpClient<IEmbeddingProvider, OpenAIEmbeddingProvider>((sp, client) =>
+                {
+                    var opt = sp.GetRequiredService<IOptions<OpenAIOptions>>().Value;
+                    client.BaseAddress = new Uri(opt.BaseUrl);
+                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", opt.ApiKey);
+                    client.Timeout = TimeSpan.FromMinutes(2);
+                });
 
-            services.AddHttpClient<IEmbeddingProvider, OllamaEmbeddingProvider>((serviceProvider, client) =>
-            {
-                var options = serviceProvider.GetRequiredService<IOptions<OllamaOptions>>().Value;
-                client.BaseAddress = new Uri(options.BaseUrl);
-                client.Timeout = TimeSpan.FromMinutes(5);
-            });
+                services.AddHttpClient<IChatProvider, OpenAIChatProvider>((sp, client) =>
+                {
+                    var opt = sp.GetRequiredService<IOptions<OpenAIOptions>>().Value;
+                    client.BaseAddress = new Uri(opt.BaseUrl);
+                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", opt.ApiKey);
+                    client.Timeout = TimeSpan.FromMinutes(2);
+                });
+                break;
 
-            services.AddHttpClient<IChatProvider, OllamaChatProvider>((serviceProvider, client) =>
-            {
-                var options = serviceProvider.GetRequiredService<IOptions<OllamaOptions>>().Value;
-                client.BaseAddress = new Uri(options.BaseUrl);
-                client.Timeout = TimeSpan.FromMinutes(5);
-            });
+            case "azureopenai":
+                services.AddOptions<AzureOpenAIOptions>()
+                    .BindConfiguration(AzureOpenAIOptions.SectionName)
+                    .ValidateDataAnnotations()
+                    .ValidateOnStart();
+
+                services.AddHttpClient<IEmbeddingProvider, AzureOpenAIEmbeddingProvider>((sp, client) =>
+                {
+                    var opt = sp.GetRequiredService<IOptions<AzureOpenAIOptions>>().Value;
+                    client.BaseAddress = new Uri(opt.BaseUrl);
+                    client.DefaultRequestHeaders.Add("api-key", opt.ApiKey);
+                    client.Timeout = TimeSpan.FromMinutes(2);
+                });
+
+                services.AddHttpClient<IChatProvider, AzureOpenAIChatProvider>((sp, client) =>
+                {
+                    var opt = sp.GetRequiredService<IOptions<AzureOpenAIOptions>>().Value;
+                    client.BaseAddress = new Uri(opt.BaseUrl);
+                    client.DefaultRequestHeaders.Add("api-key", opt.ApiKey);
+                    client.Timeout = TimeSpan.FromMinutes(2);
+                });
+                break;
+
+            case "ollama":
+            default:
+                services.AddOptions<OllamaOptions>()
+                    .BindConfiguration(OllamaOptions.SectionName)
+                    .ValidateDataAnnotations()
+                    .ValidateOnStart();
+
+                services.AddHttpClient<IEmbeddingProvider, OllamaEmbeddingProvider>((sp, client) =>
+                {
+                    var opt = sp.GetRequiredService<IOptions<OllamaOptions>>().Value;
+                    client.BaseAddress = new Uri(opt.BaseUrl);
+                    client.Timeout = TimeSpan.FromMinutes(5);
+                });
+
+                services.AddHttpClient<IChatProvider, OllamaChatProvider>((sp, client) =>
+                {
+                    var opt = sp.GetRequiredService<IOptions<OllamaOptions>>().Value;
+                    client.BaseAddress = new Uri(opt.BaseUrl);
+                    client.Timeout = TimeSpan.FromMinutes(5);
+                });
+                break;
         }
 
         return services;
