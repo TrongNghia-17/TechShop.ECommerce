@@ -4,6 +4,7 @@ using Azure.Storage.Sas;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats.Jpeg;
 using SixLabors.ImageSharp.Processing;
+using TechShop.ECommerce.Application.Common.Configurations.Storage;
 using TechShop.ECommerce.Application.Contracts.Storage;
 
 namespace TechShop.ECommerce.Infrastructure.Storage;

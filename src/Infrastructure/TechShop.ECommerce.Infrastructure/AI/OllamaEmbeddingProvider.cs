@@ -1,14 +1,15 @@
 using System.Net.Http.Json;
 using System.Text.Json.Serialization;
+using TechShop.ECommerce.Application.Common.Configurations.AI;
 
 namespace TechShop.ECommerce.Infrastructure.AI;
 
 public sealed class OllamaEmbeddingProvider(
     HttpClient httpClient,
-    IOptions<OllamaSettings> options,
+    IOptions<OllamaOptions> options,
     ILogger<OllamaEmbeddingProvider> logger) : IEmbeddingProvider
 {
-    private readonly OllamaSettings _settings = options.Value;
+    private readonly OllamaOptions _settings = options.Value;
 
     public int Dimensions => _settings.Dimensions;
 

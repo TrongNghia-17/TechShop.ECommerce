@@ -1,16 +1,17 @@
 using System.Net.Http.Json;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using TechShop.ECommerce.Application.Common.Configurations.AI;
 
 namespace TechShop.ECommerce.Infrastructure.AI;
 
 public sealed class OllamaChatProvider(
     HttpClient httpClient, 
-    IOptions<OllamaSettings> options, 
+    IOptions<OllamaOptions> options, 
     ILogger<OllamaChatProvider> logger) : IChatProvider
 {
     private readonly HttpClient _httpClient = SetupClient(httpClient);
-    private readonly OllamaSettings _settings = options.Value;
+    private readonly OllamaOptions _settings = options.Value;
 
     private static HttpClient SetupClient(HttpClient client)
     {

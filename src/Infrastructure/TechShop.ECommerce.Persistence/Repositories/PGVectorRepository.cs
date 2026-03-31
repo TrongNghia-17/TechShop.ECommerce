@@ -1,4 +1,5 @@
 using Pgvector.EntityFrameworkCore;
+using System.Linq.Expressions;
 using TechShop.ECommerce.Application.Contracts.Persistence;
 using TechShop.ECommerce.Application.Features.Products.Shared;
 using TechShop.ECommerce.Persistence.Context;
@@ -40,20 +41,10 @@ public class PGVectorRepository(TechShopDbContext dbContext) : IPGVectorReposito
     {
         var pgVector = new Pgvector.Vector(queryVector);
 
-        // BẮT BUỘC: Select phải viết tường minh để EF Core dịch được sang SQL
-        var results = await dbContext.ProductVectors
-            .Include(pv => pv.Product).ThenInclude(p => p.Category)
+        var results = await GetBaseSearchQuery()
             .OrderBy(pv => pv.Embedding.CosineDistance(pgVector))
             .Take(topK)
-            .Select(pv => new ProductSearchModel(
-                pv.Product.Id.ToString(),
-                pv.Product.Name,
-                pv.Product.Description,
-                pv.Product.MainImageBlobName,
-                pv.Product.Price,
-                new CategorySearchModel(pv.Product.Category.Id.ToString(), pv.Product.Category.Name),
-                1.0f - (float)pv.Embedding.CosineDistance(pgVector)
-            ))
+            .Select(ProjectToModel(pgVector))
             .ToListAsync(cancellationToken);
 
         return results.AsReadOnly();
@@ -63,8 +54,7 @@ public class PGVectorRepository(TechShopDbContext dbContext) : IPGVectorReposito
     {
         var pgVector = new Pgvector.Vector(queryVector);
 
-        var results = await dbContext.ProductVectors
-            .Include(pv => pv.Product).ThenInclude(p => p.Category)
+        var results = await GetBaseSearchQuery()
             .Where(pv =>
                 EF.Functions.ILike(pv.Product.Name, $"%{query}%") ||
                 EF.Functions.ILike(pv.Product.Category.Name, $"%{query}%") ||
@@ -72,15 +62,7 @@ public class PGVectorRepository(TechShopDbContext dbContext) : IPGVectorReposito
                 (pv.Product.Description != null && EF.Functions.ILike(pv.Product.Description, $"%{query}%")))
             .OrderBy(pv => pv.Embedding.CosineDistance(pgVector))
             .Take(topK)
-            .Select(pv => new ProductSearchModel(
-                pv.Product.Id.ToString(),
-                pv.Product.Name,
-                pv.Product.Description,
-                pv.Product.MainImageBlobName,
-                pv.Product.Price,
-                new CategorySearchModel(pv.Product.Category.Id.ToString(), pv.Product.Category.Name),
-                1.0f - (float)pv.Embedding.CosineDistance(pgVector)
-            ))
+            .Select(ProjectToModel(pgVector))
             .ToListAsync(cancellationToken);
 
         if (results.Count == 0)
@@ -89,5 +71,25 @@ public class PGVectorRepository(TechShopDbContext dbContext) : IPGVectorReposito
         }
 
         return results.AsReadOnly();
+    }
+
+    private IQueryable<ProductVector> GetBaseSearchQuery()
+    {
+        return dbContext.ProductVectors
+            .Include(pv => pv.Product)
+            .ThenInclude(p => p.Category);
+    }
+
+    private static Expression<Func<ProductVector, ProductSearchModel>> ProjectToModel(Pgvector.Vector pgVector)
+    {
+        return pv => new ProductSearchModel(
+            pv.Product.Id.ToString(),
+            pv.Product.Name,
+            pv.Product.Description,
+            pv.Product.MainImageBlobName,
+            pv.Product.Price,
+            new CategorySearchModel(pv.Product.Category.Id.ToString(), pv.Product.Category.Name),
+            1.0f - (float)pv.Embedding.CosineDistance(pgVector)
+        );
     }
 }

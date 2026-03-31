@@ -1,6 +1,6 @@
 using MediatR;
 using Microsoft.Extensions.Logging;
-using TechShop.ECommerce.Application.Common.Emails;
+using TechShop.ECommerce.Application.Contracts.Emails;
 using TechShop.ECommerce.Application.Contracts.Persistence;
 
 namespace TechShop.ECommerce.Application.BackgroundJobs.Emails.SendOrderConfirmedEmail;

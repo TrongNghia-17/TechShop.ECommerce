@@ -1,4 +1,5 @@
 using Azure.Storage.Blobs;
+using TechShop.ECommerce.Application.Common.Configurations.Storage;
 using TechShop.ECommerce.Application.Contracts.Storage;
 using TechShop.ECommerce.Infrastructure.Storage;
 

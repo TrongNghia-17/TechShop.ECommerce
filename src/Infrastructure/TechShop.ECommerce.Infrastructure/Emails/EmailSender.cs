@@ -1,3 +1,6 @@
+using TechShop.ECommerce.Application.Common.Configurations.Email;
+using TechShop.ECommerce.Application.Contracts.Emails;
+
 namespace TechShop.ECommerce.Infrastructure.Emails;
 
 public sealed class EmailSender(

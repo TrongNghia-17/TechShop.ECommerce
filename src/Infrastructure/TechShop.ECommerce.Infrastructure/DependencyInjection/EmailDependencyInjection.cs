@@ -1,3 +1,5 @@
+using TechShop.ECommerce.Application.Common.Configurations.Email;
+using TechShop.ECommerce.Application.Contracts.Emails;
 using TechShop.ECommerce.Infrastructure.Emails;
 
 namespace TechShop.ECommerce.Infrastructure.DependencyInjection;

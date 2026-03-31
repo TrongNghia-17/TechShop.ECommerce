@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace TechShop.ECommerce.Application.Common.Emails;
+namespace TechShop.ECommerce.Application.Common.Configurations.Email;
 
 public class EmailOptions
 {

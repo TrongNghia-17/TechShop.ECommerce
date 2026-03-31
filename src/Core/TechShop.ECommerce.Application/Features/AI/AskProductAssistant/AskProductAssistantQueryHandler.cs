@@ -1,4 +1,6 @@
+using Microsoft.Extensions.Options;
 using System.Text;
+using TechShop.ECommerce.Application.Common.Configurations.AI;
 using TechShop.ECommerce.Application.Contracts.AI;
 using TechShop.ECommerce.Application.Contracts.Persistence;
 using TechShop.ECommerce.Application.Features.AI.Shared;
@@ -9,9 +11,12 @@ namespace TechShop.ECommerce.Application.Features.AI.AskProductAssistant;
 public sealed class AskProductAssistantQueryHandler(
     IEmbeddingProvider embeddingProvider,
     IPGVectorRepository vectorRepository,
-    IChatProvider chatProvider)
+    IChatProvider chatProvider,
+    IOptions<AssistantOptions> assistantOptions)
     : IRequestHandler<AskProductAssistantQuery, ChatResponse>
 {
+    private readonly AssistantOptions _settings = assistantOptions.Value;
+
     private static readonly HashSet<string> Greetings =
     [
         "hi", "hello", "hey", "chào", "xin chào", "alo"
@@ -25,7 +30,7 @@ public sealed class AskProductAssistantQueryHandler(
 
         if (Greetings.Contains(normalizedQuestion))
         {
-            return new ChatResponse("Xin chào! Tôi là trợ lý của TechShop. Tôi có thể giúp gì cho bạn hôm nay? 😊");
+            return new ChatResponse(_settings.DefaultGreeting);
         }
 
         var queryVector = await embeddingProvider.EmbedAsync(query.Question, cancellationToken);
@@ -33,7 +38,7 @@ public sealed class AskProductAssistantQueryHandler(
         var relevantProducts = await vectorRepository.HybridSearchAsync(
             query.Question, queryVector, query.TopK, cancellationToken);
 
-        var prompt = BuildPrompt(query.Question, relevantProducts, query.ChatHistory);
+        var prompt = BuildPrompt(query.Question, relevantProducts, query.ChatHistory, _settings);
         var answer = await chatProvider.ChatAsync(prompt, cancellationToken);
 
         var sources = relevantProducts
@@ -46,15 +51,12 @@ public sealed class AskProductAssistantQueryHandler(
     private static string BuildPrompt(
         string question,
         IReadOnlyList<ProductSearchModel> products,
-        IReadOnlyList<(string Role, string Content)>? chatHistory)
+        IReadOnlyList<(string Role, string Content)>? chatHistory,
+        AssistantOptions settings)
     {
         var prompt = new StringBuilder();
 
-        prompt.AppendLine("Bạn là trợ lý tư vấn sản phẩm của TechShop, một cửa hàng điện tử.");
-        prompt.AppendLine("Chỉ trả lời dựa trên danh sách sản phẩm được cung cấp bên dưới.");
-        prompt.AppendLine("Trả lời tự nhiên như một người tư vấn, không liệt kê sản phẩm theo dạng danh sách.");
-        prompt.AppendLine("Nếu không có sản phẩm phù hợp, hãy lịch sự thông báo bạn không có thông tin đó.");
-        prompt.AppendLine("Luôn trả lời bằng tiếng Việt.");
+        prompt.AppendLine(settings.SystemPrompt);
         prompt.AppendLine();
 
         if (chatHistory is { Count: > 0 })
@@ -77,7 +79,7 @@ public sealed class AskProductAssistantQueryHandler(
             prompt.AppendLine();
         }
 
-        prompt.AppendLine($"Câu hỏi của khách hàng: {question}");
+        prompt.AppendLine($"Câu hỏi hiện tại của khách hàng: {question}");
 
         return prompt.ToString();
     }

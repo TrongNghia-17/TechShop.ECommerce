@@ -1,10 +1,10 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace TechShop.ECommerce.Infrastructure.AI;
+namespace TechShop.ECommerce.Application.Common.Configurations.AI;
 
-public class OllamaSettings
+public sealed class OllamaOptions
 {
-    public const string SectionName = "Ollama";
+    public const string SectionName = "AI:Ollama";
 
     [Required, Url]
     public string BaseUrl { get; set; } = "http://localhost:11434";

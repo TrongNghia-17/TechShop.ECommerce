@@ -1,5 +1,6 @@
 using Stripe;
 using Stripe.Checkout;
+using TechShop.ECommerce.Application.Common.Configurations.PaymentGateway;
 
 namespace TechShop.ECommerce.Infrastructure.PaymentGateway;
 

@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace TechShop.ECommerce.Application.Contracts.PaymentGateway;
+namespace TechShop.ECommerce.Application.Common.Configurations.PaymentGateway;
 
 public sealed class StripeOptions
 {
