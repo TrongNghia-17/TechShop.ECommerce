@@ -28,7 +28,7 @@ jobs:
         run: dotnet build --no-restore --configuration Release
 
       - name: Run tests
-        run: dotnet test --no-build --configuration Release --verbosity normal
+        run: dotnet test --no-build --configuration Release --logger "console;verbosity=detailed" --blame-crash
 
   # =========================================================
   # JOB 2: DOCKER BUILD & PUSH LÊN GHCR
