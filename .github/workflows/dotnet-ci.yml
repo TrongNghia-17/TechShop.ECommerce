@@ -28,6 +28,9 @@ jobs:
         run: dotnet build --no-restore --configuration Release
 
       - name: Run tests
+        env: 
+          AI__AzureOpenAI__ApiKey: "fake-key-for-testing-only"
+          AI__AzureOpenAI__BaseUrl: "https://fake-url.openai.azure.com"
         run: dotnet test --no-build --configuration Release --logger "console;verbosity=detailed" --blame-crash
 
   # =========================================================
