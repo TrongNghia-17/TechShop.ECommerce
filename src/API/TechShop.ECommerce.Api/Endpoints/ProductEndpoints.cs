@@ -16,7 +16,6 @@ public static class ProductEndpoints
         var group = app.MapGroup("/api/products")
             .WithTags("Products");
 
-        // GET /api/products
         group.MapGet("",
             async (
                 [AsParameters] GetProductsQuery query,
@@ -33,7 +32,6 @@ public static class ProductEndpoints
         .Produces(StatusCodes.Status429TooManyRequests)
         .RequireRateLimiting(RateLimitPolicies.ProductsReadSliding);
 
-        // GET /api/products/{id}
         group.MapGet("/{id:guid}",
             async (
                 Guid id,
@@ -50,7 +48,6 @@ public static class ProductEndpoints
         .Produces(StatusCodes.Status429TooManyRequests)
         .RequireRateLimiting(RateLimitPolicies.ProductsReadSliding);
 
-        // PUT /api/products/{id}
         group.MapPut("/{id:guid}",
             async (
                 Guid id,
@@ -68,7 +65,6 @@ public static class ProductEndpoints
         .Produces(StatusCodes.Status429TooManyRequests)
         .RequireRateLimiting(RateLimitPolicies.ProductsManagementFixed);
 
-        // POST /api/products/{id}/image
         group.MapPost("/{id:guid}/image",
             async (
                 Guid id,

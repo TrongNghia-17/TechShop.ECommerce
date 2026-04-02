@@ -13,7 +13,7 @@ public static class OrderEndpoints
             .WithTags("Orders")
             .RequireAuthorization();
 
-        // POST /api/orders
+
         group.MapPost("/",
             async ([FromBody] PlaceOrderCommand command, ISender sender, CancellationToken token) =>
             {
@@ -31,7 +31,7 @@ public static class OrderEndpoints
             .Produces(StatusCodes.Status429TooManyRequests)
             .RequireRateLimiting(RateLimitPolicies.OrdersFixed);
 
-        // GET /api/orders/{id}/invoice
+
         group.MapGet("/{id:guid}/invoice",
             async (
                 Guid id,

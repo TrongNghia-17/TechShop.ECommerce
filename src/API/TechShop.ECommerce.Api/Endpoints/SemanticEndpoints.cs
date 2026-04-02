@@ -19,7 +19,6 @@ public static class SemanticEndpoints
         var group = app.MapGroup("/api/ai")
             .WithTags("AI");
 
-        // POST /api/ai/ingest
         group.MapPost("/ingest",
             async (
                 ISender sender,
@@ -33,7 +32,6 @@ public static class SemanticEndpoints
         .Produces<int>(StatusCodes.Status200OK)
         .Produces(StatusCodes.Status500InternalServerError);
 
-        // POST /api/ai/search/hybrid
         group.MapPost("/search/hybrid",
             async (
                 SearchRequest request,
@@ -48,7 +46,6 @@ public static class SemanticEndpoints
         .Produces<IReadOnlyList<ProductSearchModel>>(StatusCodes.Status200OK)
         .Produces(StatusCodes.Status500InternalServerError);
 
-        // POST /api/ai/chat
         group.MapPost("/chat",
             async (
                 ChatRequest request,
@@ -63,7 +60,6 @@ public static class SemanticEndpoints
         .Produces<ChatResponse>(StatusCodes.Status200OK)
         .Produces(StatusCodes.Status500InternalServerError);
 
-        // POST /api/ai/embeddings/test (Development only — sanity check)
         // Only register this if we are in development environment
         if (app is WebApplication webApp && webApp.Environment.IsDevelopment())
         {

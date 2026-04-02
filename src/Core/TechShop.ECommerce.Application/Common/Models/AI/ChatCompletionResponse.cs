@@ -8,7 +8,7 @@ public sealed class ChatCompletionResponse
     public List<ChatChoice> Choices { get; set; } = [];
 
     [JsonPropertyName("usage")]
-    public ChatUsage? Usage { get; set; } // Thêm thông tin token để dễ mở rộng
+    public ChatUsage? Usage { get; set; }
 }
 
 public sealed class ChatChoice

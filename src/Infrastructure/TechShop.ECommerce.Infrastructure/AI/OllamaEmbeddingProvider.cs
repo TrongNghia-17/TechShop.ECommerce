@@ -27,11 +27,9 @@ public sealed class OllamaEmbeddingProvider(
 
         try
         {
-            // Thử sử dụng modern endpoint (/api/embed) - hỗ trợ nạp theo lô chính chủ Ollama
             var modernResult = await TryEmbedModernAsync(textList, cancellationToken);
             if (modernResult.Count > 0) return modernResult;
 
-            // FALLBACK: Nếu Ollama phiên bản cũ không có /api/embed, chuyển sang chạy từng cái một
             logger.LogWarning("Ollama modern endpoint not available. Falling back to sequential embedding (Legacy)");
 
             var legacyResults = new List<float[]>();
@@ -54,7 +52,6 @@ public sealed class OllamaEmbeddingProvider(
 
         using var response = await httpClient.PostAsJsonAsync("/api/embed", request, cancellationToken);
 
-        // Trả về danh sách trống nếu endpoint không tồn tại
         if (response.StatusCode == System.Net.HttpStatusCode.NotFound) return [];
 
         response.EnsureSuccessStatusCode();
@@ -65,7 +62,6 @@ public sealed class OllamaEmbeddingProvider(
             return [];
         }
 
-        // Tách ra để dễ debug: Chuyển đổi từ double[][] (API trả về) sang List<float[]> (Hệ thống dùng)
         var floatEmbeddings = responseContainer.Embeddings
             .Select(doubleArray => doubleArray.Select(v => (float)v).ToArray())
             .ToList();
@@ -86,7 +82,6 @@ public sealed class OllamaEmbeddingProvider(
             return [];
         }
 
-        // Tách ra để dễ debug: Chuyển đổi mảng double[] sang float[]
         var floatArray = responseContainer.Embedding
             .Select(v => (float)v)
             .ToArray();
@@ -94,7 +89,6 @@ public sealed class OllamaEmbeddingProvider(
         return floatArray;
     }
 
-    // Records: Cú pháp hiện đại, tối giản và bất biến (Immutable)
     private record OllamaEmbedResponse(
         [property: JsonPropertyName("embeddings")] double[][]? Embeddings
     );

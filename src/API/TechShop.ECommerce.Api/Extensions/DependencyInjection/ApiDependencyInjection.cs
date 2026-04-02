@@ -2,6 +2,7 @@ using Microsoft.OpenApi;
 using TechShop.ECommerce.Api.Middleware;
 using TechShop.ECommerce.Application;
 using TechShop.ECommerce.Application.Common.Constants;
+using TechShop.ECommerce.Application.Common.Configurations.Identity;
 using TechShop.ECommerce.Identity.DependencyInjection;
 using TechShop.ECommerce.Infrastructure.DependencyInjection;
 using TechShop.ECommerce.Persistence.DependencyInjection;
@@ -32,8 +33,9 @@ public static class ApiDependencyInjection
         {
             options.AddDocumentTransformer((document, context, cancellationToken) =>
             {
-                var clientId = configuration["AzureAd:ClientId"];
-                var tenantId = configuration["AzureAd:TenantId"];
+                var azureAd = configuration.GetSection(AzureAdOptions.SectionName).Get<AzureAdOptions>();
+                if (azureAd is null) return Task.CompletedTask;
+
                 document.Components ??= new OpenApiComponents();
                 document.Components.SecuritySchemes ??= new Dictionary<string, Microsoft.OpenApi.IOpenApiSecurityScheme>();
                 
@@ -42,13 +44,13 @@ public static class ApiDependencyInjection
                     Type = SecuritySchemeType.OAuth2,
                     Flows = new OpenApiOAuthFlows
                     {
-                        AuthorizationCode = new OpenApiOAuthFlow // Dùng AuthorizationCode theo chuẩn bảo mật mới nhất của Microsoft (tránh lỗi cấm Implicit)
+                        AuthorizationCode = new OpenApiOAuthFlow
                         {
-                            AuthorizationUrl = new Uri($"https://login.microsoftonline.com/{tenantId}/oauth2/v2.0/authorize"),
-                            TokenUrl = new Uri($"https://login.microsoftonline.com/{tenantId}/oauth2/v2.0/token"),
+                            AuthorizationUrl = new Uri($"https://login.microsoftonline.com/{azureAd.TenantId}/oauth2/v2.0/authorize"),
+                            TokenUrl = new Uri($"https://login.microsoftonline.com/{azureAd.TenantId}/oauth2/v2.0/token"),
                             Scopes = new Dictionary<string, string>
                             {
-                                { $"api://{clientId}/access_as_user", "Access API" }
+                                { $"api://{azureAd.ClientId}/access_as_user", "Access API" }
                             }
                         }
                     }
@@ -56,7 +58,7 @@ public static class ApiDependencyInjection
                 document.Security ??= new List<OpenApiSecurityRequirement>();
                 document.Security.Add(new OpenApiSecurityRequirement
                 {
-                    { new OpenApiSecuritySchemeReference("oauth2"), new List<string> { $"api://{clientId}/access_as_user" } }
+                    { new OpenApiSecuritySchemeReference("oauth2"), new List<string> { $"api://{azureAd.ClientId}/access_as_user" } }
                 });
                 return Task.CompletedTask;
             });

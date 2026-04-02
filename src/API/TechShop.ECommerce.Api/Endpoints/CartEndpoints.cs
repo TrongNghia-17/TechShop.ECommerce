@@ -15,7 +15,6 @@ public static class CartEndpoints
             .WithTags("Carts")
             .RequireAuthorization();
 
-        // POST /api/carts/items
         group.MapPost("/items",
             async ([FromBody] AddToCartCommand command, ISender sender, CancellationToken token) =>
             {
@@ -31,7 +30,6 @@ public static class CartEndpoints
             .Produces(StatusCodes.Status429TooManyRequests)
             .RequireRateLimiting(RateLimitPolicies.CartFixed);
 
-        // DELETE /api/carts/items
         group.MapDelete("/items",
             async ([FromBody] RemoveFromCartCommand command, ISender sender, CancellationToken token) =>
             {
@@ -47,7 +45,6 @@ public static class CartEndpoints
             .Produces(StatusCodes.Status429TooManyRequests)
             .RequireRateLimiting(RateLimitPolicies.CartFixed);
 
-        // GET /api/carts
         group.MapGet("",
             async (ISender sender, CancellationToken token) =>
             {

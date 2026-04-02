@@ -12,5 +12,5 @@ public record ProductSearchModel(
     string? ImageFile,
     decimal Price,
     CategorySearchModel Category,
-    float Score = 0 // <-- Thêm điểm số mặc định
+    float Score = 0
 );

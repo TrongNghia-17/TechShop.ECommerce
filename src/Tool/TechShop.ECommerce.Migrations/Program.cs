@@ -11,7 +11,6 @@ using TechShop.ECommerce.Persistence.Seedings;
 var builder = Host.CreateApplicationBuilder(args);
 
 builder.Services.AddPersistenceServices(builder.Configuration);
-        // Removed Identity
 
 using var app = builder.Build();
 using var scope = app.Services.CreateScope();
