@@ -17,7 +17,7 @@ public static class ProductEndpoints
             .WithTags("Products");
 
         // GET /api/products
-        group.MapGet("/",
+        group.MapGet("",
             async (
                 [AsParameters] GetProductsQuery query,
                 ISender sender,

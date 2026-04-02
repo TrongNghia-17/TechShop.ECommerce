@@ -6,8 +6,11 @@ public sealed class CurrentUserService(IHttpContextAccessor httpContextAccessor)
     {
         get
         {
-            var id = httpContextAccessor.HttpContext?.User?
-                .FindFirstValue(ClaimTypes.NameIdentifier);
+            var user = httpContextAccessor.HttpContext?.User;
+            var id = user?.FindFirstValue("http://schemas.microsoft.com/identity/claims/objectidentifier") 
+                ?? user?.FindFirstValue("oid")
+                ?? user?.FindFirstValue(ClaimTypes.NameIdentifier)
+                ?? user?.FindFirstValue("sub");
 
             return Guid.TryParse(id, out var guid)
                 ? guid

@@ -1,26 +1,28 @@
-using TechShop.ECommerce.Identity.Authentication;
+using Microsoft.Identity.Web;
+using TechShop.ECommerce.Identity.Services;
+
 
 namespace TechShop.ECommerce.Identity.DependencyInjection;
 
 public static class AuthenticationDependencyInjection
 {
-    public static IServiceCollection AddJwtAuthentication(this IServiceCollection services)
+    public static IServiceCollection AddJwtAuthentication(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
-
-        services.AddOptions<JwtOptions>()
-            .BindConfiguration(JwtOptions.SectionName)
-            .ValidateDataAnnotations()
-            .ValidateOnStart();
-
-        services.AddAuthentication(options =>
+        services.AddAuthentication(options => 
         {
             options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
             options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
         })
-        .AddJwtBearer();
+        .AddMicrosoftIdentityWebApi(configuration.GetSection("AzureAd"));
 
-        services.ConfigureOptions<JwtBearerOptionsSetup>();
+        return services;
+    }
+
+    public static IServiceCollection AddUserRequestContext(this IServiceCollection services)
+    {
+        services.AddHttpContextAccessor();
+        services.AddScoped<ICurrentUserService, CurrentUserService>();
 
         return services;
     }

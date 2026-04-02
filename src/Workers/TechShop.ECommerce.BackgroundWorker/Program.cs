@@ -22,7 +22,7 @@ builder.Services.AddPersistenceServices(builder.Configuration);
 builder.Services.AddEmailInfrastructure();
 builder.Services.AddBackgroundJobInfrastructure();
 
-builder.Services.AddIdentityInfrastructure(builder.Configuration);
+        // Removed Identity
 builder.Services.AddScoped<ICurrentUserService, BackgroundCurrentUserService>();
 
 builder.Services.AddHangfire(config =>

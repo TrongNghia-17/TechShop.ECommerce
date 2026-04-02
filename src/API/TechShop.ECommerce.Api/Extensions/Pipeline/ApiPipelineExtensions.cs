@@ -37,13 +37,20 @@ public static class ApiPipelineExtensions
         if (app.Environment.IsDevelopment())
         {
             app.MapOpenApi();
-            app.MapScalarApiReference();
+            app.MapScalarApiReference(options =>
+            {
+                options.AddAuthorizationCodeFlow("oauth2", flow => 
+                {
+                    flow.ClientId = app.Configuration["AzureAd:ClientId"];
+                    flow.Pkce = Scalar.AspNetCore.Pkce.Sha256; 
+                    flow.CredentialsLocation = Scalar.AspNetCore.CredentialsLocation.Body;
+                });
+            });
         }
 
         app.MapStripeWebhookEndpoints();
         app.MapProductEndpoints();
         app.MapSemanticEndpoints();
-        app.MapAuthEndpoints();
         app.MapCartEndpoints();
         app.MapOrderEndpoints();
         app.MapTechShopHealthChecks();

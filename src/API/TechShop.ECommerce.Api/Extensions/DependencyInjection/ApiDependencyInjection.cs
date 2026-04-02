@@ -1,3 +1,4 @@
+using Microsoft.OpenApi;
 using TechShop.ECommerce.Api.Middleware;
 using TechShop.ECommerce.Application;
 using TechShop.ECommerce.Application.Common.Constants;
@@ -19,16 +20,48 @@ public static class ApiDependencyInjection
         services.AddPersistenceServices(configuration);
         services.AddInfrastructureServices(configuration);
 
-        services.AddIdentityInfrastructure(configuration);
-        services.AddCurrentUserContext();
-        services.AddJwtAuthentication();
+        services.AddUserRequestContext();
+        services.AddJwtAuthentication(configuration);
 
         services.AddAuthorization();
 
         services.AddProblemDetails();
         services.AddExceptionHandler<GlobalExceptionHandler>();
 
-        services.AddOpenApi();
+        services.AddOpenApi(options =>
+        {
+            options.AddDocumentTransformer((document, context, cancellationToken) =>
+            {
+                var clientId = configuration["AzureAd:ClientId"];
+                var tenantId = configuration["AzureAd:TenantId"];
+                document.Components ??= new OpenApiComponents();
+                document.Components.SecuritySchemes ??= new Dictionary<string, Microsoft.OpenApi.IOpenApiSecurityScheme>();
+                
+                document.Components.SecuritySchemes.Add("oauth2", new OpenApiSecurityScheme
+                {
+                    Type = SecuritySchemeType.OAuth2,
+                    Flows = new OpenApiOAuthFlows
+                    {
+                        AuthorizationCode = new OpenApiOAuthFlow // Dùng AuthorizationCode theo chuẩn bảo mật mới nhất của Microsoft (tránh lỗi cấm Implicit)
+                        {
+                            AuthorizationUrl = new Uri($"https://login.microsoftonline.com/{tenantId}/oauth2/v2.0/authorize"),
+                            TokenUrl = new Uri($"https://login.microsoftonline.com/{tenantId}/oauth2/v2.0/token"),
+                            Scopes = new Dictionary<string, string>
+                            {
+                                { $"api://{clientId}/access_as_user", "Access API" }
+                            }
+                        }
+                    }
+                });
+                document.Security ??= new List<OpenApiSecurityRequirement>();
+                document.Security.Add(new OpenApiSecurityRequirement
+                {
+                    { new OpenApiSecuritySchemeReference("oauth2"), new List<string> { $"api://{clientId}/access_as_user" } }
+                });
+                return Task.CompletedTask;
+            });
+        });
+
         services.AddApiOpenTelemetry(configuration);
         services.AddApiResponseCompression();
         services.AddApiCors();

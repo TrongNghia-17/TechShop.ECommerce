@@ -48,7 +48,7 @@ public static class CartEndpoints
             .RequireRateLimiting(RateLimitPolicies.CartFixed);
 
         // GET /api/carts
-        group.MapGet("/",
+        group.MapGet("",
             async (ISender sender, CancellationToken token) =>
             {
                 var result = await sender.Send(
