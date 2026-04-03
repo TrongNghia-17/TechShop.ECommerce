@@ -46,6 +46,16 @@ public static class ApiDependencyInjection
                 var azureAd = configuration.GetSection(AzureAdOptions.SectionName).Get<AzureAdOptions>();
                 if (azureAd is null) return Task.CompletedTask;
 
+                var openApiScopes = new Dictionary<string, string>();
+                var securityRequirementScopes = new List<string>();
+
+                foreach (var scope in azureAd.Scopes)
+                {
+                    var scopeUrl = $"api://{azureAd.ClientId}/{scope.Key}";
+                    openApiScopes.Add(scopeUrl, scope.Value);
+                    securityRequirementScopes.Add(scopeUrl);
+                }
+
                 document.Components ??= new OpenApiComponents();
                 document.Components.SecuritySchemes ??= new Dictionary<string, IOpenApiSecurityScheme>();
 
@@ -56,12 +66,9 @@ public static class ApiDependencyInjection
                     {
                         AuthorizationCode = new OpenApiOAuthFlow
                         {
-                            AuthorizationUrl = new Uri($"https://login.microsoftonline.com/{azureAd.TenantId}/oauth2/v2.0/authorize"),
-                            TokenUrl = new Uri($"https://login.microsoftonline.com/{azureAd.TenantId}/oauth2/v2.0/token"),
-                            Scopes = new Dictionary<string, string>
-                            {
-                                { $"api://{azureAd.ClientId}/access_as_user", "Access API" }
-                            }
+                            AuthorizationUrl = new Uri($"{azureAd.Instance}{azureAd.TenantId}/oauth2/v2.0/authorize"),
+                            TokenUrl = new Uri($"{azureAd.Instance}{azureAd.TenantId}/oauth2/v2.0/token"),
+                            Scopes = openApiScopes
                         }
                     }
                 });
@@ -69,7 +76,7 @@ public static class ApiDependencyInjection
                 document.Security ??= new List<OpenApiSecurityRequirement>();
                 document.Security.Add(new OpenApiSecurityRequirement
                 {
-                    { new OpenApiSecuritySchemeReference("oauth2"), new List<string> { $"api://{azureAd.ClientId}/access_as_user" } }
+                    { new OpenApiSecuritySchemeReference("oauth2"), securityRequirementScopes }
                 });
 
                 return Task.CompletedTask;

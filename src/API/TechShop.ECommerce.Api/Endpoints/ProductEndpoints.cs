@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.Identity.Web;
 using TechShop.ECommerce.Api.Extensions.Http;
 using TechShop.ECommerce.Api.Extensions.RateLimiting;
 using TechShop.ECommerce.Application.Common.Paging;

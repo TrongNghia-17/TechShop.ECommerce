@@ -12,7 +12,7 @@ public static class OrderEndpoints
     {
         var group = app.MapGroup("/api/orders")
             .WithTags("Orders")
-            .RequireAuthorization(new AuthorizeAttribute { Roles = "Customer" });
+            .RequireAuthorization();
 
         group.MapPost("/",
             async ([FromBody] PlaceOrderCommand command, ISender sender, CancellationToken token) =>

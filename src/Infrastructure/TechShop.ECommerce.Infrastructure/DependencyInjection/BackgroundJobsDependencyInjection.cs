@@ -1,6 +1,6 @@
 using TechShop.ECommerce.Application.Contracts.Jobs;
+using TechShop.ECommerce.Infrastructure.BackgroundJobs.Orders;
 using TechShop.ECommerce.Infrastructure.Jobs.Emails;
-using TechShop.ECommerce.Infrastructure.Jobs.Orders;
 using TechShop.ECommerce.Infrastructure.Jobs.Payments;
 
 namespace TechShop.ECommerce.Infrastructure.DependencyInjection;

@@ -1,6 +1,6 @@
 using TechShop.ECommerce.Application.BackgroundJobs.Orders.ExpirePendingOrders;
 
-namespace TechShop.ECommerce.Infrastructure.Jobs.Orders;
+namespace TechShop.ECommerce.Infrastructure.BackgroundJobs.Orders;
 
 public sealed class HangfireOrderMaintenanceJobExecutor(
     ISender sender,

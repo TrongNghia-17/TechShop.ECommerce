@@ -3,10 +3,9 @@ using Hangfire.PostgreSql;
 using Serilog;
 using TechShop.ECommerce.Application.BackgroundJobs;
 using TechShop.ECommerce.Application.Contracts.Identity;
-using TechShop.ECommerce.Identity.DependencyInjection;
 using TechShop.ECommerce.Infrastructure.Background;
+using TechShop.ECommerce.Infrastructure.BackgroundJobs.Orders;
 using TechShop.ECommerce.Infrastructure.DependencyInjection;
-using TechShop.ECommerce.Infrastructure.Jobs.Orders;
 using TechShop.ECommerce.Persistence.DependencyInjection;
 
 var builder = Host.CreateApplicationBuilder(args);
