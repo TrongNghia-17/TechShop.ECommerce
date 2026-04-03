@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using TechShop.ECommerce.Api.Extensions.Http;
 using TechShop.ECommerce.Api.Extensions.RateLimiting;
 using TechShop.ECommerce.Application.Features.Carts.AddToCart;
@@ -13,7 +14,7 @@ public static class CartEndpoints
     {
         var group = app.MapGroup("/api/carts")
             .WithTags("Carts")
-            .RequireAuthorization();
+            .RequireAuthorization(new AuthorizeAttribute { Roles = "Customer" });
 
         group.MapPost("/items",
             async ([FromBody] AddToCartCommand command, ISender sender, CancellationToken token) =>

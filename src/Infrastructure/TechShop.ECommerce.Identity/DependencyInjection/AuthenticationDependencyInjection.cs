@@ -1,4 +1,5 @@
 using Microsoft.Identity.Web;
+using TechShop.ECommerce.Application.Common.Configurations.Identity;
 using TechShop.ECommerce.Identity.Services;
 
 
@@ -8,13 +9,8 @@ public static class AuthenticationDependencyInjection
 {
     public static IServiceCollection AddJwtAuthentication(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddAuthentication(options => 
-        {
-            options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-            options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-        })
-        .AddMicrosoftIdentityWebApi(configuration.GetSection("AzureAd"));
+        services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddMicrosoftIdentityWebApi(configuration.GetSection(AzureAdOptions.SectionName));
 
         return services;
     }

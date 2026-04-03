@@ -27,22 +27,17 @@ public sealed class IngestProductVectorsCommandHandler(
 
         var totalProcessed = 0;
 
-
         for (var i = 0; i < products.Count; i += _settings.BatchSize)
         {
             var currentBatch = products.Skip(i).Take(_settings.BatchSize).ToList();
 
-
             var texts = currentBatch.Select(PrepareEmbeddingText).ToArray();
 
-
             var embeddings = await embeddingProvider.EmbedBatchAsync(texts, cancellationToken);
-
 
             var upsertData = currentBatch
                 .Select((product, index) => (product, embeddings[index]))
                 .ToList();
-
 
             await vectorRepository.UpsertProductVectorsAsync(upsertData, cancellationToken);
 

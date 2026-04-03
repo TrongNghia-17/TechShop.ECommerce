@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using TechShop.ECommerce.Api.Extensions.Http;
 using TechShop.ECommerce.Api.Extensions.RateLimiting;
 using TechShop.ECommerce.Application.Common.Paging;
@@ -63,7 +64,8 @@ public static class ProductEndpoints
         .Produces(StatusCodes.Status204NoContent)
         .Produces(StatusCodes.Status400BadRequest)
         .Produces(StatusCodes.Status429TooManyRequests)
-        .RequireRateLimiting(RateLimitPolicies.ProductsManagementFixed);
+        .RequireRateLimiting(RateLimitPolicies.ProductsManagementFixed)
+        .RequireAuthorization(new AuthorizeAttribute { Roles = "Admin" });
 
         group.MapPost("/{id:guid}/image",
             async (
@@ -103,7 +105,8 @@ public static class ProductEndpoints
         .Produces(StatusCodes.Status404NotFound)
         .Produces(StatusCodes.Status429TooManyRequests)
         .DisableAntiforgery()
-        .RequireRateLimiting(RateLimitPolicies.FileUploadFixed);
+        .RequireRateLimiting(RateLimitPolicies.FileUploadFixed)
+        .RequireAuthorization(new AuthorizeAttribute { Roles = "Admin" });
 
         return group;
     }

@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using TechShop.ECommerce.Api.Extensions.Http;
 using TechShop.ECommerce.Api.Extensions.RateLimiting;
 using TechShop.ECommerce.Application.Features.Orders.Invoices;
@@ -11,8 +12,7 @@ public static class OrderEndpoints
     {
         var group = app.MapGroup("/api/orders")
             .WithTags("Orders")
-            .RequireAuthorization();
-
+            .RequireAuthorization(new AuthorizeAttribute { Roles = "Customer" });
 
         group.MapPost("/",
             async ([FromBody] PlaceOrderCommand command, ISender sender, CancellationToken token) =>
@@ -30,7 +30,6 @@ public static class OrderEndpoints
             .Produces(StatusCodes.Status404NotFound)
             .Produces(StatusCodes.Status429TooManyRequests)
             .RequireRateLimiting(RateLimitPolicies.OrdersFixed);
-
 
         group.MapGet("/{id:guid}/invoice",
             async (

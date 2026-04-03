@@ -1,4 +1,4 @@
-using TechShop.ECommerce.Api.Endpoints;
+﻿using TechShop.ECommerce.Api.Endpoints;
 using TechShop.ECommerce.Api.Middleware;
 using TechShop.ECommerce.Application.Common.Configurations.Identity;
 
@@ -11,46 +11,28 @@ public static class ApiPipelineExtensions
     public static WebApplication UseApiPipeline(this WebApplication app)
     {
         app.UseExceptionHandler();
-
         if (!app.Environment.IsDevelopment())
         {
             app.UseHsts();
         }
 
+        app.UseHttpsRedirection();
+
+        app.UseMiddleware<CorrelationIdMiddleware>();
+        app.UseSerilogRequestLogging();
+
         app.UseResponseCompression();
         app.UseMiddleware<SecurityHeadersMiddleware>();
-        app.UseMiddleware<CorrelationIdMiddleware>();
 
-        app.UseSerilogRequestLogging();
-        app.UseHttpsRedirection();
         app.UseCors(FrontendCorsPolicy);
-
         app.UseAuthentication();
         app.UseAuthorization();
-
-        if (app.Environment.IsDevelopment())
-        {
-            app.UseHangfireDashboard("/hangfire");
-        }
-
         app.UseRateLimiter();
 
         if (app.Environment.IsDevelopment())
         {
-            app.MapOpenApi();
-            app.MapScalarApiReference(options =>
-            {
-                options.AddAuthorizationCodeFlow("oauth2", flow => 
-                {
-                    var azureAd = app.Configuration.GetSection(AzureAdOptions.SectionName).Get<AzureAdOptions>();
-                    if (azureAd is not null)
-                    {
-                        flow.ClientId = azureAd.ClientId;
-                    }
-                    flow.Pkce = Scalar.AspNetCore.Pkce.Sha256; 
-                    flow.CredentialsLocation = Scalar.AspNetCore.CredentialsLocation.Body;
-                });
-            });
+            app.UseHangfireDashboard("/hangfire");
+            app.UseApiDocumentation();
         }
 
         app.MapStripeWebhookEndpoints();
@@ -61,5 +43,24 @@ public static class ApiPipelineExtensions
         app.MapTechShopHealthChecks();
 
         return app;
+    }
+
+    private static void UseApiDocumentation(this WebApplication app)
+    {
+        app.MapOpenApi();
+        app.MapScalarApiReference(options =>
+        {
+            options.AddAuthorizationCodeFlow("oauth2", flow =>
+            {
+                var azureAd = app.Configuration.GetSection(AzureAdOptions.SectionName).Get<AzureAdOptions>();
+                if (azureAd is not null)
+                {
+                    flow.ClientId = azureAd.ClientId;
+                }
+
+                flow.Pkce = Pkce.Sha256;
+                flow.CredentialsLocation = CredentialsLocation.Body;
+            });
+        });
     }
 }
